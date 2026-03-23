@@ -1,0 +1,10 @@
+{
+  "name": "global-storefront",
+  "version": "1.0.0",
+  "description": "Global Storefront - Client Portal",
+  "dependencies": {
+    "airtable": "^0.12.2",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Global Storefront</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #0f0f1a;
+            --color-card: #1a1a2e;
+            --color-card-lighter: #1e2a3a;
+            --color-accent: #d4af37;
+            --color-accent-hover: #c4a030;
+            --color-accent-glow: rgba(212, 175, 55, 0.15);
+            --color-text: #ffffff;
+            --color-text-muted: #8892a0;
+            --color-text-label: #b0b8c4;
+            --color-border: #2a2a4a;
+            --color-input-bg: #0f1520;
+            --color-input-border: #2a3545;
+            --color-input-focus: #d4af37;
+            --color-error-bg: rgba(239, 68, 68, 0.1);
+            --color-error-border: rgba(239, 68, 68, 0.3);
+            --color-error-text: #f87171;
+            --color-success: #22c55e;
+            --color-danger: #ef4444;
+            --color-danger-hover: #dc2626;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --shadow-card: 0 25px 60px rgba(0, 0, 0, 0.5);
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--color-bg);
+            color: var(--color-text);
+            min-height: 100vh;
+        }
+
+        /* ===== LOGIN STATE ===== */
+        .login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .login-card {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 3rem 2.5rem 2.5rem;
+            box-shadow: var(--shadow-card);
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.25rem;
+        }
+
+        .brand-icon svg {
+            width: 24px;
+            height: 24px;
+            color: #0f0f1a;
+        }
+
+        .brand h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand p {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--color-text-label);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--color-input-bg);
+            border: 1.5px solid var(--color-input-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .form-group input::placeholder {
+            color: #4a5568;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--color-input-focus);
+            box-shadow: 0 0 0 3px var(--color-accent-glow);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 3rem;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--color-text-muted);
+            padding: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.2s ease;
+        }
+
+        .toggle-password:hover {
+            color: var(--color-accent);
+        }
+
+        .toggle-password svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .error {
+            background: var(--color-error-bg);
+            border: 1px solid var(--color-error-border);
+            color: var(--color-error-text);
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.95rem;
+            background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%);
+            color: #0f0f1a;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            letter-spacing: 0.02em;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .back-link a {
+            color: var(--color-text-muted);
+            font-size: 0.8rem;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .back-link a:hover {
+            color: var(--color-accent);
+        }
+
+        /* ===== DASHBOARD STATE ===== */
+        .dashboard {
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .login-wrapper.hidden {
+            display: none;
+        }
+
+        .dash-header {
+            background: var(--color-card);
+            border-bottom: 1px solid var(--color-border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .dash-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .dash-header-left .logo-sm {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dash-header-left .logo-sm svg {
+            width: 16px;
+            height: 16px;
+            color: #0f0f1a;
+        }
+
+        .dash-header-left h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .dash-header-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-name {
+            color: var(--color-text-muted);
+            font-size: 0.85rem;
+        }
+
+        .btn-logout {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-sm);
+            color: var(--color-text-muted);
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            border-color: var(--color-danger);
+            color: var(--color-danger);
+        }
+
+        .dash-content {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .dash-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .dash-toolbar h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .dash-toolbar .client-count {
+            color: var(--color-text-muted);
+            font-weight: 400;
+            font-size: 0.9rem;
+            margin-left: 0.5rem;
+        }
+
+        .btn-add {
+            padding: 0.65rem 1.25rem;
+            background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%);
+            color: #0f0f1a;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .btn-add:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        .btn-add svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 1rem;
+        }
+
+        .client-card {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .client-card:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .client-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .client-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+        }
+
+        .client-company {
+            font-size: 0.8rem;
+            color: var(--color-accent);
+            font-weight: 500;
+        }
+
+        .client-card-actions {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--color-accent);
+            color: var(--color-accent);
+        }
+
+        .btn-icon.delete:hover {
+            border-color: var(--color-danger);
+            color: var(--color-danger);
+        }
+
+        .btn-icon svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .client-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .client-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.82rem;
+            color: var(--color-text-muted);
+        }
+
+        .client-meta-row svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            opacity: 0.6;
+        }
+
+        .client-meta-row a {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .client-meta-row a:hover {
+            color: var(--color-accent);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--color-text-muted);
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 1rem;
+            opacity: 0.4;
+        }
+
+        .empty-state h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: var(--color-text);
+        }
+
+        .empty-state p {
+            font-size: 0.9rem;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ===== MODAL ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-card);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.75rem;
+        }
+
+        .modal-header h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            color: var(--color-text-muted);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .modal-close:hover {
+            border-color: var(--color-text);
+            color: var(--color-text);
+        }
+
+        .modal-close svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .modal .form-group:last-of-type {
+            margin-bottom: 0.5rem;
+        }
+
+        .modal .error {
+            margin-top: 1rem;
+            margin-bottom: 0;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.75rem;
+        }
+
+        .modal-actions .btn-primary {
+            flex: 1;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 0.85rem;
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            color: var(--color-text-muted);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--color-text);
+            color: var(--color-text);
+        }
+
+        .password-note {
+            font-size: 0.75rem;
+            color: var(--color-text-muted);
+            margin-top: 0.35rem;
+        }
+
+        /* ===== CONFIRM DIALOG ===== */
+        .confirm-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            padding: 1rem;
+        }
+
+        .confirm-overlay.active {
+            display: flex;
+        }
+
+        .confirm-dialog {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .confirm-dialog h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .confirm-dialog p {
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-danger {
+            flex: 1;
+            padding: 0.85rem;
+            background: var(--color-danger);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .btn-danger:hover {
+            background: var(--color-danger-hover);
+        }
+
+        .btn-danger:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .dash-header {
+                padding: 0.75rem 1rem;
+            }
+
+            .dash-content {
+                padding: 1.25rem;
+            }
+
+            .dash-toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .clients-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dash-header-left h2 {
+                font-size: 0.95rem;
+            }
+
+            .admin-name {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-wrapper {
+                padding: 1rem;
+                align-items: flex-start;
+                padding-top: 3rem;
+            }
+
+            .login-card {
+                padding: 2rem 1.5rem 1.5rem;
+            }
+
+            .modal {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN STATE -->
+    <div class="login-wrapper" id="loginWrapper">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="brand">
+                    <div class="brand-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
+                    </div>
+                    <h1>Global Storefront</h1>
+                    <p>Admin Dashboard</p>
+                </div>
+
+                <form id="adminLoginForm">
+                    <div class="form-group">
+                        <label for="adminEmail">Email Address</label>
+                        <input type="email" id="adminEmail" placeholder="admin@globalmedia.com" required autocomplete="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="adminPassword">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="adminPassword" placeholder="Enter your password" required autocomplete="current-password">
+                            <button type="button" class="toggle-password" aria-label="Show password">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="error" id="loginError"></div>
+
+                    <button type="submit" class="btn-primary" id="adminLoginBtn">Sign In</button>
+                </form>
+
+                <div class="back-link">
+                    <a href="index.html">&larr; Client Portal</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD STATE -->
+    <div class="dashboard" id="dashboard">
+        <header class="dash-header">
+            <div class="dash-header-left">
+                <div class="logo-sm">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
+                </div>
+                <h2>Global Storefront</h2>
+            </div>
+            <div class="dash-header-right">
+                <span class="admin-name" id="adminNameDisplay"></span>
+                <button class="btn-logout" id="logoutBtn">Log Out</button>
+            </div>
+        </header>
+
+        <main class="dash-content">
+            <div class="dash-toolbar">
+                <h3>Clients <span class="client-count" id="clientCount"></span></h3>
+                <button class="btn-add" id="addClientBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    Add Client
+                </button>
+            </div>
+
+            <div id="clientsContainer">
+                <div class="loading-state">Loading clients...</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ADD/EDIT MODAL -->
+    <div class="modal-overlay" id="clientModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add Client</h3>
+                <button class="modal-close" id="modalClose">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="clientForm">
+                <div class="form-group">
+                    <label for="clientName">Full Name</label>
+                    <input type="text" id="clientName" placeholder="John Smith" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="clientEmail">Email Address</label>
+                    <input type="email" id="clientEmail" placeholder="john@company.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="clientPassword" id="passwordLabel">Password</label>
+                    <input type="password" id="clientPassword" placeholder="Minimum 6 characters">
+                    <div class="password-note" id="passwordNote"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="clientCompany">Company Name</label>
+                    <input type="text" id="clientCompany" placeholder="Company Inc.">
+                </div>
+
+                <div class="form-group">
+                    <label for="clientProjectUrl">Project URL</label>
+                    <input type="url" id="clientProjectUrl" placeholder="https://example.netlify.app/demo.html" required>
+                </div>
+
+                <div class="error" id="modalError"></div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="modalCancel">Cancel</button>
+                    <button type="submit" class="btn-primary" id="modalSaveBtn">Add Client</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CONFIRM DELETE DIALOG -->
+    <div class="confirm-overlay" id="confirmDialog">
+        <div class="confirm-dialog">
+            <h3>Delete Client</h3>
+            <p id="confirmMessage">Are you sure you want to delete this client? This action cannot be undone.</p>
+            <div class="confirm-actions">
+                <button class="btn-secondary" id="confirmCancel">Cancel</button>
+                <button class="btn-danger" id="confirmDelete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let clients = [];
+        let editingClientId = null;
+        let deletingClientId = null;
+
+        // ===== AUTH =====
+        const token = localStorage.getItem('gsAdminToken');
+        const adminName = localStorage.getItem('gsAdminName');
+
+        if (token) {
+            showDashboard();
+        }
+
+        // Password toggle
+        document.querySelector('.toggle-password').addEventListener('click', function() {
+            const input = document.getElementById('adminPassword');
+            const isPassword = input.type === 'password';
+            input.type = isPassword ? 'text' : 'password';
+            this.innerHTML = isPassword
+                ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>'
+                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+        });
+
+        // Admin login
+        document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const error = document.getElementById('loginError');
+            const btn = document.getElementById('adminLoginBtn');
+
+            error.classList.remove('show');
+            btn.disabled = true;
+            btn.textContent = 'Signing in...';
+
+            try {
+                const response = await fetch('/.netlify/functions/admin-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('gsAdminToken', data.token);
+                    localStorage.setItem('gsAdminName', data.name);
+                    showDashboard();
+                } else {
+                    error.textContent = data.error || 'Login failed.';
+                    error.classList.add('show');
+                    btn.disabled = false;
+                    btn.textContent = 'Sign In';
+                }
+            } catch (err) {
+                error.textContent = 'Connection error. Please try again.';
+                error.classList.add('show');
+                btn.disabled = false;
+                btn.textContent = 'Sign In';
+            }
+        });
+
+        // ===== DASHBOARD =====
+        function showDashboard() {
+            document.getElementById('loginWrapper').classList.add('hidden');
+            document.getElementById('dashboard').classList.add('active');
+            document.getElementById('adminNameDisplay').textContent = localStorage.getItem('gsAdminName') || 'Admin';
+            loadClients();
+        }
+
+        // Logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('gsAdminToken');
+            localStorage.removeItem('gsAdminName');
+            window.location.reload();
+        });
+
+        // Load clients
+        async function loadClients() {
+            const container = document.getElementById('clientsContainer');
+            container.innerHTML = '<div class="loading-state">Loading clients...</div>';
+
+            try {
+                const response = await fetch('/.netlify/functions/get-clients', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('gsAdminToken')}` }
+                });
+
+                if (response.status === 401) {
+                    localStorage.removeItem('gsAdminToken');
+                    localStorage.removeItem('gsAdminName');
+                    window.location.reload();
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    clients = data.clients;
+                    renderClients();
+                } else {
+                    container.innerHTML = '<div class="empty-state"><p>Failed to load clients.</p></div>';
+                }
+            } catch (err) {
+                container.innerHTML = '<div class="empty-state"><p>Connection error.</p></div>';
+            }
+        }
+
+        function renderClients() {
+            const container = document.getElementById('clientsContainer');
+            document.getElementById('clientCount').textContent = `(${clients.length})`;
+
+            if (clients.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <h3>No clients yet</h3>
+                        <p>Add your first client to get started.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="clients-grid">
+                    ${clients.map(client => `
+                        <div class="client-card">
+                            <div class="client-card-header">
+                                <div>
+                                    <div class="client-name">${escapeHtml(client.name)}</div>
+                                    <div class="client-company">${escapeHtml(client.company || 'No company')}</div>
+                                </div>
+                                <div class="client-card-actions">
+                                    <button class="btn-icon" onclick="openEditModal('${client.id}')" title="Edit">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="btn-icon delete" onclick="confirmDeleteClient('${client.id}', '${escapeHtml(client.name)}')" title="Delete">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="client-meta">
+                                <div class="client-meta-row">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                        <polyline points="22,6 12,13 2,6"></polyline>
+                                    </svg>
+                                    <span>${escapeHtml(client.email)}</span>
+                                </div>
+                                <div class="client-meta-row">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                                    </svg>
+                                    <a href="${escapeHtml(client.projectUrl)}" target="_blank">${escapeHtml(client.projectUrl.replace(/^https?:\/\//, ''))}</a>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // ===== MODAL =====
+        document.getElementById('addClientBtn').addEventListener('click', () => openAddModal());
+        document.getElementById('modalClose').addEventListener('click', closeModal);
+        document.getElementById('modalCancel').addEventListener('click', closeModal);
+
+        function openAddModal() {
+            editingClientId = null;
+            document.getElementById('modalTitle').textContent = 'Add Client';
+            document.getElementById('modalSaveBtn').textContent = 'Add Client';
+            document.getElementById('clientPassword').required = true;
+            document.getElementById('passwordNote').textContent = '';
+            document.getElementById('clientForm').reset();
+            document.getElementById('modalError').classList.remove('show');
+            document.getElementById('clientModal').classList.add('active');
+        }
+
+        function openEditModal(clientId) {
+            const client = clients.find(c => c.id === clientId);
+            if (!client) return;
+
+            editingClientId = clientId;
+            document.getElementById('modalTitle').textContent = 'Edit Client';
+            document.getElementById('modalSaveBtn').textContent = 'Save Changes';
+            document.getElementById('clientPassword').required = false;
+            document.getElementById('passwordNote').textContent = 'Leave blank to keep current password';
+            document.getElementById('clientName').value = client.name;
+            document.getElementById('clientEmail').value = client.email;
+            document.getElementById('clientPassword').value = '';
+            document.getElementById('clientCompany').value = client.company;
+            document.getElementById('clientProjectUrl').value = client.projectUrl;
+            document.getElementById('modalError').classList.remove('show');
+            document.getElementById('clientModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('clientModal').classList.remove('active');
+            editingClientId = null;
+        }
+
+        // Save client (create or update)
+        document.getElementById('clientForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const error = document.getElementById('modalError');
+            const btn = document.getElementById('modalSaveBtn');
+            const originalText = btn.textContent;
+
+            error.classList.remove('show');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const payload = {
+                name: document.getElementById('clientName').value.trim(),
+                email: document.getElementById('clientEmail').value.trim(),
+                company: document.getElementById('clientCompany').value.trim(),
+                projectUrl: document.getElementById('clientProjectUrl').value.trim()
+            };
+
+            const password = document.getElementById('clientPassword').value;
+
+            if (editingClientId) {
+                payload.clientId = editingClientId;
+                if (password) payload.password = password;
+            } else {
+                payload.password = password;
+            }
+
+            const endpoint = editingClientId ? 'update-client' : 'create-client';
+
+            try {
+                const response = await fetch(`/.netlify/functions/${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('gsAdminToken')}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    closeModal();
+                    loadClients();
+                } else {
+                    error.textContent = data.error || 'Failed to save client.';
+                    error.classList.add('show');
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }
+            } catch (err) {
+                error.textContent = 'Connection error. Please try again.';
+                error.classList.add('show');
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        });
+
+        // ===== DELETE =====
+        function confirmDeleteClient(clientId, clientName) {
+            deletingClientId = clientId;
+            document.getElementById('confirmMessage').textContent = `Are you sure you want to delete ${clientName}? This action cannot be undone.`;
+            document.getElementById('confirmDialog').classList.add('active');
+        }
+
+        document.getElementById('confirmCancel').addEventListener('click', () => {
+            document.getElementById('confirmDialog').classList.remove('active');
+            deletingClientId = null;
+        });
+
+        document.getElementById('confirmDelete').addEventListener('click', async () => {
+            if (!deletingClientId) return;
+
+            const btn = document.getElementById('confirmDelete');
+            btn.disabled = true;
+            btn.textContent = 'Deleting...';
+
+            try {
+                const response = await fetch('/.netlify/functions/delete-client', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('gsAdminToken')}`
+                    },
+                    body: JSON.stringify({ clientId: deletingClientId })
+                });
+
+                if (response.ok) {
+                    document.getElementById('confirmDialog').classList.remove('active');
+                    deletingClientId = null;
+                    btn.disabled = false;
+                    btn.textContent = 'Delete';
+                    loadClients();
+                } else {
+                    btn.disabled = false;
+                    btn.textContent = 'Delete';
+                }
+            } catch (err) {
+                btn.disabled = false;
+                btn.textContent = 'Delete';
+            }
+        });
+
+        // ===== UTILITIES =====
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
