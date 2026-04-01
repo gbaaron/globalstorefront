@@ -48,7 +48,7 @@
             justify-content: center;
             padding: 2rem;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
         body::before {
@@ -243,6 +243,57 @@
             color: var(--color-accent);
         }
 
+        .about {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+        }
+
+        .about h2 {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-accent);
+            margin-bottom: 0.75rem;
+        }
+
+        .about p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--color-text-muted);
+        }
+
+        .about-features {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .about-feature {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem 0.5rem;
+            border-radius: var(--radius-sm);
+            background: var(--color-input-bg);
+        }
+
+        .about-feature svg {
+            width: 20px;
+            height: 20px;
+            color: var(--color-accent);
+            margin-bottom: 0.4rem;
+        }
+
+        .about-feature span {
+            display: block;
+            font-size: 0.7rem;
+            color: var(--color-text-muted);
+            font-weight: 500;
+        }
+
         .footer {
             text-align: center;
             margin-top: 2rem;
@@ -308,6 +359,36 @@
 
             <div class="admin-link">
                 <a href="admin.html">Admin Access &rarr;</a>
+            </div>
+        </div>
+
+        <div class="about">
+            <h2>About Global Storefront</h2>
+            <p>Your dedicated portal for previewing and exploring your custom-built website. Log in with the credentials provided by Global Media to view your project, test features, and see your vision come to life.</p>
+            <div class="about-features">
+                <div class="about-feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                    <span>Live Preview</span>
+                </div>
+                <div class="about-feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    <span>Secure Access</span>
+                </div>
+                <div class="about-feature">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                    <span>Built For You</span>
+                </div>
             </div>
         </div>
 
