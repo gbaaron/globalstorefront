@@ -1,5 +1,4 @@
 const Airtable = require('airtable');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.handler = async (event) => {
@@ -69,7 +68,7 @@ exports.handler = async (event) => {
                     body: JSON.stringify({ error: 'Password must be at least 6 characters' })
                 };
             }
-            fields.PasswordHash = await bcrypt.hash(password, 10);
+            fields.PasswordHash = password;
         }
         if (company !== undefined) fields.Company = company.trim();
         if (projectUrl) fields.ProjectURL = projectUrl.trim();
