@@ -1,19 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="scroll-behavior: smooth;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Storefront | Client Portal</title>
+    <title>Global Storefront | Custom Web Solutions</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --color-bg: #0f0f1a;
             --color-card: #1a1a2e;
-            --color-card-lighter: #1e2a3a;
             --color-accent: #d4af37;
-            --color-accent-hover: #c4a030;
             --color-accent-glow: rgba(212, 175, 55, 0.15);
             --color-text: #ffffff;
             --color-text-muted: #8892a0;
@@ -21,7 +19,6 @@
             --color-border: #2a2a4a;
             --color-input-bg: #0f1520;
             --color-input-border: #2a3545;
-            --color-input-focus: #d4af37;
             --color-error-bg: rgba(239, 68, 68, 0.1);
             --color-error-border: rgba(239, 68, 68, 0.3);
             --color-error-text: #f87171;
@@ -31,374 +28,284 @@
             --radius-md: 12px;
             --radius-sm: 8px;
         }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: var(--font-body); background: var(--color-bg); color: var(--color-text); line-height: 1.7; overflow-x: hidden; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* LOGIN SECTION */
+        .login-section { padding: 4rem 2rem 3rem; position: relative; }
+        .login-section::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 20%, rgba(212,175,55,0.03) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(26,26,46,0.5) 0%, transparent 50%); pointer-events: none; }
+        .login-container { width: 100%; max-width: 440px; margin: 0 auto; position: relative; z-index: 1; }
+        .login-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 3rem 2.5rem 2.5rem; box-shadow: var(--shadow-card); }
+        .brand { text-align: center; margin-bottom: 2.5rem; }
+        .brand-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
+        .brand-icon svg { width: 24px; height: 24px; color: #0f0f1a; }
+        .brand h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+        .brand p { color: var(--color-text-muted); font-size: 0.9rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--color-text-label); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .form-group input { width: 100%; padding: 0.875rem 1rem; background: var(--color-input-bg); border: 1.5px solid var(--color-input-border); border-radius: var(--radius-md); color: var(--color-text); font-family: var(--font-body); font-size: 0.95rem; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        .form-group input::placeholder { color: #4a5568; }
+        .form-group input:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-glow); }
+        .password-wrapper { position: relative; }
+        .password-wrapper input { padding-right: 3rem; }
+        .toggle-password { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--color-text-muted); padding: 0.25rem; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
+        .toggle-password:hover { color: var(--color-accent); }
+        .toggle-password svg { width: 20px; height: 20px; }
+        .error { background: var(--color-error-bg); border: 1px solid var(--color-error-border); color: var(--color-error-text); padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1.5rem; display: none; }
+        .error.show { display: block; }
+        .btn-login { width: 100%; padding: 0.95rem; background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%); color: #0f0f1a; border: none; border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s ease, transform 0.2s ease; letter-spacing: 0.02em; }
+        .btn-login:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-login:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .admin-link { text-align: center; margin-top: 2rem; }
+        .admin-link a { color: var(--color-text-muted); font-size: 0.8rem; text-decoration: none; transition: color 0.2s ease; }
+        .admin-link a:hover { color: var(--color-accent); }
+
+        /* DIVIDER */
+        .section-divider { border: none; border-top: 1px solid var(--color-border); max-width: 1000px; margin: 0 auto; }
+
+        /* HERO */
+        .hero { max-width: 1000px; margin: 0 auto; padding: 4rem 2rem 3rem; text-align: center; }
+        .hero-badge { display: inline-block; padding: 0.4rem 1rem; background: var(--color-accent-glow); border: 1px solid rgba(212,175,55,0.25); border-radius: 50px; color: var(--color-accent); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.5rem; }
+        .hero h2 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 1.25rem; }
+        .hero h2 .accent { color: var(--color-accent); }
+        .hero .subtitle { font-size: 1.1rem; color: var(--color-text-muted); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+
+        /* CALLOUT */
+        .callout { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+        .callout-card { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 1px solid var(--color-border); border-left: 3px solid var(--color-accent); border-radius: var(--radius-md); padding: 2rem 2.5rem; margin-bottom: 3rem; }
+        .callout-card .callout-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.6rem; }
+        .callout-card .callout-title svg { width: 20px; height: 20px; color: var(--color-accent); }
+        .callout-card p { color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.8; }
+        .callout-card .highlight { color: var(--color-text); font-weight: 600; }
+
+        /* SECTIONS */
+        .section { max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 3rem; }
+        .section-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-accent); margin-bottom: 0.75rem; }
+        .section h2 { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; }
+        .section .section-desc { color: var(--color-text-muted); font-size: 0.95rem; max-width: 650px; margin-bottom: 2rem; }
+
+        /* FEATURES */
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+        .feature-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.75rem; transition: border-color 0.2s ease, transform 0.2s ease; }
+        .feature-card:hover { border-color: rgba(212,175,55,0.3); transform: translateY(-3px); }
+        .feature-icon { width: 40px; height: 40px; background: var(--color-accent-glow); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+        .feature-icon svg { width: 20px; height: 20px; color: var(--color-accent); }
+        .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .feature-card p { font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.6; }
+
+        /* COMPARISON */
+        .comparison { max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 3rem; }
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 2rem; }
+        .comparison-col { border-radius: var(--radius-md); padding: 2rem; }
+        .comparison-col.them { background: #1a1220; border: 1px solid #2a1a3a; }
+        .comparison-col.us { background: var(--color-card); border: 1px solid rgba(212,175,55,0.3); }
+        .comparison-col h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; font-weight: 700; }
+        .comparison-col.them h3 { color: #7a6888; }
+        .comparison-col.us h3 { color: var(--color-accent); }
+        .comparison-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+        .comparison-col li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.5; }
+        .comparison-col li svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
+        .comparison-col.them li svg { color: #5a4568; }
+        .comparison-col.us li svg { color: var(--color-accent); }
+
+        /* PROCESS */
+        .process-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
+        .process-step { display: flex; gap: 1.25rem; align-items: flex-start; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.5rem; }
+        .process-num { width: 36px; height: 36px; min-width: 36px; background: var(--color-accent-glow); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--color-accent); font-weight: 800; font-size: 0.85rem; }
+        .process-step h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .process-step p { font-size: 0.85rem; color: var(--color-text-muted); }
+
+        /* CTA */
+        .cta { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem 4rem; text-align: center; }
+        .cta-card { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 3rem 2rem; }
+        .cta-card h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.75rem; }
+        .cta-card p { color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .cta-btn { display: inline-block; padding: 0.85rem 2rem; background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%); color: #0f0f1a; border: none; border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.95rem; font-weight: 700; text-decoration: none; transition: opacity 0.2s ease, transform 0.2s ease; }
+        .cta-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* FOOTER */
+        .site-footer { text-align: center; padding: 2rem; color: #4a5568; font-size: 0.75rem; border-top: 1px solid var(--color-border); max-width: 1000px; margin: 0 auto; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero { padding: 3rem 1.5rem 2rem; }
+            .hero h2 { font-size: 1.75rem; }
+            .comparison-grid { grid-template-columns: 1fr; }
+            .callout-card { padding: 1.5rem; }
         }
-
-        body {
-            font-family: var(--font-body);
-            background: var(--color-bg);
-            color: var(--color-text);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(ellipse at 30% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 50%),
-                        radial-gradient(ellipse at 70% 80%, rgba(26, 26, 46, 0.5) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .login-container {
-            width: 100%;
-            max-width: 440px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .login-card {
-            background: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-lg);
-            padding: 3rem 2.5rem 2.5rem;
-            box-shadow: var(--shadow-card);
-        }
-
-        .brand {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .brand-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.25rem;
-        }
-
-        .brand-icon svg {
-            width: 24px;
-            height: 24px;
-            color: #0f0f1a;
-        }
-
-        .brand h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 0.5rem;
-        }
-
-        .brand p {
-            color: var(--color-text-muted);
-            font-size: 0.9rem;
-            font-weight: 400;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--color-text-label);
-            margin-bottom: 0.5rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            background: var(--color-input-bg);
-            border: 1.5px solid var(--color-input-border);
-            border-radius: var(--radius-md);
-            color: var(--color-text);
-            font-family: var(--font-body);
-            font-size: 0.95rem;
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .form-group input::placeholder {
-            color: #4a5568;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--color-input-focus);
-            box-shadow: 0 0 0 3px var(--color-accent-glow);
-        }
-
-        .password-wrapper {
-            position: relative;
-        }
-
-        .password-wrapper input {
-            padding-right: 3rem;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            cursor: pointer;
-            color: var(--color-text-muted);
-            padding: 0.25rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: color 0.2s ease;
-        }
-
-        .toggle-password:hover {
-            color: var(--color-accent);
-        }
-
-        .toggle-password svg {
-            width: 20px;
-            height: 20px;
-        }
-
-        .error {
-            background: var(--color-error-bg);
-            border: 1px solid var(--color-error-border);
-            color: var(--color-error-text);
-            padding: 0.75rem 1rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.85rem;
-            margin-bottom: 1.5rem;
-            display: none;
-        }
-
-        .error.show {
-            display: block;
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 0.95rem;
-            background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%);
-            color: #0f0f1a;
-            border: none;
-            border-radius: var(--radius-md);
-            font-family: var(--font-body);
-            font-size: 0.95rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: opacity 0.2s ease, transform 0.2s ease;
-            letter-spacing: 0.02em;
-        }
-
-        .btn-login:hover {
-            opacity: 0.9;
-            transform: translateY(-1px);
-        }
-
-        .btn-login:active {
-            transform: translateY(0);
-        }
-
-        .btn-login:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .admin-link {
-            text-align: center;
-            margin-top: 2rem;
-        }
-
-        .admin-link a {
-            color: var(--color-text-muted);
-            font-size: 0.8rem;
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        .admin-link a:hover {
-            color: var(--color-accent);
-        }
-
-        .about {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-md);
-        }
-
-        .about h2 {
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--color-accent);
-            margin-bottom: 0.75rem;
-        }
-
-        .about p {
-            font-size: 0.85rem;
-            line-height: 1.6;
-            color: var(--color-text-muted);
-        }
-
-        .about-features {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .about-feature {
-            flex: 1;
-            text-align: center;
-            padding: 0.75rem 0.5rem;
-            border-radius: var(--radius-sm);
-            background: var(--color-input-bg);
-        }
-
-        .about-feature svg {
-            width: 20px;
-            height: 20px;
-            color: var(--color-accent);
-            margin-bottom: 0.4rem;
-        }
-
-        .about-feature span {
-            display: block;
-            font-size: 0.7rem;
-            color: var(--color-text-muted);
-            font-weight: 500;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 2rem;
-            color: var(--color-text-muted);
-            font-size: 0.75rem;
-        }
-
         @media (max-width: 480px) {
-            body {
-                padding: 1rem;
-                align-items: flex-start;
-                padding-top: 3rem;
-            }
-
-            .login-card {
-                padding: 2rem 1.5rem 1.5rem;
-            }
-
-            .brand h1 {
-                font-size: 1.3rem;
-            }
+            .login-section { padding: 2rem 1rem; }
+            .login-card { padding: 2rem 1.5rem 1.5rem; }
+            .brand h1 { font-size: 1.3rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .section h2 { font-size: 1.4rem; }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-card">
-            <div class="brand">
-                <div class="brand-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                        <path d="M2 17l10 5 10-5"></path>
-                        <path d="M2 12l10 5 10-5"></path>
-                    </svg>
-                </div>
-                <h1>Global Storefront</h1>
-                <p>Client Portal</p>
-            </div>
-
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="email">Email Address</label>
-                    <input type="email" id="email" placeholder="you@company.com" required autocomplete="email">
-                </div>
-
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <div class="password-wrapper">
-                        <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
-                        <button type="button" class="toggle-password" aria-label="Show password">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
+    <!-- LOGIN -->
+    <section class="login-section" id="loginForm">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="brand">
+                    <div class="brand-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                            <path d="M2 17l10 5 10-5"></path>
+                            <path d="M2 12l10 5 10-5"></path>
+                        </svg>
                     </div>
+                    <h1>Global Storefront</h1>
+                    <p>Client Portal</p>
                 </div>
-
-                <div class="error" id="error"></div>
-
-                <button type="submit" class="btn-login" id="loginBtn">Sign In</button>
-            </form>
-
-            <div class="admin-link">
-                <a href="admin.html">Admin Access &rarr;</a>
-            </div>
-        </div>
-
-        <div class="about">
-            <h2><a href="about.html" style="color: var(--color-accent); text-decoration: none;">About Global Storefront</a></h2>
-            <p>Your dedicated portal for previewing and exploring your custom-built website. Log in with the credentials provided by Global Media to view your project, test features, and see your vision come to life.</p>
-            <div class="about-features">
-                <div class="about-feature">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-                        <line x1="8" y1="21" x2="16" y2="21"></line>
-                        <line x1="12" y1="17" x2="12" y2="21"></line>
-                    </svg>
-                    <span>Live Preview</span>
-                </div>
-                <div class="about-feature">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                    </svg>
-                    <span>Secure Access</span>
-                </div>
-                <div class="about-feature">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                        <circle cx="9" cy="7" r="4"></circle>
-                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                    </svg>
-                    <span>Built For You</span>
+                <form id="loginFormEl">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" placeholder="you@company.com" required autocomplete="email">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                            <button type="button" class="toggle-password" aria-label="Show password">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="error" id="error"></div>
+                    <button type="submit" class="btn-login" id="loginBtn">Sign In</button>
+                </form>
+                <div class="admin-link">
+                    <a href="admin.html">Admin Access &rarr;</a>
                 </div>
             </div>
         </div>
+    </section>
 
-        <div class="footer">
-            &copy; 2026 Global Media. All rights reserved.
+    <hr class="section-divider">
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-badge">Custom-Built Web Solutions</div>
+        <h2>We build websites that <span class="accent">actually work</span> for your business</h2>
+        <p class="subtitle">Not templates. Not drag-and-drop. Real code, built from scratch, designed around how your business actually operates.</p>
+    </section>
+
+    <!-- THE DIG -->
+    <section class="callout">
+        <div class="callout-card">
+            <div class="callout-title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                Let's be honest for a second
+            </div>
+            <p>We can tell you're using Wix. Or Squarespace. Or whatever template builder you Googled at 11pm on a Tuesday. <span class="highlight">And so can your customers.</span></p>
+            <p style="margin-top: 0.75rem;">The generic stock photos. The layout that looks like every other business in your industry. The slow load times. The footer that still says "Powered by..." — it all screams <span class="highlight">"I didn't invest in this."</span></p>
+            <p style="margin-top: 0.75rem;">Your business isn't a template. Your website shouldn't be either. We build from a blank canvas — every line of code written specifically for you, your brand, and how your customers actually interact with your business.</p>
         </div>
-    </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="section">
+        <div class="section-label">What We Build</div>
+        <h2>Features your template site can't touch</h2>
+        <p class="section-desc">Every site we build comes with tools that actually help you run your business — not just look pretty.</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
+                <h3>Custom Admin Dashboards</h3>
+                <p>Manage orders, track inventory, view daily summaries — all from a dashboard built around your workflow. No third-party plugins, no monthly fees.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg></div>
+                <h3>Online Ordering Systems</h3>
+                <p>Real order management that fits your business. Customers order, you fulfill — with live tracking, notifications, and zero commission fees from a platform.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></div>
+                <h3>Inventory Management</h3>
+                <p>Track what's in stock, get low-stock alerts, update quantities in real time. Your website knows what you have before your customer orders something you don't.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"></path><path d="M18 20V4"></path><path d="M6 20v-4"></path></svg></div>
+                <h3>Business Analytics</h3>
+                <p>Daily summaries, order trends, customer insights — see how your business is performing at a glance, not buried in some third-party analytics tool you'll never check.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
+                <h3>Lightning Fast</h3>
+                <p>No bloated page builders. No 47 plugins slowing things down. Clean code means your site loads in under 2 seconds — because your customers won't wait for 5.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
+                <h3>You Own Everything</h3>
+                <p>No vendor lock-in. No "upgrade to premium to unlock this feature." The code is yours. The design is yours. You're never held hostage by a platform.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMPARISON -->
+    <section class="comparison">
+        <div class="section-label">The Difference</div>
+        <h2>Template builders vs. what we do</h2>
+        <div class="comparison-grid">
+            <div class="comparison-col them">
+                <h3>Wix / Squarespace / Shopify</h3>
+                <ul>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Same templates everyone else uses</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Monthly fees that add up forever</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>"Powered by..." in your footer</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Limited to what their drag-and-drop allows</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Slow load times from bloated code</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>You don't own the code — they do</li>
+                </ul>
+            </div>
+            <div class="comparison-col us">
+                <h3>Global Storefront</h3>
+                <ul>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>100% custom design — no templates</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>One-time build, minimal hosting costs</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Your brand, no one else's</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Custom features built for your workflow</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Blazing fast — clean code, no bloat</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Full code ownership — it's yours forever</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="section">
+        <div class="section-label">How It Works</div>
+        <h2>From conversation to launch</h2>
+        <p class="section-desc">No 47-step onboarding process. No committees. Just a conversation about what your business needs, then we build it.</p>
+        <div class="process-list">
+            <div class="process-step">
+                <div class="process-num">1</div>
+                <div><h3>We talk about your business</h3><p>Not your "brand colors" or "user personas." We talk about what you actually need — what your customers do, what's annoying about your current setup, what would make your day easier.</p></div>
+            </div>
+            <div class="process-step">
+                <div class="process-num">2</div>
+                <div><h3>We build it — from scratch</h3><p>Custom code, custom design, custom features. You get a private portal here on Global Storefront to preview everything as it comes together. No surprises.</p></div>
+            </div>
+            <div class="process-step">
+                <div class="process-num">3</div>
+                <div><h3>You launch and actually use it</h3><p>Your site goes live with admin tools, analytics, and everything you need to run your business from day one. Not a brochure — a business tool.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="cta-card">
+            <h2>Ready to ditch the template?</h2>
+            <p>Let's talk about what a real website can do for your business. No pressure, no 30-slide pitch deck — just a conversation.</p>
+            <a href="#loginForm" class="cta-btn">Get Started</a>
+        </div>
+    </section>
+
+    <footer class="site-footer">&copy; 2026 Global Media. All rights reserved.</footer>
 
     <script>
-        // Password toggle
         document.querySelector('.toggle-password').addEventListener('click', function() {
             const input = document.getElementById('password');
             const isPassword = input.type === 'password';
@@ -408,28 +315,22 @@
                 : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
         });
 
-        // Login form
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        document.getElementById('loginFormEl').addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
             const error = document.getElementById('error');
             const btn = document.getElementById('loginBtn');
-
             error.classList.remove('show');
             btn.disabled = true;
             btn.textContent = 'Signing in...';
-
             try {
                 const response = await fetch('/.netlify/functions/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
-
                 const data = await response.json();
-
                 if (response.ok) {
                     localStorage.setItem('gsToken', data.token);
                     localStorage.setItem('gsClientName', data.name);
