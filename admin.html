@@ -679,6 +679,38 @@
             cursor: not-allowed;
         }
 
+        /* ===== ANALYTICS ===== */
+        .analytics-bar {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem 1.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.4rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            letter-spacing: -0.03em;
+            line-height: 1;
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .dash-header {
@@ -793,6 +825,22 @@
         </header>
 
         <main class="dash-content">
+            <!-- ANALYTICS -->
+            <div class="analytics-bar" id="analyticsBar">
+                <div class="stat-card">
+                    <div class="stat-label">Total Visits</div>
+                    <div class="stat-value" id="statTotal">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">This Week</div>
+                    <div class="stat-value" id="statWeek">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Today</div>
+                    <div class="stat-value" id="statToday">—</div>
+                </div>
+            </div>
+
             <div class="dash-toolbar">
                 <h3>Clients <span class="client-count" id="clientCount"></span></h3>
                 <button class="btn-add" id="addClientBtn">
@@ -946,6 +994,25 @@
             document.getElementById('dashboard').classList.add('active');
             document.getElementById('adminNameDisplay').textContent = localStorage.getItem('gsAdminName') || 'Admin';
             loadClients();
+            loadAnalytics();
+        }
+
+        // Load analytics
+        async function loadAnalytics() {
+            try {
+                const response = await fetch('/.netlify/functions/get-analytics', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('gsAdminToken')}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('statTotal').textContent = data.total;
+                    document.getElementById('statWeek').textContent = data.thisWeek;
+                    document.getElementById('statToday').textContent = data.today;
+                }
+            } catch (err) {
+                // Fail silently
+            }
         }
 
         // Logout
@@ -1084,6 +1151,7 @@
             document.getElementById('modalTitle').textContent = 'Edit Client';
             document.getElementById('modalSaveBtn').textContent = 'Save Changes';
             document.getElementById('clientPassword').required = false;
+            document.getElementById('clientUsername').required = false;
             document.getElementById('passwordNote').textContent = 'Leave blank to keep current password';
             document.getElementById('clientName').value = client.name;
             document.getElementById('clientEmail').value = client.email;

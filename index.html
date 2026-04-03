@@ -160,8 +160,8 @@
                 </div>
                 <form id="loginFormEl">
                     <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" placeholder="your-username" required autocomplete="username">
+                        <label for="username">Username or Email</label>
+                        <input type="text" id="username" placeholder="username or you@email.com" required autocomplete="username">
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
@@ -353,6 +353,13 @@
                 btn.textContent = 'Sign In';
             }
         });
+
+        // Track page visit (fire and forget)
+        fetch('/.netlify/functions/track-visit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ page: 'home', referrer: document.referrer || '' })
+        }).catch(() => {});
     </script>
 </body>
 </html>

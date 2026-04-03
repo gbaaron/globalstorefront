@@ -18,8 +18,15 @@ exports.handler = async (event) => {
 
         const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
 
+        // Accept either a username or email address
+        const isEmail = username.includes('@');
+        const sanitized = username.replace(/'/g, "\\'");
+        const filterFormula = isEmail
+            ? `{Email} = '${sanitized.toLowerCase()}'`
+            : `{Username} = '${sanitized}'`;
+
         const records = await base('Clients').select({
-            filterByFormula: `{Username} = '${username.replace(/'/g, "\\'")}'`,
+            filterByFormula: filterFormula,
             maxRecords: 1
         }).firstPage();
 
