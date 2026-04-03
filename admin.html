@@ -830,8 +830,13 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="clientEmail">Email Address</label>
+                    <label for="clientEmail">Email Address <span style="color: var(--color-text-muted); font-weight: 400; text-transform: none; letter-spacing: 0;">(for recovery)</span></label>
                     <input type="email" id="clientEmail" placeholder="john@company.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="clientUsername">Login Username</label>
+                    <input type="text" id="clientUsername" placeholder="john-smith" required>
                 </div>
 
                 <div class="form-group">
@@ -1028,6 +1033,13 @@
                             <div class="client-meta">
                                 <div class="client-meta-row">
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                        <circle cx="12" cy="7" r="4"></circle>
+                                    </svg>
+                                    <span>${escapeHtml(client.username || '—')}</span>
+                                </div>
+                                <div class="client-meta-row">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                         <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                                         <polyline points="22,6 12,13 2,6"></polyline>
                                     </svg>
@@ -1057,6 +1069,7 @@
             document.getElementById('modalTitle').textContent = 'Add Client';
             document.getElementById('modalSaveBtn').textContent = 'Add Client';
             document.getElementById('clientPassword').required = true;
+            document.getElementById('clientUsername').required = true;
             document.getElementById('passwordNote').textContent = '';
             document.getElementById('clientForm').reset();
             document.getElementById('modalError').classList.remove('show');
@@ -1074,6 +1087,7 @@
             document.getElementById('passwordNote').textContent = 'Leave blank to keep current password';
             document.getElementById('clientName').value = client.name;
             document.getElementById('clientEmail').value = client.email;
+            document.getElementById('clientUsername').value = client.username;
             document.getElementById('clientPassword').value = '';
             document.getElementById('clientCompany').value = client.company;
             document.getElementById('clientProjectUrl').value = client.projectUrl;
@@ -1101,6 +1115,7 @@
             const payload = {
                 name: document.getElementById('clientName').value.trim(),
                 email: document.getElementById('clientEmail').value.trim(),
+                username: document.getElementById('clientUsername').value.trim(),
                 company: document.getElementById('clientCompany').value.trim(),
                 projectUrl: document.getElementById('clientProjectUrl').value.trim()
             };

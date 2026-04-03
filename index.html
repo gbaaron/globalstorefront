@@ -160,8 +160,8 @@
                 </div>
                 <form id="loginFormEl">
                     <div class="form-group">
-                        <label for="email">Email Address</label>
-                        <input type="email" id="email" placeholder="you@company.com" required autocomplete="email">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" placeholder="your-username" required autocomplete="username">
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
@@ -321,7 +321,7 @@
 
         document.getElementById('loginFormEl').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('email').value.trim();
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             const error = document.getElementById('error');
             const btn = document.getElementById('loginBtn');
@@ -332,7 +332,7 @@
                 const response = await fetch('/.netlify/functions/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
+                    body: JSON.stringify({ username, password })
                 });
                 const data = await response.json();
                 if (response.ok) {

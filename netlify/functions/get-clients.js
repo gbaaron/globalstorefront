@@ -35,6 +35,7 @@ exports.handler = async (event) => {
             id: r.id,
             name: r.get('Name') || '',
             email: r.get('Email') || '',
+            username: r.get('Username') || '',
             company: r.get('Company') || '',
             projectUrl: r.get('ProjectURL') || '',
             createdAt: r.get('CreatedAt') || ''

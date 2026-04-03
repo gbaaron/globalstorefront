@@ -25,12 +25,12 @@ exports.handler = async (event) => {
             };
         }
 
-        const { name, email, password, company, projectUrl } = JSON.parse(event.body);
+        const { name, email, username, password, company, projectUrl } = JSON.parse(event.body);
 
-        if (!name || !email || !password || !projectUrl) {
+        if (!name || !email || !username || !password || !projectUrl) {
             return {
                 statusCode: 400,
-                body: JSON.stringify({ error: 'Name, email, password, and project URL are required' })
+                body: JSON.stringify({ error: 'Name, email, username, password, and project URL are required' })
             };
         }
 
@@ -68,6 +68,7 @@ exports.handler = async (event) => {
                 fields: {
                     Name: name.trim(),
                     Email: email.trim().toLowerCase(),
+                    Username: username.trim(),
                     PasswordHash: password,
                     Company: company ? company.trim() : '',
                     ProjectURL: projectUrl.trim(),
@@ -84,6 +85,7 @@ exports.handler = async (event) => {
                     id: newRecord[0].id,
                     name: newRecord[0].get('Name'),
                     email: newRecord[0].get('Email'),
+                    username: newRecord[0].get('Username'),
                     company: newRecord[0].get('Company'),
                     projectUrl: newRecord[0].get('ProjectURL'),
                     createdAt: newRecord[0].get('CreatedAt')

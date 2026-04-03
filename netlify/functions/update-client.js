@@ -25,7 +25,7 @@ exports.handler = async (event) => {
             };
         }
 
-        const { clientId, name, email, password, company, projectUrl } = JSON.parse(event.body);
+        const { clientId, name, email, username, password, company, projectUrl } = JSON.parse(event.body);
 
         if (!clientId) {
             return {
@@ -38,6 +38,7 @@ exports.handler = async (event) => {
 
         const fields = {};
         if (name) fields.Name = name.trim();
+        if (username) fields.Username = username.trim();
         if (email) {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {

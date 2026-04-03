@@ -7,26 +7,26 @@ exports.handler = async (event) => {
     }
 
     try {
-        const { email, password } = JSON.parse(event.body);
+        const { username, password } = JSON.parse(event.body);
 
-        if (!email || !password) {
+        if (!username || !password) {
             return {
                 statusCode: 400,
-                body: JSON.stringify({ error: 'Email and password are required' })
+                body: JSON.stringify({ error: 'Username and password are required' })
             };
         }
 
         const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
 
         const records = await base('Clients').select({
-            filterByFormula: `{Email} = '${email.replace(/'/g, "\\'")}'`,
+            filterByFormula: `{Username} = '${username.replace(/'/g, "\\'")}'`,
             maxRecords: 1
         }).firstPage();
 
         if (records.length === 0) {
             return {
                 statusCode: 401,
-                body: JSON.stringify({ error: 'Invalid email or password' })
+                body: JSON.stringify({ error: 'Invalid username or password' })
             };
         }
 
@@ -35,7 +35,7 @@ exports.handler = async (event) => {
         if (password !== client.get('PasswordHash')) {
             return {
                 statusCode: 401,
-                body: JSON.stringify({ error: 'Invalid email or password' })
+                body: JSON.stringify({ error: 'Invalid username or password' })
             };
         }
 
