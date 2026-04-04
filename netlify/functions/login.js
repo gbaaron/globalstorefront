@@ -58,7 +58,8 @@ exports.handler = async (event) => {
                 token,
                 name: client.get('Name'),
                 company: client.get('Company'),
-                projectUrl: client.get('ProjectURL')
+                projectUrl: client.get('ProjectURL'),
+                username: client.get('Username') || ''
             })
         };
 

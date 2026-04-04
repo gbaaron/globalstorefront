@@ -339,6 +339,7 @@
                     localStorage.setItem('gsToken', data.token);
                     localStorage.setItem('gsClientName', data.name);
                     localStorage.setItem('gsCompany', data.company);
+                    localStorage.setItem('gsUsername', data.username || '');
                     window.location.href = data.projectUrl;
                 } else {
                     error.textContent = data.error || 'Login failed. Please try again.';
