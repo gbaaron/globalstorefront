@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Storefront | Custom Web Solutions</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏪</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -31,43 +32,21 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: var(--font-body); background: var(--color-bg); color: var(--color-text); line-height: 1.7; overflow-x: hidden; }
 
-        /* LOGIN SECTION */
-        .login-section { padding: 4rem 2rem 3rem; position: relative; }
-        .login-section::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 20%, rgba(212,175,55,0.03) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(26,26,46,0.5) 0%, transparent 50%); pointer-events: none; }
-        .login-container { width: 100%; max-width: 440px; margin: 0 auto; position: relative; z-index: 1; }
-        .login-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 3rem 2.5rem 2.5rem; box-shadow: var(--shadow-card); }
-        .brand { text-align: center; margin-bottom: 2.5rem; }
-        .brand-icon { width: 48px; height: 48px; background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem; }
-        .brand-icon svg { width: 24px; height: 24px; color: #0f0f1a; }
-        .brand h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
-        .brand p { color: var(--color-text-muted); font-size: 0.9rem; }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--color-text-label); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .form-group input { width: 100%; padding: 0.875rem 1rem; background: var(--color-input-bg); border: 1.5px solid var(--color-input-border); border-radius: var(--radius-md); color: var(--color-text); font-family: var(--font-body); font-size: 0.95rem; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
-        .form-group input::placeholder { color: #4a5568; }
-        .form-group input:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-glow); }
-        .password-wrapper { position: relative; }
-        .password-wrapper input { padding-right: 3rem; }
-        .toggle-password { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--color-text-muted); padding: 0.25rem; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
-        .toggle-password:hover { color: var(--color-accent); }
-        .toggle-password svg { width: 20px; height: 20px; }
-        .error { background: var(--color-error-bg); border: 1px solid var(--color-error-border); color: var(--color-error-text); padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1.5rem; display: none; }
-        .error.show { display: block; }
-        .btn-login { width: 100%; padding: 0.95rem; background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%); color: #0f0f1a; border: none; border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s ease, transform 0.2s ease; letter-spacing: 0.02em; }
-        .btn-login:hover { opacity: 0.9; transform: translateY(-1px); }
-        .btn-login:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-        .admin-link { text-align: center; margin-top: 2rem; }
-        .admin-link a { color: var(--color-text-muted); font-size: 0.8rem; text-decoration: none; transition: color 0.2s ease; }
-        .admin-link a:hover { color: var(--color-accent); }
-
-        /* DIVIDER */
-        .section-divider { border: none; border-top: 1px solid var(--color-border); max-width: 1000px; margin: 0 auto; }
+        /* NAV */
+        .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(15, 15, 26, 0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(42, 42, 74, 0.5); }
+        .nav-inner { max-width: 1000px; margin: 0 auto; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+        .nav-brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--color-text); }
+        .nav-brand .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+        .nav-brand .logo-icon svg { width: 16px; height: 16px; color: #0f0f1a; }
+        .nav-brand span { font-weight: 700; font-size: 1rem; }
+        .nav-login { padding: 0.5rem 1.25rem; background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%); color: #0f0f1a; border: none; border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.8rem; font-weight: 700; text-decoration: none; transition: opacity 0.2s ease; }
+        .nav-login:hover { opacity: 0.9; }
 
         /* HERO */
-        .hero { max-width: 1000px; margin: 0 auto; padding: 4rem 2rem 3rem; text-align: center; }
+        .hero { max-width: 1000px; margin: 0 auto; padding: 7rem 2rem 3rem; text-align: center; }
         .hero-badge { display: inline-block; padding: 0.4rem 1rem; background: var(--color-accent-glow); border: 1px solid rgba(212,175,55,0.25); border-radius: 50px; color: var(--color-accent); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.5rem; }
-        .hero h2 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 1.25rem; }
-        .hero h2 .accent { color: var(--color-accent); }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 1.25rem; }
+        .hero h1 .accent { color: var(--color-accent); }
         .hero .subtitle { font-size: 1.1rem; color: var(--color-text-muted); max-width: 600px; margin: 0 auto; line-height: 1.7; }
 
         /* CALLOUT */
@@ -123,71 +102,78 @@
         .cta-btn { display: inline-block; padding: 0.85rem 2rem; background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%); color: #0f0f1a; border: none; border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.95rem; font-weight: 700; text-decoration: none; transition: opacity 0.2s ease, transform 0.2s ease; }
         .cta-btn:hover { opacity: 0.9; transform: translateY(-1px); }
 
+        /* DIVIDER */
+        .section-divider { border: none; border-top: 1px solid var(--color-border); max-width: 1000px; margin: 0 auto; }
+
+        /* LOGIN SECTION */
+        .login-section { padding: 3rem 2rem 3rem; position: relative; }
+        .login-section::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 20%, rgba(212,175,55,0.03) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(26,26,46,0.5) 0%, transparent 50%); pointer-events: none; }
+        .login-container { width: 100%; max-width: 440px; margin: 0 auto; position: relative; z-index: 1; }
+        .login-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 3rem 2.5rem 2.5rem; box-shadow: var(--shadow-card); }
+        .login-header { text-align: center; margin-bottom: 2rem; }
+        .login-header h2 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
+        .login-header p { color: var(--color-text-muted); font-size: 0.85rem; }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--color-text-label); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .form-group input { width: 100%; padding: 0.875rem 1rem; background: var(--color-input-bg); border: 1.5px solid var(--color-input-border); border-radius: var(--radius-md); color: var(--color-text); font-family: var(--font-body); font-size: 0.95rem; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        .form-group input::placeholder { color: #4a5568; }
+        .form-group input:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-glow); }
+        .password-wrapper { position: relative; }
+        .password-wrapper input { padding-right: 3rem; }
+        .toggle-password { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--color-text-muted); padding: 0.25rem; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
+        .toggle-password:hover { color: var(--color-accent); }
+        .toggle-password svg { width: 20px; height: 20px; }
+        .error { background: var(--color-error-bg); border: 1px solid var(--color-error-border); color: var(--color-error-text); padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1.5rem; display: none; }
+        .error.show { display: block; }
+        .btn-login { width: 100%; padding: 0.95rem; background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%); color: #0f0f1a; border: none; border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s ease, transform 0.2s ease; letter-spacing: 0.02em; }
+        .btn-login:hover { opacity: 0.9; transform: translateY(-1px); }
+        .btn-login:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
         /* FOOTER */
         .site-footer { text-align: center; padding: 2rem; color: #4a5568; font-size: 0.75rem; border-top: 1px solid var(--color-border); max-width: 1000px; margin: 0 auto; }
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
-            .hero { padding: 3rem 1.5rem 2rem; }
-            .hero h2 { font-size: 1.75rem; }
+            .nav-inner { padding: 1rem 1.5rem; }
+            .hero { padding: 6rem 1.5rem 2rem; }
+            .hero h1 { font-size: 1.75rem; }
             .comparison-grid { grid-template-columns: 1fr; }
             .callout-card { padding: 1.5rem; }
         }
         @media (max-width: 480px) {
+            .nav { padding: 0.75rem 1rem; }
+            .nav-brand span { font-size: 0.9rem; }
+            .hero { padding: 5.5rem 1rem 2rem; }
+            .hero h1 { font-size: 1.5rem; }
             .login-section { padding: 2rem 1rem; }
             .login-card { padding: 2rem 1.5rem 1.5rem; }
-            .brand h1 { font-size: 1.3rem; }
             .features-grid { grid-template-columns: 1fr; }
             .section h2 { font-size: 1.4rem; }
         }
     </style>
 </head>
 <body>
-    <!-- LOGIN -->
-    <section class="login-section" id="loginForm">
-        <div class="login-container">
-            <div class="login-card">
-                <div class="brand">
-                    <div class="brand-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                            <path d="M2 17l10 5 10-5"></path>
-                            <path d="M2 12l10 5 10-5"></path>
-                        </svg>
-                    </div>
-                    <h1>Global Storefront</h1>
-                    <p>Client Portal</p>
+    <!-- NAV -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="#" class="nav-brand">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                        <path d="M2 17l10 5 10-5"></path>
+                        <path d="M2 12l10 5 10-5"></path>
+                    </svg>
                 </div>
-                <form id="loginFormEl">
-                    <div class="form-group">
-                        <label for="username">Username or Email</label>
-                        <input type="text" id="username" placeholder="username or you@email.com" required autocomplete="username">
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <div class="password-wrapper">
-                            <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
-                            <button type="button" class="toggle-password" aria-label="Show password">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="error" id="error"></div>
-                    <button type="submit" class="btn-login" id="loginBtn">Sign In</button>
-                </form>
-                <div class="admin-link">
-                    <a href="admin.html">Admin Access &rarr;</a>
-                </div>
-            </div>
+                <span>Global Storefront</span>
+            </a>
+            <a href="#clientLogin" class="nav-login">Client Login</a>
         </div>
-    </section>
-
-    <hr class="section-divider">
+    </nav>
 
     <!-- HERO -->
     <section class="hero">
         <div class="hero-badge">Hand-coded. No shortcuts.</div>
-        <h2>We build websites your business can actually <span class="accent">rely on</span></h2>
+        <h1>We build websites your business can actually <span class="accent">rely on</span></h1>
         <p class="subtitle">Not templates. Not drag-and-drop. Real code, built from scratch — designed around how your business runs, not some generic version of it.</p>
     </section>
 
@@ -303,7 +289,38 @@
         <div class="cta-card">
             <h2>Ready to ditch the template?</h2>
             <p>Let's talk about what your site could actually be doing for you. No pitch deck, no jargon — just a straight conversation.</p>
-            <a href="#loginForm" class="cta-btn">Get Started</a>
+            <a href="#clientLogin" class="cta-btn">Get Started</a>
+        </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- CLIENT LOGIN -->
+    <section class="login-section" id="clientLogin">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <h2>Client Login</h2>
+                    <p>Already a client? Sign in to view your project.</p>
+                </div>
+                <form id="loginFormEl">
+                    <div class="form-group">
+                        <label for="username">Username or Email</label>
+                        <input type="text" id="username" placeholder="username or you@email.com" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="password" placeholder="Enter your password" required autocomplete="current-password">
+                            <button type="button" class="toggle-password" aria-label="Show password">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="error" id="error"></div>
+                    <button type="submit" class="btn-login" id="loginBtn">Sign In</button>
+                </form>
+            </div>
         </div>
     </section>
 

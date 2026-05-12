@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Global Storefront</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏪</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -1270,6 +1271,32 @@
             } catch (err) {
                 btn.disabled = false;
                 btn.textContent = 'Delete';
+            }
+        });
+
+        // ===== MODAL CLOSE TRIFECTA =====
+        // Escape key closes active modal or confirm dialog
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('confirmDialog').classList.contains('active')) {
+                    document.getElementById('confirmDialog').classList.remove('active');
+                    deletingClientId = null;
+                } else if (document.getElementById('clientModal').classList.contains('active')) {
+                    closeModal();
+                }
+            }
+        });
+
+        // Backdrop click closes modal
+        document.getElementById('clientModal').addEventListener('click', (e) => {
+            if (e.target.id === 'clientModal') closeModal();
+        });
+
+        // Backdrop click closes confirm dialog
+        document.getElementById('confirmDialog').addEventListener('click', (e) => {
+            if (e.target.id === 'confirmDialog') {
+                document.getElementById('confirmDialog').classList.remove('active');
+                deletingClientId = null;
             }
         });
 

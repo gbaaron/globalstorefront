@@ -1,4 +1,5 @@
 const Airtable = require('airtable');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.handler = async (event) => {
@@ -39,7 +40,8 @@ exports.handler = async (event) => {
 
         const client = records[0];
 
-        if (password !== client.get('PasswordHash')) {
+        const valid = await bcrypt.compare(password, client.get('PasswordHash'));
+        if (!valid) {
             return {
                 statusCode: 401,
                 body: JSON.stringify({ error: 'Invalid username or password' })
