@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Native platforms (generated - can be recreated with `npx cap add ios/android`)
+ios/
+android/
+
+# Firebase config (contains API keys - add manually per machine)
+firebase/GoogleService-Info.plist
+firebase/google-services.json
+
+# Build artifacts
+*.ipa
+*.apk
+*.aab
+
+# IDE
+.idea/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+
+# OS files
+.DS_Store
+Thumbs.db

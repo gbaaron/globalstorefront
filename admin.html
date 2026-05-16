@@ -712,6 +712,319 @@
             line-height: 1;
         }
 
+        /* ===== TAB NAV ===== */
+        .dash-tabs {
+            display: flex;
+            gap: 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .dash-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--color-text-muted);
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            font-weight: 600;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s ease;
+        }
+
+        .dash-tab:hover {
+            color: var(--color-text);
+        }
+
+        .dash-tab.active {
+            color: var(--color-accent);
+        }
+
+        .dash-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--color-accent);
+            border-radius: 2px 2px 0 0;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== BOT KNOWLEDGE ===== */
+        .kb-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .kb-header select {
+            padding: 0.6rem 1rem;
+            background: var(--color-input-bg);
+            border: 1.5px solid var(--color-input-border);
+            border-radius: var(--radius-sm);
+            color: var(--color-text);
+            font-family: var(--font-body);
+            font-size: 0.88rem;
+            min-width: 200px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .kb-header select:focus {
+            border-color: var(--color-input-focus);
+        }
+
+        .kb-entries {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .kb-entry {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .kb-entry:hover {
+            border-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .kb-entry-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .kb-entry-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .kb-entry-key {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .kb-entry-category {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            background: var(--color-accent-glow);
+            color: var(--color-accent);
+        }
+
+        .kb-entry-value {
+            font-size: 0.82rem;
+            color: var(--color-text-muted);
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .kb-entry-actions {
+            display: flex;
+            gap: 0.4rem;
+            flex-shrink: 0;
+        }
+
+        .kb-empty {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--color-text-muted);
+        }
+
+        .kb-empty p {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== TEST BOT ===== */
+        .testbot-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .testbot-header select {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            background: var(--color-surface);
+            color: var(--color-text);
+            font-size: 0.85rem;
+        }
+
+        .testbot-chat {
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .testbot-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .testbot-msg {
+            max-width: 80%;
+            padding: 0.65rem 1rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .testbot-msg.user {
+            align-self: flex-end;
+            background: var(--color-gold);
+            color: #0f0f1a;
+            border-bottom-right-radius: 4px;
+        }
+
+        .testbot-msg.bot {
+            align-self: flex-start;
+            background: var(--color-surface);
+            color: var(--color-text);
+            border-bottom-left-radius: 4px;
+        }
+
+        .testbot-msg.system {
+            align-self: center;
+            background: transparent;
+            color: var(--color-text-muted);
+            font-size: 0.78rem;
+            font-style: italic;
+        }
+
+        .testbot-msg.error {
+            align-self: center;
+            background: rgba(248, 113, 113, 0.1);
+            color: #f87171;
+            font-size: 0.8rem;
+        }
+
+        .testbot-input {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            border-top: 1px solid var(--color-border);
+            background: var(--color-surface);
+        }
+
+        .testbot-input input {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            background: var(--color-bg);
+            color: var(--color-text);
+            font-size: 0.85rem;
+        }
+
+        .testbot-input input:focus {
+            outline: none;
+            border-color: var(--color-gold);
+        }
+
+        .testbot-input button {
+            padding: 0.6rem 1.2rem;
+            background: var(--color-gold);
+            color: #0f0f1a;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        .testbot-input button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .testbot-actions {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1rem;
+        }
+
+        .testbot-actions button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            background: var(--color-surface);
+            color: var(--color-text-muted);
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .testbot-actions button:hover {
+            border-color: var(--color-gold);
+            color: var(--color-text);
+        }
+
+        .testbot-actions button.import-btn {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--color-gold);
+            color: var(--color-gold);
+        }
+
+        .testbot-typing {
+            display: flex;
+            gap: 4px;
+            padding: 0.65rem 1rem;
+            align-self: flex-start;
+        }
+
+        .testbot-typing span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--color-text-muted);
+            animation: typingDot 1.2s infinite;
+        }
+
+        .testbot-typing span:nth-child(2) { animation-delay: 0.2s; }
+        .testbot-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingDot {
+            0%, 60%, 100% { opacity: 0.3; transform: scale(0.8); }
+            30% { opacity: 1; transform: scale(1); }
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .dash-header {
@@ -738,6 +1051,19 @@
 
             .admin-name {
                 display: none;
+            }
+
+            .analytics-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .kb-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .kb-header select {
+                min-width: 100%;
             }
         }
 
@@ -842,19 +1168,79 @@
                 </div>
             </div>
 
-            <div class="dash-toolbar">
-                <h3>Clients <span class="client-count" id="clientCount"></span></h3>
-                <button class="btn-add" id="addClientBtn">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <line x1="12" y1="5" x2="12" y2="19"></line>
-                        <line x1="5" y1="12" x2="19" y2="12"></line>
-                    </svg>
-                    Add Client
-                </button>
+            <!-- TAB NAV -->
+            <div class="dash-tabs">
+                <button class="dash-tab active" data-tab="clients">Clients</button>
+                <button class="dash-tab" data-tab="knowledge">Bot Knowledge</button>
+                <button class="dash-tab" data-tab="testbot">Test Bot</button>
             </div>
 
-            <div id="clientsContainer">
-                <div class="loading-state">Loading clients...</div>
+            <!-- CLIENTS TAB -->
+            <div class="tab-content active" id="tabClients">
+                <div class="dash-toolbar">
+                    <h3>Clients <span class="client-count" id="clientCount"></span></h3>
+                    <button class="btn-add" id="addClientBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add Client
+                    </button>
+                </div>
+
+                <div id="clientsContainer">
+                    <div class="loading-state">Loading clients...</div>
+                </div>
+            </div>
+
+            <!-- TEST BOT TAB -->
+            <div class="tab-content" id="tabTestbot">
+                <div class="testbot-header">
+                    <select id="testbotClientSelect">
+                        <option value="">Select a client to test...</option>
+                    </select>
+                </div>
+
+                <div class="testbot-chat" id="testbotChat" style="display:none;">
+                    <div class="testbot-messages" id="testbotMessages">
+                        <div class="testbot-msg system">Type a question as if you were a customer visiting this client's website.</div>
+                    </div>
+                    <div class="testbot-input">
+                        <input type="text" id="testbotInput" placeholder="Ask a question..." autocomplete="off">
+                        <button id="testbotSend">Send</button>
+                    </div>
+                </div>
+
+                <div class="testbot-actions" id="testbotActions" style="display:none;">
+                    <button onclick="clearTestChat()">Clear Chat</button>
+                    <button class="import-btn" id="bulkImportBtn" onclick="bulkImportKb()">Import Client Data to KB</button>
+                </div>
+
+                <div class="kb-empty" id="testbotEmpty">
+                    <p>Select a client to simulate how their chatbot responds to customer questions.</p>
+                </div>
+            </div>
+
+            <!-- BOT KNOWLEDGE TAB -->
+            <div class="tab-content" id="tabKnowledge">
+                <div class="kb-header">
+                    <select id="kbClientSelect">
+                        <option value="">Select a client...</option>
+                    </select>
+                    <button class="btn-add" id="addKbBtn" style="display:none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        Add Entry
+                    </button>
+                </div>
+
+                <div id="kbContainer">
+                    <div class="kb-empty">
+                        <p>Select a client to manage their bot's knowledge base.</p>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
@@ -923,6 +1309,58 @@
                 <button class="btn-secondary" id="confirmCancel">Cancel</button>
                 <button class="btn-danger" id="confirmDelete">Delete</button>
             </div>
+        </div>
+    </div>
+
+    <!-- KB ADD/EDIT MODAL -->
+    <div class="modal-overlay" id="kbModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="kbModalTitle">Add Knowledge Entry</h3>
+                <button class="modal-close" id="kbModalClose">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <form id="kbForm">
+                <div class="form-group">
+                    <label for="kbCategory">Category</label>
+                    <select id="kbCategory" style="width:100%;padding:0.875rem 1rem;background:var(--color-input-bg);border:1.5px solid var(--color-input-border);border-radius:var(--radius-md);color:var(--color-text);font-family:var(--font-body);font-size:0.95rem;" required>
+                        <option value="">Select category...</option>
+                        <option value="hours">Hours</option>
+                        <option value="menu">Menu</option>
+                        <option value="policies">Policies</option>
+                        <option value="faq">FAQ</option>
+                        <option value="services">Services</option>
+                        <option value="general">General</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="kbKey">Key <span style="color:var(--color-text-muted);font-weight:400;text-transform:none;letter-spacing:0;">(identifier)</span></label>
+                    <input type="text" id="kbKey" placeholder="e.g., monday_hours, return_policy" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="kbValue">Value <span style="color:var(--color-text-muted);font-weight:400;text-transform:none;letter-spacing:0;">(bot uses this to answer)</span></label>
+                    <textarea id="kbValue" placeholder="The content the bot will use to answer customer questions..." rows="5" style="width:100%;padding:0.875rem 1rem;background:var(--color-input-bg);border:1.5px solid var(--color-input-border);border-radius:var(--radius-md);color:var(--color-text);font-family:var(--font-body);font-size:0.95rem;resize:vertical;" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="kbPriority">Priority <span style="color:var(--color-text-muted);font-weight:400;text-transform:none;letter-spacing:0;">(higher = included first)</span></label>
+                    <input type="number" id="kbPriority" placeholder="10" value="10" min="0" max="100">
+                </div>
+
+                <div class="error" id="kbModalError"></div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="kbModalCancel">Cancel</button>
+                    <button type="submit" class="btn-primary" id="kbModalSaveBtn">Add Entry</button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -1275,17 +1713,7 @@
         });
 
         // ===== MODAL CLOSE TRIFECTA =====
-        // Escape key closes active modal or confirm dialog
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                if (document.getElementById('confirmDialog').classList.contains('active')) {
-                    document.getElementById('confirmDialog').classList.remove('active');
-                    deletingClientId = null;
-                } else if (document.getElementById('clientModal').classList.contains('active')) {
-                    closeModal();
-                }
-            }
-        });
+        // Escape key handler is consolidated in the KB section below
 
         // Backdrop click closes modal
         document.getElementById('clientModal').addEventListener('click', (e) => {
@@ -1299,6 +1727,411 @@
                 deletingClientId = null;
             }
         });
+
+        // ===== TAB NAVIGATION =====
+        const tabMap = { clients: 'tabClients', knowledge: 'tabKnowledge', testbot: 'tabTestbot' };
+        document.querySelectorAll('.dash-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                const target = tab.dataset.tab;
+                const tabEl = document.getElementById(tabMap[target]);
+                if (tabEl) tabEl.classList.add('active');
+                if (target === 'knowledge') populateKbClientSelect();
+                if (target === 'testbot') populateTestbotClientSelect();
+            });
+        });
+
+        // ===== BOT KNOWLEDGE BASE =====
+        let kbEntries = [];
+        let editingKbId = null;
+        let selectedKbClientId = null;
+
+        function populateKbClientSelect() {
+            const select = document.getElementById('kbClientSelect');
+            const currentVal = select.value;
+            select.innerHTML = '<option value="">Select a client...</option>';
+            clients.forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${escapeHtml(c.company || c.name)}</option>`;
+            });
+            if (currentVal) select.value = currentVal;
+        }
+
+        document.getElementById('kbClientSelect').addEventListener('change', (e) => {
+            selectedKbClientId = e.target.value;
+            if (selectedKbClientId) {
+                document.getElementById('addKbBtn').style.display = '';
+                loadKbEntries();
+            } else {
+                document.getElementById('addKbBtn').style.display = 'none';
+                document.getElementById('kbContainer').innerHTML = '<div class="kb-empty"><p>Select a client to manage their bot\'s knowledge base.</p></div>';
+            }
+        });
+
+        async function loadKbEntries() {
+            const container = document.getElementById('kbContainer');
+            container.innerHTML = '<div class="loading-state">Loading knowledge base...</div>';
+
+            try {
+                const response = await fetch(`/.netlify/functions/get-bot-kb?tenantId=${selectedKbClientId}`, {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('gsAdminToken')}` }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    kbEntries = data.entries || [];
+                    renderKbEntries();
+                } else {
+                    container.innerHTML = '<div class="kb-empty"><p>Failed to load knowledge base.</p></div>';
+                }
+            } catch (err) {
+                container.innerHTML = '<div class="kb-empty"><p>Connection error.</p></div>';
+            }
+        }
+
+        function renderKbEntries() {
+            const container = document.getElementById('kbContainer');
+
+            if (kbEntries.length === 0) {
+                container.innerHTML = `
+                    <div class="kb-empty">
+                        <p>No knowledge entries yet. Add entries so the bot can answer customer questions.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort by priority descending
+            const sorted = [...kbEntries].sort((a, b) => (b.priority || 0) - (a.priority || 0));
+
+            container.innerHTML = `
+                <div class="kb-entries">
+                    ${sorted.map(entry => `
+                        <div class="kb-entry">
+                            <div class="kb-entry-content">
+                                <div class="kb-entry-header">
+                                    <span class="kb-entry-key">${escapeHtml(entry.key)}</span>
+                                    <span class="kb-entry-category">${escapeHtml(entry.category || 'general')}</span>
+                                </div>
+                                <div class="kb-entry-value">${escapeHtml(entry.value)}</div>
+                            </div>
+                            <div class="kb-entry-actions">
+                                <button class="btn-icon" onclick="openEditKb('${entry.id}')" title="Edit">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </button>
+                                <button class="btn-icon delete" onclick="deleteKbEntry('${entry.id}')" title="Delete">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="3 6 5 6 21 6"></polyline>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // KB Modal
+        document.getElementById('addKbBtn').addEventListener('click', () => openAddKb());
+        document.getElementById('kbModalClose').addEventListener('click', closeKbModal);
+        document.getElementById('kbModalCancel').addEventListener('click', closeKbModal);
+
+        function openAddKb() {
+            editingKbId = null;
+            document.getElementById('kbModalTitle').textContent = 'Add Knowledge Entry';
+            document.getElementById('kbModalSaveBtn').textContent = 'Add Entry';
+            document.getElementById('kbForm').reset();
+            document.getElementById('kbPriority').value = '10';
+            document.getElementById('kbModalError').classList.remove('show');
+            document.getElementById('kbModal').classList.add('active');
+        }
+
+        function openEditKb(entryId) {
+            const entry = kbEntries.find(e => e.id === entryId);
+            if (!entry) return;
+
+            editingKbId = entryId;
+            document.getElementById('kbModalTitle').textContent = 'Edit Knowledge Entry';
+            document.getElementById('kbModalSaveBtn').textContent = 'Save Changes';
+            document.getElementById('kbCategory').value = entry.category || 'general';
+            document.getElementById('kbKey').value = entry.key || '';
+            document.getElementById('kbValue').value = entry.value || '';
+            document.getElementById('kbPriority').value = entry.priority || 10;
+            document.getElementById('kbModalError').classList.remove('show');
+            document.getElementById('kbModal').classList.add('active');
+        }
+
+        function closeKbModal() {
+            document.getElementById('kbModal').classList.remove('active');
+            editingKbId = null;
+        }
+
+        // KB Save
+        document.getElementById('kbForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const error = document.getElementById('kbModalError');
+            const btn = document.getElementById('kbModalSaveBtn');
+            const originalText = btn.textContent;
+
+            error.classList.remove('show');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            const payload = {
+                tenantId: selectedKbClientId,
+                action: editingKbId ? 'update' : 'create',
+                category: document.getElementById('kbCategory').value,
+                key: document.getElementById('kbKey').value.trim(),
+                value: document.getElementById('kbValue').value.trim(),
+                priority: parseInt(document.getElementById('kbPriority').value) || 10
+            };
+
+            if (editingKbId) {
+                payload.entryId = editingKbId;
+            }
+
+            try {
+                const response = await fetch('/.netlify/functions/update-bot-kb', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('gsAdminToken')}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    closeKbModal();
+                    loadKbEntries();
+                } else {
+                    error.textContent = data.error || 'Failed to save entry.';
+                    error.classList.add('show');
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }
+            } catch (err) {
+                error.textContent = 'Connection error. Please try again.';
+                error.classList.add('show');
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        });
+
+        // KB Delete
+        async function deleteKbEntry(entryId) {
+            if (!confirm('Delete this knowledge entry?')) return;
+
+            try {
+                const response = await fetch('/.netlify/functions/update-bot-kb', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('gsAdminToken')}`
+                    },
+                    body: JSON.stringify({
+                        tenantId: selectedKbClientId,
+                        action: 'delete',
+                        entryId: entryId
+                    })
+                });
+
+                if (response.ok) {
+                    loadKbEntries();
+                }
+            } catch (err) {
+                // Silent fail
+            }
+        }
+
+        // KB Modal close trifecta
+        document.getElementById('kbModal').addEventListener('click', (e) => {
+            if (e.target.id === 'kbModal') closeKbModal();
+        });
+
+        // Consolidated escape key handler (all modals)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (document.getElementById('kbModal').classList.contains('active')) {
+                    closeKbModal();
+                } else if (document.getElementById('confirmDialog').classList.contains('active')) {
+                    document.getElementById('confirmDialog').classList.remove('active');
+                    deletingClientId = null;
+                } else if (document.getElementById('clientModal').classList.contains('active')) {
+                    closeModal();
+                }
+            }
+        });
+
+        // ===== TEST BOT =====
+        let testbotClientId = null;
+        let testbotMessages = [];
+
+        function populateTestbotClientSelect() {
+            const select = document.getElementById('testbotClientSelect');
+            select.innerHTML = '<option value="">Select a client to test...</option>';
+            clients.forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${escapeHtml(c.fields.Company || c.fields.Name)}</option>`;
+            });
+        }
+
+        document.getElementById('testbotClientSelect').addEventListener('change', (e) => {
+            testbotClientId = e.target.value;
+            const chat = document.getElementById('testbotChat');
+            const empty = document.getElementById('testbotEmpty');
+            const actions = document.getElementById('testbotActions');
+
+            if (testbotClientId) {
+                chat.style.display = 'flex';
+                empty.style.display = 'none';
+                actions.style.display = 'flex';
+                clearTestChat();
+            } else {
+                chat.style.display = 'none';
+                empty.style.display = 'block';
+                actions.style.display = 'none';
+            }
+        });
+
+        document.getElementById('testbotSend').addEventListener('click', sendTestMessage);
+        document.getElementById('testbotInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendTestMessage();
+            }
+        });
+
+        async function sendTestMessage() {
+            const input = document.getElementById('testbotInput');
+            const msg = input.value.trim();
+            if (!msg || !testbotClientId) return;
+
+            input.value = '';
+            appendTestMsg(msg, 'user');
+
+            // Show typing indicator
+            const typing = document.createElement('div');
+            typing.className = 'testbot-typing';
+            typing.id = 'typingIndicator';
+            typing.innerHTML = '<span></span><span></span><span></span>';
+            document.getElementById('testbotMessages').appendChild(typing);
+            scrollTestChat();
+
+            const sendBtn = document.getElementById('testbotSend');
+            sendBtn.disabled = true;
+
+            try {
+                const response = await fetch('/.netlify/functions/helper-bot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        tenantId: testbotClientId,
+                        messages: [...testbotMessages, { role: 'user', content: msg }],
+                        sessionId: 'admin-test-' + Date.now()
+                    })
+                });
+
+                const el = document.getElementById('typingIndicator');
+                if (el) el.remove();
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const reply = data.reply || data.message || 'No response';
+                    appendTestMsg(reply, 'bot');
+                    testbotMessages.push({ role: 'user', content: msg });
+                    testbotMessages.push({ role: 'assistant', content: reply });
+
+                    if (data.escalated) {
+                        appendTestMsg('Bot would escalate this to the store owner.', 'system');
+                    }
+                } else {
+                    const err = await response.json().catch(() => ({}));
+                    appendTestMsg(err.error || 'Error: could not reach bot', 'error');
+                }
+            } catch (err) {
+                const el = document.getElementById('typingIndicator');
+                if (el) el.remove();
+                appendTestMsg('Network error: ' + err.message, 'error');
+            }
+
+            sendBtn.disabled = false;
+            document.getElementById('testbotInput').focus();
+        }
+
+        function appendTestMsg(text, type) {
+            const container = document.getElementById('testbotMessages');
+            const div = document.createElement('div');
+            div.className = 'testbot-msg ' + type;
+            div.textContent = text;
+            container.appendChild(div);
+            scrollTestChat();
+        }
+
+        function scrollTestChat() {
+            const container = document.getElementById('testbotMessages');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function clearTestChat() {
+            testbotMessages = [];
+            const container = document.getElementById('testbotMessages');
+            container.innerHTML = '<div class="testbot-msg system">Type a question as if you were a customer visiting this client\'s website.</div>';
+        }
+
+        async function bulkImportKb() {
+            if (!testbotClientId) return;
+
+            const client = clients.find(c => c.id === testbotClientId);
+            if (!client) return;
+
+            const baseId = client.fields.BaseID;
+            const siteType = (client.fields.SiteType || '').toLowerCase();
+
+            if (!baseId) {
+                appendTestMsg('This client has no BaseID configured. Add a BaseID to their profile first.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('bulkImportBtn');
+            btn.disabled = true;
+            btn.textContent = 'Importing...';
+            appendTestMsg('Starting bulk import from client database...', 'system');
+
+            try {
+                const response = await fetch('/.netlify/functions/bulk-import-kb', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('gsAdminToken')}`
+                    },
+                    body: JSON.stringify({
+                        tenantId: testbotClientId,
+                        baseId: baseId,
+                        siteType: siteType
+                    })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    appendTestMsg(`Imported ${data.imported || 0} entries. ${data.skipped || 0} skipped (already exist).`, 'system');
+                } else {
+                    const err = await response.json().catch(() => ({}));
+                    appendTestMsg('Import failed: ' + (err.error || 'Unknown error'), 'error');
+                }
+            } catch (err) {
+                appendTestMsg('Import error: ' + err.message, 'error');
+            }
+
+            btn.disabled = false;
+            btn.textContent = 'Import Client Data to KB';
+        }
 
         // ===== UTILITIES =====
         function escapeHtml(str) {
