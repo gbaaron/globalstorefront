@@ -3,17 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global Storefront | Custom Web Solutions</title>
+    <title>Global Storefront | Custom Web Solutions for Local Business</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏪</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --color-bg: #0f0f1a;
+            --color-surface: #141425;
             --color-card: #1a1a2e;
+            --color-card-alt: #16213e;
             --color-accent: #d4af37;
+            --color-accent-dark: #b8962e;
             --color-accent-glow: rgba(212, 175, 55, 0.15);
+            --color-accent-soft: rgba(212, 175, 55, 0.06);
             --color-text: #ffffff;
             --color-text-muted: #8892a0;
             --color-text-label: #b0b8c4;
@@ -24,147 +28,849 @@
             --color-error-border: rgba(239, 68, 68, 0.3);
             --color-error-text: #f87171;
             --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --shadow-card: 0 25px 60px rgba(0, 0, 0, 0.5);
+            --font-display: 'Playfair Display', Georgia, serif;
+            --grad-gold: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-dark) 100%);
+            --shadow-card: 0 25px 60px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 40px rgba(212, 175, 55, 0.08);
             --radius-lg: 16px;
             --radius-md: 12px;
             --radius-sm: 8px;
+            --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: var(--font-body); background: var(--color-bg); color: var(--color-text); line-height: 1.7; overflow-x: hidden; }
+        body {
+            font-family: var(--font-body);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ATMOSPHERIC BACKGROUND */
+        body::before {
+            content: '';
+            position: fixed; inset: -10%;
+            background:
+                radial-gradient(ellipse 900px 700px at 8% 8%, rgba(212,175,55,0.09), transparent 55%),
+                radial-gradient(ellipse 700px 600px at 88% 20%, rgba(212,175,55,0.05), transparent 55%),
+                radial-gradient(ellipse 800px 500px at 50% 60%, rgba(184,150,46,0.04), transparent 60%),
+                radial-gradient(ellipse 600px 400px at 20% 85%, rgba(212,175,55,0.06), transparent 50%);
+            z-index: 0; pointer-events: none;
+            animation: ambientShift 20s ease-in-out infinite alternate;
+        }
+        body::after {
+            content: '';
+            position: fixed; inset: 0;
+            background-image:
+                radial-gradient(circle at 1px 1px, rgba(212,175,55,0.035) 1px, transparent 1.5px),
+                radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.4) 100%);
+            background-size: 28px 28px, 100% 100%;
+            z-index: 0; pointer-events: none;
+        }
+        @keyframes ambientShift {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(15px, -10px) scale(1.02); }
+        }
+
+        .page-content { position: relative; z-index: 1; }
 
         /* NAV */
-        .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(15, 15, 26, 0.92); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(42, 42, 74, 0.5); }
-        .nav-inner { max-width: 1000px; margin: 0 auto; padding: 1rem 2rem; display: flex; align-items: center; justify-content: space-between; }
-        .nav-brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--color-text); }
-        .nav-brand .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%); border-radius: 6px; display: flex; align-items: center; justify-content: center; }
-        .nav-brand .logo-icon svg { width: 16px; height: 16px; color: #0f0f1a; }
-        .nav-brand span { font-weight: 700; font-size: 1rem; }
-        .nav-login { padding: 0.5rem 1.25rem; background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%); color: #0f0f1a; border: none; border-radius: var(--radius-sm); font-family: var(--font-body); font-size: 0.8rem; font-weight: 700; text-decoration: none; transition: opacity 0.2s ease; }
-        .nav-login:hover { opacity: 0.9; }
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(15, 15, 26, 0.88);
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+            border-bottom: 1px solid rgba(42, 42, 74, 0.4);
+        }
+        .nav-inner {
+            max-width: 1200px; margin: 0 auto; padding: 0.75rem 2rem;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .nav-brand {
+            display: flex; align-items: center; gap: 0.75rem;
+            text-decoration: none; color: var(--color-text);
+        }
+        .nav-brand img { height: 38px; width: auto; }
+        .nav-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+        .nav-brand-name { font-weight: 700; font-size: 1rem; letter-spacing: -0.01em; }
+        .nav-brand-tag { font-size: 0.6rem; color: var(--color-accent); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+        .nav-login {
+            padding: 0.55rem 1.4rem;
+            background: var(--grad-gold); color: #0f0f1a;
+            border: none; border-radius: var(--radius-sm);
+            font-family: var(--font-body); font-size: 0.8rem; font-weight: 700;
+            text-decoration: none; transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+        }
+        .nav-login:hover { opacity: 0.9; transform: translateY(-1px); }
 
         /* HERO */
-        .hero { max-width: 1000px; margin: 0 auto; padding: 7rem 2rem 3rem; text-align: center; }
-        .hero-badge { display: inline-block; padding: 0.4rem 1rem; background: var(--color-accent-glow); border: 1px solid rgba(212,175,55,0.25); border-radius: 50px; color: var(--color-accent); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.5rem; }
-        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 1.25rem; }
+        .hero {
+            max-width: 1200px; margin: 0 auto;
+            padding: 8rem 2rem 3rem;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+        }
+        .hero-content { max-width: 560px; }
+        .hero-logo { height: 72px; width: auto; margin-bottom: 1.5rem; opacity: 0.92; }
+        .hero h1 {
+            font-family: var(--font-display); font-size: clamp(2.2rem, 4.5vw, 3.2rem);
+            font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; margin-bottom: 1.25rem;
+        }
         .hero h1 .accent { color: var(--color-accent); }
-        .hero .subtitle { font-size: 1.1rem; color: var(--color-text-muted); max-width: 600px; margin: 0 auto; line-height: 1.7; }
+        .hero .subtitle {
+            font-size: 1.05rem; color: var(--color-text-muted);
+            line-height: 1.75; margin-bottom: 2rem;
+        }
+        .hero .subtitle strong { color: var(--color-text); font-weight: 600; }
+        .hero-cta {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.9rem 2rem; background: var(--grad-gold); color: #0f0f1a;
+            border: none; border-radius: var(--radius-md);
+            font-family: var(--font-body); font-size: 0.95rem; font-weight: 700;
+            text-decoration: none; transition: all 0.25s var(--ease);
+        }
+        .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(212,175,55,0.25); }
+        .hero-cta svg { width: 18px; height: 18px; }
+        .hero-proof {
+            margin-top: 1.25rem; font-size: 0.78rem; color: var(--color-text-muted);
+            letter-spacing: 0.02em;
+        }
 
-        /* CALLOUT */
-        .callout { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
-        .callout-card { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 1px solid var(--color-border); border-left: 3px solid var(--color-accent); border-radius: var(--radius-md); padding: 2rem 2.5rem; margin-bottom: 3rem; }
-        .callout-card .callout-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.6rem; }
-        .callout-card .callout-title svg { width: 20px; height: 20px; color: var(--color-accent); }
-        .callout-card p { color: var(--color-text-muted); font-size: 0.95rem; line-height: 1.8; }
-        .callout-card .highlight { color: var(--color-text); font-weight: 600; }
+        /* Hero visual — site mockup */
+        .hero-visual {
+            position: relative;
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: var(--shadow-card), var(--shadow-glow);
+            overflow: hidden;
+        }
+        .hero-visual::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: var(--grad-gold);
+        }
+        .hv-browser-bar {
+            display: flex; gap: 6px; margin-bottom: 1rem; padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(42,42,74,0.4);
+        }
+        .hv-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .hv-dot:nth-child(1) { background: #ff5f57; }
+        .hv-dot:nth-child(2) { background: #febc2e; }
+        .hv-dot:nth-child(3) { background: #28c840; }
+        .hv-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 1rem;
+        }
+        .hv-logo-placeholder { width: 80px; height: 12px; background: var(--color-accent); border-radius: 4px; opacity: 0.5; }
+        .hv-nav-dots { display: flex; gap: 10px; }
+        .hv-nav-dot { width: 40px; height: 6px; background: rgba(255,255,255,0.12); border-radius: 3px; }
+        .hv-hero-block {
+            background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.02));
+            border-radius: var(--radius-sm); padding: 1.5rem; margin-bottom: 1rem;
+            border: 1px solid rgba(212,175,55,0.1);
+        }
+        .hv-hero-title { width: 70%; height: 14px; background: rgba(255,255,255,0.25); border-radius: 4px; margin-bottom: 0.5rem; }
+        .hv-hero-sub { width: 50%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 1rem; }
+        .hv-hero-btn { width: 90px; height: 26px; background: var(--grad-gold); border-radius: 6px; opacity: 0.7; }
+        .hv-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem; }
+        .hv-card {
+            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 6px; padding: 0.75rem;
+        }
+        .hv-card-img { width: 100%; height: 40px; background: rgba(212,175,55,0.06); border-radius: 4px; margin-bottom: 0.4rem; }
+        .hv-card-title { width: 80%; height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; margin-bottom: 0.3rem; }
+        .hv-card-sub { width: 50%; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; }
+        .hv-label {
+            position: absolute; bottom: -12px; right: 20px;
+            background: var(--color-card); border: 1px solid var(--color-border);
+            padding: 0.35rem 0.9rem; border-radius: 20px;
+            font-size: 0.65rem; color: var(--color-accent); font-weight: 600;
+            letter-spacing: 0.05em;
+        }
 
-        /* SECTIONS */
-        .section { max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 3rem; }
-        .section-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-accent); margin-bottom: 0.75rem; }
-        .section h2 { font-size: 1.75rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; }
-        .section .section-desc { color: var(--color-text-muted); font-size: 0.95rem; max-width: 650px; margin-bottom: 2rem; }
+        /* INDUSTRY MARQUEE */
+        .marquee-section {
+            padding: 2.5rem 0 3rem; overflow: hidden;
+            border-top: 1px solid rgba(42,42,74,0.3);
+            border-bottom: 1px solid rgba(42,42,74,0.3);
+        }
+        .marquee-label {
+            text-align: center; font-size: 0.7rem; text-transform: uppercase;
+            letter-spacing: 0.15em; color: var(--color-text-muted); margin-bottom: 1.25rem; font-weight: 600;
+        }
+        .marquee-track {
+            display: flex; width: max-content;
+            animation: marqueeScroll 30s linear infinite;
+        }
+        .marquee-track:hover { animation-play-state: paused; }
+        .marquee-item {
+            flex-shrink: 0; padding: 0.5rem 1.5rem;
+            margin: 0 0.4rem;
+            background: rgba(212,175,55,0.06);
+            border: 1px solid rgba(212,175,55,0.12);
+            border-radius: 50px;
+            font-size: 0.8rem; font-weight: 500; color: var(--color-text-label);
+            white-space: nowrap;
+        }
+        @keyframes marqueeScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
 
-        /* FEATURES */
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
-        .feature-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.75rem; transition: border-color 0.2s ease, transform 0.2s ease; }
-        .feature-card:hover { border-color: rgba(212,175,55,0.3); transform: translateY(-3px); }
-        .feature-icon { width: 40px; height: 40px; background: var(--color-accent-glow); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
-        .feature-icon svg { width: 20px; height: 20px; color: var(--color-accent); }
-        .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
-        .feature-card p { font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.6; }
+        /* SECTION UTILITIES */
+        .section-wrap { max-width: 1200px; margin: 0 auto; padding: 5rem 2rem; }
+        .section-label {
+            font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.12em; color: var(--color-accent); margin-bottom: 0.6rem;
+        }
+        .section-heading {
+            font-family: var(--font-display);
+            font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+            font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.75rem; line-height: 1.2;
+        }
+        .section-desc { color: var(--color-text-muted); font-size: 0.95rem; max-width: 600px; margin-bottom: 2.5rem; line-height: 1.75; }
 
-        /* COMPARISON */
-        .comparison { max-width: 1000px; margin: 0 auto; padding: 2rem 2rem 3rem; }
-        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 2rem; }
-        .comparison-col { border-radius: var(--radius-md); padding: 2rem; }
-        .comparison-col.them { background: #1a1220; border: 1px solid #2a1a3a; }
-        .comparison-col.us { background: var(--color-card); border: 1px solid rgba(212,175,55,0.3); }
-        .comparison-col h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; font-weight: 700; }
-        .comparison-col.them h3 { color: #7a6888; }
-        .comparison-col.us h3 { color: var(--color-accent); }
-        .comparison-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
-        .comparison-col li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.5; }
-        .comparison-col li svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }
-        .comparison-col.them li svg { color: #5a4568; }
-        .comparison-col.us li svg { color: var(--color-accent); }
+        /* INDUSTRY PILLS */
+        .pills-section { max-width: 1200px; margin: 0 auto; padding: 2.5rem 2rem 1rem; }
+        .industry-pills {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 0.65rem;
+        }
+        .ind-pill {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.55rem 1.15rem;
+            background: var(--color-card); border: 1px solid var(--color-border);
+            border-radius: 50px; font-size: 0.82rem; font-weight: 600;
+            color: var(--color-text-label);
+            transition: border-color 0.2s var(--ease), background 0.2s var(--ease);
+        }
+        .ind-pill:hover { border-color: rgba(212,175,55,0.25); background: rgba(212,175,55,0.06); }
+        .ind-pill svg { flex-shrink: 0; }
+
+        /* SHOWCASE — shared layout for feature mockup sections */
+        .showcase {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .showcase.visible { opacity: 1; transform: translateY(0); }
+        .showcase-bg {
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .showcase-grid {
+            display: grid; grid-template-columns: 1fr 1.4fr;
+            gap: 3.5rem; align-items: center;
+        }
+        .showcase-grid.flip { grid-template-columns: 1.4fr 1fr; }
+        .showcase-grid.flip .showcase-mockup { order: -1; }
+        .showcase-text h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 800; margin-bottom: 1rem;
+            letter-spacing: -0.02em; line-height: 1.2;
+        }
+        .showcase-text p {
+            color: var(--color-text-muted); font-size: 0.9rem;
+            line-height: 1.75; margin-bottom: 1.25rem;
+        }
+        .showcase-badge {
+            display: inline-block; padding: 0.25rem 0.7rem;
+            border-radius: 50px; font-size: 0.65rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem;
+        }
+        .showcase-badge.public { background: rgba(34,197,94,0.15); color: #22c55e; }
+        .showcase-badge.members { background: rgba(59,130,246,0.15); color: #3b82f6; }
+        .showcase-badge.admin { background: var(--color-accent-glow); color: var(--color-accent); }
+        .feature-list {
+            list-style: none; display: flex; flex-direction: column; gap: 0.6rem;
+        }
+        .feature-list li {
+            display: flex; align-items: center; gap: 0.6rem;
+            font-size: 0.88rem; color: var(--color-text-label);
+        }
+        .feature-list li svg { width: 16px; height: 16px; color: var(--color-accent); flex-shrink: 0; }
+
+        /* MOCKUP FRAME — shared browser chrome for all mockups */
+        .mockup-frame {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-card), var(--shadow-glow);
+        }
+        .mf-strip { height: 3px; }
+        .mf-strip.green { background: linear-gradient(135deg, #22c55e, #16a34a); }
+        .mf-strip.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .mf-strip.gold { background: var(--grad-gold); }
+        .mf-chrome {
+            display: flex; align-items: center; gap: 6px;
+            padding: 0.55rem 1rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .mf-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .mf-dot:nth-child(1) { background: #ff5f57; }
+        .mf-dot:nth-child(2) { background: #febc2e; }
+        .mf-dot:nth-child(3) { background: #28c840; }
+        .mf-url {
+            margin-left: 10px; padding: 0.2rem 0.6rem;
+            background: rgba(255,255,255,0.04); border-radius: 4px;
+            font-size: 0.5rem; color: var(--color-text-muted);
+        }
+        .mf-body { padding: 1.1rem; }
+
+        /* REWARDS MOCKUP */
+        .rm-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 0.85rem;
+        }
+        .rm-title {
+            width: 100px; height: 10px;
+            background: rgba(255,255,255,0.2); border-radius: 4px;
+        }
+        .rm-pts-badge {
+            padding: 0.2rem 0.6rem; border-radius: 50px;
+            background: rgba(59,130,246,0.15);
+            font-size: 0.6rem; font-weight: 700; color: #60a5fa;
+        }
+        .rm-card {
+            background: linear-gradient(135deg, #d4a537 0%, #f0d060 30%, #d4af37 50%, #c49b2e 70%, #d4af37 100%);
+            border-radius: 12px; padding: 1.25rem; color: #1a1a2e;
+            position: relative; overflow: hidden;
+            margin-bottom: 1rem;
+        }
+        .rm-card::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.2) 50%, transparent 75%);
+            pointer-events: none;
+        }
+        .rm-card-top {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 0.6rem;
+        }
+        .rm-card-tier {
+            font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        .rm-card-stars { font-size: 0.7rem; letter-spacing: 2px; }
+        .rm-card-pts {
+            font-size: 1.5rem; font-weight: 800; margin-bottom: 0.1rem;
+        }
+        .rm-card-pts-label { font-size: 0.55rem; font-weight: 600; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; }
+        .rm-progress-track {
+            height: 6px; background: rgba(0,0,0,0.15);
+            border-radius: 3px; margin: 0.65rem 0 0.3rem;
+            overflow: hidden;
+        }
+        .rm-progress-fill {
+            height: 100%; border-radius: 3px;
+            background: rgba(255,255,255,0.85);
+        }
+        .rm-progress-label {
+            font-size: 0.5rem; font-weight: 600; opacity: 0.65;
+            text-align: right;
+        }
+        .rm-subtitle {
+            width: 90px; height: 7px;
+            background: rgba(255,255,255,0.12); border-radius: 3px;
+            margin-bottom: 0.65rem;
+        }
+        .rm-rewards-row {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;
+        }
+        .rm-reward {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px; padding: 0.6rem; text-align: center;
+        }
+        .rm-reward-icon {
+            width: 24px; height: 24px; border-radius: 50%;
+            margin: 0 auto 0.35rem;
+        }
+        .rm-reward-icon.green { background: rgba(34,197,94,0.2); }
+        .rm-reward-icon.blue { background: rgba(59,130,246,0.2); }
+        .rm-reward-icon.purple { background: rgba(168,85,247,0.2); }
+        .rm-reward-text {
+            width: 70%; height: 5px; background: rgba(255,255,255,0.1);
+            border-radius: 3px; margin: 0 auto 0.3rem;
+        }
+        .rm-reward-pts {
+            font-size: 0.6rem; font-weight: 700; color: #22c55e;
+        }
+
+        /* ORDERING MOCKUP */
+        .om-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        .om-title {
+            width: 90px; height: 10px;
+            background: rgba(255,255,255,0.2); border-radius: 4px;
+        }
+        .om-cart-badge {
+            width: 26px; height: 26px; border-radius: 50%;
+            background: rgba(34,197,94,0.2); display: flex;
+            align-items: center; justify-content: center;
+            font-size: 0.6rem; font-weight: 700; color: #22c55e;
+            position: relative;
+        }
+        .om-tabs {
+            display: flex; gap: 0.4rem; margin-bottom: 0.85rem;
+        }
+        .om-tab {
+            padding: 0.3rem 0.7rem; border-radius: 50px;
+            font-size: 0.55rem; font-weight: 600;
+            background: rgba(255,255,255,0.04); color: var(--color-text-muted);
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .om-tab.active {
+            background: rgba(34,197,94,0.15); color: #22c55e;
+            border-color: rgba(34,197,94,0.3);
+        }
+        .om-products {
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;
+            margin-bottom: 0.85rem;
+        }
+        .om-product {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 8px; padding: 0.6rem; overflow: hidden;
+        }
+        .om-prod-img {
+            width: 100%; height: 44px; border-radius: 5px;
+            margin-bottom: 0.4rem;
+        }
+        .om-prod-img.a { background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.04)); }
+        .om-prod-img.b { background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.03)); }
+        .om-prod-img.c { background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(59,130,246,0.03)); }
+        .om-prod-name {
+            width: 75%; height: 5px; background: rgba(255,255,255,0.15);
+            border-radius: 3px; margin-bottom: 0.4rem;
+        }
+        .om-prod-bottom {
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .om-price { font-size: 0.6rem; font-weight: 700; color: var(--color-text-label); }
+        .om-add {
+            width: 20px; height: 20px; border-radius: 50%;
+            background: rgba(34,197,94,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.65rem; color: #22c55e; font-weight: 700;
+        }
+        .om-cart-bar {
+            background: rgba(34,197,94,0.06);
+            border: 1px solid rgba(34,197,94,0.15);
+            border-radius: 8px; padding: 0.65rem 0.8rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .om-cart-label { font-size: 0.5rem; color: var(--color-text-muted); }
+        .om-cart-total { font-size: 0.75rem; font-weight: 800; color: var(--color-text); }
+        .om-cart-btn {
+            padding: 0.3rem 0.8rem; border-radius: 6px;
+            background: #22c55e; color: #fff;
+            font-size: 0.55rem; font-weight: 700;
+        }
+
+        /* DASHBOARD MOCKUP (existing — preserved) */
+        .dashboard-section { overflow: hidden; }
+        .dashboard-layout { display: grid; grid-template-columns: 1fr 1.3fr; gap: 3rem; align-items: center; }
+        .dashboard-text h2 { font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+        .dashboard-text p { color: var(--color-text-muted); font-size: 0.92rem; line-height: 1.75; margin-bottom: 1rem; }
+        .dashboard-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+        .dashboard-features li { display: flex; align-items: center; gap: 0.6rem; font-size: 0.88rem; color: var(--color-text-label); }
+        .dashboard-features li svg { width: 16px; height: 16px; color: var(--color-accent); flex-shrink: 0; }
+
+        .dash-mockup {
+            background: var(--color-card); border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg); overflow: hidden;
+            box-shadow: var(--shadow-card), var(--shadow-glow);
+        }
+        .dash-topbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0.6rem 1rem; background: rgba(0,0,0,0.2);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .dash-topbar::before {
+            content: ''; height: 3px; position: absolute; top: 0; left: 0; right: 0;
+            background: var(--grad-gold);
+        }
+        .dash-mockup { position: relative; }
+        .dash-topbar-title { font-size: 0.7rem; font-weight: 700; color: var(--color-text-label); }
+        .dash-topbar-user { font-size: 0.6rem; color: var(--color-text-muted); }
+        .dash-body { display: flex; min-height: 240px; }
+        .dash-sidebar {
+            width: 100px; padding: 0.75rem 0.5rem;
+            border-right: 1px solid var(--color-border);
+            display: flex; flex-direction: column; gap: 0.3rem;
+        }
+        .dash-nav-item {
+            padding: 0.35rem 0.5rem; border-radius: 5px; font-size: 0.55rem;
+            color: var(--color-text-muted); font-weight: 500;
+        }
+        .dash-nav-item.active { background: var(--color-accent-glow); color: var(--color-accent); }
+        .dash-main { flex: 1; padding: 1rem; }
+        .dash-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-bottom: 1rem; }
+        .dash-stat {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px; padding: 0.6rem;
+        }
+        .dash-stat-label { font-size: 0.5rem; color: var(--color-text-muted); margin-bottom: 0.15rem; text-transform: uppercase; letter-spacing: 0.05em; }
+        .dash-stat-val { font-size: 1rem; font-weight: 800; color: var(--color-accent); }
+        .dash-chart { display: flex; align-items: flex-end; gap: 6px; height: 70px; padding-top: 0.5rem; }
+        .dash-bar {
+            flex: 1; border-radius: 3px 3px 0 0;
+        }
+        .dash-bar:nth-child(1) { height: 45%; background: rgba(212,175,55,0.25); }
+        .dash-bar:nth-child(2) { height: 65%; background: rgba(212,175,55,0.35); }
+        .dash-bar:nth-child(3) { height: 55%; background: rgba(212,175,55,0.3); }
+        .dash-bar:nth-child(4) { height: 80%; background: rgba(212,175,55,0.45); }
+        .dash-bar:nth-child(5) { height: 70%; background: rgba(212,175,55,0.4); }
+        .dash-bar:nth-child(6) { height: 90%; background: var(--color-accent); opacity: 0.6; }
+        .dash-bar:nth-child(7) { height: 60%; background: rgba(212,175,55,0.35); }
+        .dash-chart-label {
+            display: flex; justify-content: space-between;
+            font-size: 0.45rem; color: var(--color-text-muted); margin-top: 0.3rem;
+            padding: 0 2px;
+        }
+
+        /* MOBILE APP SPOTLIGHT */
+        .app-section {
+            background: var(--color-surface);
+            border-top: 1px solid var(--color-border);
+            border-bottom: 1px solid var(--color-border);
+        }
+        .app-inner {
+            max-width: 1200px; margin: 0 auto; padding: 4.5rem 2rem;
+            text-align: center;
+        }
+        .app-inner h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3.5vw, 2.2rem);
+            font-weight: 800; letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+        .app-inner h2 .accent { color: var(--color-accent); }
+        .app-subtitle {
+            color: var(--color-text-muted); font-size: 0.92rem;
+            margin-bottom: 2.5rem;
+        }
+        .phone-frame {
+            width: 220px; height: 450px;
+            border-radius: 34px; border: 3px solid var(--color-border);
+            background: #0a0a14;
+            padding: 10px; margin: 0 auto 2rem;
+            position: relative;
+            box-shadow: var(--shadow-card), 0 0 60px rgba(212,175,55,0.06);
+            animation: phoneFloat 5s ease-in-out infinite;
+        }
+        @keyframes phoneFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .phone-notch {
+            width: 70px; height: 5px; border-radius: 3px;
+            background: rgba(255,255,255,0.08);
+            margin: 2px auto 8px;
+        }
+        .phone-screen {
+            height: calc(100% - 18px);
+            border-radius: 22px; overflow: hidden;
+            background: var(--color-bg);
+            border: 1px solid rgba(255,255,255,0.05);
+            display: flex; flex-direction: column;
+        }
+        .ps-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .ps-logo {
+            width: 40px; height: 7px;
+            background: var(--color-accent); border-radius: 3px; opacity: 0.5;
+        }
+        .ps-menu {
+            display: flex; flex-direction: column; gap: 2px;
+        }
+        .ps-menu-line {
+            width: 14px; height: 1.5px;
+            background: rgba(255,255,255,0.3); border-radius: 1px;
+        }
+        .ps-hero {
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.02));
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+        .ps-hero-text {
+            width: 80%; height: 8px;
+            background: rgba(255,255,255,0.2); border-radius: 3px;
+            margin-bottom: 5px;
+        }
+        .ps-hero-sub {
+            width: 55%; height: 5px;
+            background: rgba(255,255,255,0.08); border-radius: 3px;
+            margin-bottom: 8px;
+        }
+        .ps-hero-btn {
+            width: 60px; height: 16px;
+            background: var(--grad-gold); border-radius: 4px; opacity: 0.7;
+        }
+        .ps-products {
+            padding: 10px 12px; flex: 1;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+        }
+        .ps-product {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 6px; padding: 6px;
+        }
+        .ps-prod-img {
+            width: 100%; height: 30px;
+            background: rgba(212,175,55,0.06);
+            border-radius: 4px; margin-bottom: 4px;
+        }
+        .ps-prod-text {
+            width: 70%; height: 4px;
+            background: rgba(255,255,255,0.12); border-radius: 2px;
+            margin-bottom: 3px;
+        }
+        .ps-prod-price {
+            width: 35%; height: 4px;
+            background: rgba(212,175,55,0.25); border-radius: 2px;
+        }
+        .ps-tab-bar {
+            display: flex; justify-content: center; gap: 12px;
+            padding: 8px 0;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        .ps-tab-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: rgba(255,255,255,0.12);
+        }
+        .ps-tab-dot.active { background: var(--color-accent); opacity: 0.6; }
+        .app-benefits {
+            display: flex; justify-content: center; gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .app-benefit {
+            padding: 0.45rem 1rem; border-radius: 50px;
+            background: var(--color-card); border: 1px solid var(--color-border);
+            font-size: 0.75rem; font-weight: 600; color: var(--color-text-label);
+        }
+
+        /* COMPACT CAPABILITIES STRIP */
+        .caps-strip {
+            max-width: 1000px; margin: 0 auto;
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+        .caps-label {
+            font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.1em; color: var(--color-text-muted);
+            margin-bottom: 1rem;
+        }
+        .caps-flow {
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem;
+        }
+        .cap-tag {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.45rem 0.9rem;
+            background: var(--color-card); border: 1px solid var(--color-border);
+            border-radius: 50px; font-size: 0.75rem; font-weight: 500;
+            color: var(--color-text-muted);
+            transition: all 0.25s var(--ease);
+        }
+        .cap-tag:hover {
+            border-color: rgba(212,175,55,0.3);
+            background: rgba(212,175,55,0.06);
+            color: var(--color-text);
+        }
+        .cap-tag svg { width: 13px; height: 13px; color: var(--color-accent); }
+        .cap-tag.hl {
+            background: var(--color-accent-glow);
+            border-color: rgba(212,175,55,0.25);
+            color: var(--color-text-label);
+        }
+
+        /* COST COMPARISON */
+        .cost-section { background: var(--color-surface); border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+        .cost-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 2rem; }
+        .cost-col {
+            background: var(--color-card); border: 1px solid var(--color-border);
+            border-radius: var(--radius-md); padding: 2rem;
+        }
+        .cost-col.them { border-color: rgba(100,50,50,0.3); }
+        .cost-col.us { border-color: rgba(212,175,55,0.2); }
+        .cost-col h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; font-weight: 700; }
+        .cost-col.them h3 { color: #7a6888; }
+        .cost-col.us h3 { color: var(--color-accent); }
+        .cost-bars { display: flex; flex-direction: column; gap: 1rem; }
+        .cost-bar-row { display: flex; flex-direction: column; gap: 0.3rem; }
+        .cost-bar-label { font-size: 0.7rem; color: var(--color-text-muted); font-weight: 500; }
+        .cost-bar-track { height: 28px; background: rgba(255,255,255,0.03); border-radius: 6px; position: relative; overflow: hidden; }
+        .cost-bar-fill {
+            position: absolute; top: 0; left: 0; bottom: 0;
+            border-radius: 6px;
+            display: flex; align-items: center; justify-content: flex-end;
+            padding-right: 8px;
+            font-size: 0.65rem; font-weight: 700;
+        }
+        .cost-col.them .cost-bar-fill { background: linear-gradient(90deg, rgba(120,60,60,0.3), rgba(180,80,80,0.5)); color: #e8a0a0; }
+        .cost-col.us .cost-bar-fill { background: linear-gradient(90deg, rgba(212,175,55,0.15), rgba(212,175,55,0.35)); color: var(--color-accent); }
+        .cost-note {
+            font-size: 0.72rem; color: var(--color-text-muted);
+            margin-top: 1rem; line-height: 1.6;
+            padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.05);
+        }
 
         /* PROCESS */
-        .process-list { display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem; }
-        .process-step { display: flex; gap: 1.25rem; align-items: flex-start; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.5rem; }
-        .process-num { width: 36px; height: 36px; min-width: 36px; background: var(--color-accent-glow); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--color-accent); font-weight: 800; font-size: 0.85rem; }
-        .process-step h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.3rem; }
-        .process-step p { font-size: 0.85rem; color: var(--color-text-muted); }
+        .process-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2rem; }
+        .process-card {
+            background: var(--color-card); border: 1px solid var(--color-border);
+            border-radius: var(--radius-md); padding: 2rem 1.75rem;
+        }
+        .process-num {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--color-accent-glow); border: 1px solid rgba(212,175,55,0.2);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--color-accent); font-weight: 800; font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        .process-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .process-card p { font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.65; }
 
         /* CTA */
-        .cta { max-width: 1000px; margin: 0 auto; padding: 3rem 2rem 4rem; text-align: center; }
-        .cta-card { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 3rem 2rem; }
-        .cta-card h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 0.75rem; }
-        .cta-card p { color: var(--color-text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; max-width: 500px; margin-left: auto; margin-right: auto; }
-        .cta-btn { display: inline-block; padding: 0.85rem 2rem; background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%); color: #0f0f1a; border: none; border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.95rem; font-weight: 700; text-decoration: none; transition: opacity 0.2s ease, transform 0.2s ease; }
-        .cta-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+        .cta-section { padding: 5rem 2rem; }
+        .cta-card {
+            max-width: 700px; margin: 0 auto;
+            background: linear-gradient(135deg, var(--color-card) 0%, var(--color-card-alt) 100%);
+            border: 1px solid rgba(212,175,55,0.15);
+            border-radius: var(--radius-lg); padding: 3.5rem 2.5rem;
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .cta-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: var(--grad-gold);
+        }
+        .cta-card h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.3rem, 3vw, 1.8rem); font-weight: 800;
+            margin-bottom: 0.75rem;
+        }
+        .cta-card p {
+            color: var(--color-text-muted); font-size: 0.95rem;
+            margin-bottom: 1.75rem; max-width: 480px; margin-left: auto; margin-right: auto;
+            line-height: 1.7;
+        }
 
-        /* DIVIDER */
-        .section-divider { border: none; border-top: 1px solid var(--color-border); max-width: 1000px; margin: 0 auto; }
-
-        /* LOGIN SECTION */
-        .login-section { padding: 3rem 2rem 3rem; position: relative; }
-        .login-section::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(ellipse at 30% 20%, rgba(212,175,55,0.03) 0%, transparent 50%), radial-gradient(ellipse at 70% 80%, rgba(26,26,46,0.5) 0%, transparent 50%); pointer-events: none; }
-        .login-container { width: 100%; max-width: 440px; margin: 0 auto; position: relative; z-index: 1; }
-        .login-card { background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 3rem 2.5rem 2.5rem; box-shadow: var(--shadow-card); }
-        .login-header { text-align: center; margin-bottom: 2rem; }
-        .login-header h2 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
-        .login-header p { color: var(--color-text-muted); font-size: 0.85rem; }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--color-text-label); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .form-group input { width: 100%; padding: 0.875rem 1rem; background: var(--color-input-bg); border: 1.5px solid var(--color-input-border); border-radius: var(--radius-md); color: var(--color-text); font-family: var(--font-body); font-size: 0.95rem; transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        /* LOGIN */
+        .login-section { padding: 3rem 2rem 4rem; }
+        .login-container { width: 100%; max-width: 440px; margin: 0 auto; }
+        .login-card {
+            background: var(--color-card); border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg); padding: 2.5rem 2.25rem 2rem;
+            box-shadow: var(--shadow-card);
+        }
+        .login-header { text-align: center; margin-bottom: 1.75rem; }
+        .login-header h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .login-header p { color: var(--color-text-muted); font-size: 0.82rem; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label {
+            display: block; font-size: 0.75rem; font-weight: 600;
+            color: var(--color-text-label); margin-bottom: 0.4rem;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+        .form-group input {
+            width: 100%; padding: 0.8rem 1rem;
+            background: var(--color-input-bg);
+            border: 1.5px solid var(--color-input-border);
+            border-radius: var(--radius-md); color: var(--color-text);
+            font-family: var(--font-body); font-size: 0.9rem;
+            transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+        }
         .form-group input::placeholder { color: #4a5568; }
         .form-group input:focus { outline: none; border-color: var(--color-accent); box-shadow: 0 0 0 3px var(--color-accent-glow); }
         .password-wrapper { position: relative; }
         .password-wrapper input { padding-right: 3rem; }
-        .toggle-password { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--color-text-muted); padding: 0.25rem; display: flex; align-items: center; justify-content: center; transition: color 0.2s ease; }
+        .toggle-password {
+            position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%);
+            background: none; border: none; cursor: pointer;
+            color: var(--color-text-muted); padding: 0.25rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: color 0.2s var(--ease);
+        }
         .toggle-password:hover { color: var(--color-accent); }
-        .toggle-password svg { width: 20px; height: 20px; }
-        .error { background: var(--color-error-bg); border: 1px solid var(--color-error-border); color: var(--color-error-text); padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 1.5rem; display: none; }
+        .toggle-password svg { width: 18px; height: 18px; }
+        .error {
+            background: var(--color-error-bg); border: 1px solid var(--color-error-border);
+            color: var(--color-error-text); padding: 0.7rem 1rem;
+            border-radius: var(--radius-sm); font-size: 0.82rem;
+            margin-bottom: 1.25rem; display: none;
+        }
         .error.show { display: block; }
-        .btn-login { width: 100%; padding: 0.95rem; background: linear-gradient(135deg, var(--color-accent) 0%, #b8962e 100%); color: #0f0f1a; border: none; border-radius: var(--radius-md); font-family: var(--font-body); font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s ease, transform 0.2s ease; letter-spacing: 0.02em; }
+        .btn-login {
+            width: 100%; padding: 0.85rem;
+            background: var(--grad-gold); color: #0f0f1a;
+            border: none; border-radius: var(--radius-md);
+            font-family: var(--font-body); font-size: 0.9rem; font-weight: 700;
+            cursor: pointer; transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+        }
         .btn-login:hover { opacity: 0.9; transform: translateY(-1px); }
         .btn-login:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
         /* FOOTER */
-        .site-footer { text-align: center; padding: 2rem; color: #4a5568; font-size: 0.75rem; border-top: 1px solid var(--color-border); max-width: 1000px; margin: 0 auto; }
+        .site-footer {
+            text-align: center; padding: 2rem;
+            color: #4a5568; font-size: 0.72rem;
+            border-top: 1px solid rgba(42,42,74,0.3);
+            max-width: 1200px; margin: 0 auto;
+        }
+        .site-footer a { color: var(--color-accent); text-decoration: none; }
+
+        .section-divider { border: none; border-top: 1px solid var(--color-border); max-width: 1200px; margin: 0 auto; }
 
         /* RESPONSIVE */
-        @media (max-width: 768px) {
-            .nav-inner { padding: 1rem 1.5rem; }
-            .hero { padding: 6rem 1.5rem 2rem; }
-            .hero h1 { font-size: 1.75rem; }
-            .comparison-grid { grid-template-columns: 1fr; }
-            .callout-card { padding: 1.5rem; }
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; gap: 2.5rem; padding: 7rem 1.5rem 2rem; text-align: center; }
+            .hero-content { max-width: 100%; }
+            .hero-logo { margin-left: auto; margin-right: auto; }
+            .hero-visual { max-width: 500px; margin: 0 auto; }
+            .showcase-grid, .showcase-grid.flip { grid-template-columns: 1fr; }
+            .showcase-grid.flip .showcase-mockup { order: unset; }
+            .dashboard-layout { grid-template-columns: 1fr; }
+            .cost-layout { grid-template-columns: 1fr; }
+            .process-grid { grid-template-columns: 1fr; }
         }
-        @media (max-width: 480px) {
-            .nav { padding: 0.75rem 1rem; }
-            .nav-brand span { font-size: 0.9rem; }
-            .hero { padding: 5.5rem 1rem 2rem; }
-            .hero h1 { font-size: 1.5rem; }
-            .login-section { padding: 2rem 1rem; }
-            .login-card { padding: 2rem 1.5rem 1.5rem; }
-            .features-grid { grid-template-columns: 1fr; }
-            .section h2 { font-size: 1.4rem; }
+        @media (max-width: 600px) {
+            .hero { padding: 6rem 1rem 2rem; }
+            .hero h1 { font-size: 1.6rem; }
+            .section-wrap { padding: 3rem 1.25rem; }
+            .login-card { padding: 1.75rem 1.5rem 1.5rem; }
+            .dash-sidebar { display: none; }
+            .hv-cards { grid-template-columns: 1fr 1fr; }
+            .om-products { grid-template-columns: 1fr 1fr; }
+            .rm-rewards-row { grid-template-columns: 1fr 1fr; }
+            .rm-rewards-row .rm-reward:last-child { display: none; }
+            .phone-frame { width: 190px; height: 390px; }
+            .industry-pills { gap: 0.5rem; }
+            .ind-pill { font-size: 0.75rem; padding: 0.45rem 0.9rem; }
+            .app-benefits { gap: 0.5rem; }
+            .app-benefit { font-size: 0.68rem; padding: 0.35rem 0.8rem; }
+            .pills-section { padding: 2rem 1.25rem 0.5rem; }
         }
     </style>
 </head>
 <body>
+<div class="page-content">
+
     <!-- NAV -->
     <nav class="nav">
         <div class="nav-inner">
             <a href="#" class="nav-brand">
-                <div class="logo-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                        <path d="M2 17l10 5 10-5"></path>
-                        <path d="M2 12l10 5 10-5"></path>
-                    </svg>
+                <img src="logo-removebg-preview.png" alt="Global Storefront" width="38" height="38">
+                <div class="nav-brand-text">
+                    <span class="nav-brand-name">Global Storefront</span>
+                    <span class="nav-brand-tag">Custom Web Solutions</span>
                 </div>
-                <span>Global Storefront</span>
             </a>
             <a href="#clientLogin" class="nav-login">Client Login</a>
         </div>
@@ -172,124 +878,406 @@
 
     <!-- HERO -->
     <section class="hero">
-        <div class="hero-badge">Hand-coded. No shortcuts.</div>
-        <h1>We build websites your business can actually <span class="accent">rely on</span></h1>
-        <p class="subtitle">Not templates. Not drag-and-drop. Real code, built from scratch — designed around how your business runs, not some generic version of it.</p>
-    </section>
-
-    <!-- THE DIG -->
-    <section class="callout">
-        <div class="callout-card">
-            <div class="callout-title">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                We can tell.
+        <div class="hero-content">
+            <img src="logo-removebg-preview.png" alt="Global Storefront" class="hero-logo" width="72" height="72">
+            <h1>Your business isn't a template.<br><span class="accent">Your website shouldn't be either.</span></h1>
+            <p class="subtitle"><strong>Ordering. Scheduling. Rewards. Admin dashboard. Payment processing.</strong> All custom-coded for how you actually run your shop.</p>
+            <a href="#showcase" class="hero-cta">
+                See What We Build
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
+            <p class="hero-proof">No templates. No monthly platform fees. No shortcuts.</p>
+        </div>
+        <div class="hero-visual">
+            <div class="hv-browser-bar"><div class="hv-dot"></div><div class="hv-dot"></div><div class="hv-dot"></div></div>
+            <div class="hv-header">
+                <div class="hv-logo-placeholder"></div>
+                <div class="hv-nav-dots"><div class="hv-nav-dot"></div><div class="hv-nav-dot"></div><div class="hv-nav-dot"></div><div class="hv-nav-dot"></div></div>
             </div>
-            <p>We can tell you're using Wix. Or Squarespace. Or whatever template builder you Googled at 11pm on a Tuesday. <span class="highlight">And so can your customers.</span></p>
-            <p style="margin-top: 0.75rem;">The generic stock photos. The layout that looks like every other business in your industry. The slow load times. The footer that still says "Powered by..." — it all screams <span class="highlight">"I didn't invest in this."</span></p>
-            <p style="margin-top: 0.75rem;">Your business isn't a template. Your website shouldn't be either. We start from nothing — every line of code written for you, your brand, and how your customers actually move through your site.</p>
+            <div class="hv-hero-block">
+                <div class="hv-hero-title"></div>
+                <div class="hv-hero-sub"></div>
+                <div class="hv-hero-btn"></div>
+            </div>
+            <div class="hv-cards">
+                <div class="hv-card"><div class="hv-card-img"></div><div class="hv-card-title"></div><div class="hv-card-sub"></div></div>
+                <div class="hv-card"><div class="hv-card-img"></div><div class="hv-card-title"></div><div class="hv-card-sub"></div></div>
+                <div class="hv-card"><div class="hv-card-img"></div><div class="hv-card-title"></div><div class="hv-card-sub"></div></div>
+            </div>
+            <div class="hv-label">Custom built for your brand</div>
         </div>
     </section>
 
-    <!-- FEATURES -->
-    <section class="section">
-        <div class="section-label">What We Build</div>
-        <h2>Features your template site can't touch</h2>
-        <p class="section-desc">Every site we build comes with tools that actually help you run your business — not just look pretty.</p>
-        <div class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg></div>
-                <h3>Custom Admin Dashboards</h3>
-                <p>Manage orders, track inventory, view daily summaries — all from a dashboard built around your workflow. No third-party plugins, no monthly fees.</p>
+    <!-- INDUSTRY MARQUEE -->
+    <div class="marquee-section">
+        <div class="marquee-label">Built for local businesses of all kinds</div>
+        <div class="marquee-track" aria-hidden="true">
+            <span class="marquee-item">Bakeries</span>
+            <span class="marquee-item">Restaurants</span>
+            <span class="marquee-item">Barbershops</span>
+            <span class="marquee-item">Coffee Shops</span>
+            <span class="marquee-item">Retail Stores</span>
+            <span class="marquee-item">Salons & Spas</span>
+            <span class="marquee-item">Board Game Shops</span>
+            <span class="marquee-item">Hobby Stores</span>
+            <span class="marquee-item">Golf Courses</span>
+            <span class="marquee-item">Bike Shops</span>
+            <span class="marquee-item">Gift Shops</span>
+            <span class="marquee-item">Food Trucks</span>
+            <span class="marquee-item">Delis & Cafes</span>
+            <span class="marquee-item">Auto Shops</span>
+            <span class="marquee-item">Fitness Studios</span>
+            <span class="marquee-item">Pet Stores</span>
+            <!-- Duplicate for seamless loop -->
+            <span class="marquee-item">Bakeries</span>
+            <span class="marquee-item">Restaurants</span>
+            <span class="marquee-item">Barbershops</span>
+            <span class="marquee-item">Coffee Shops</span>
+            <span class="marquee-item">Retail Stores</span>
+            <span class="marquee-item">Salons & Spas</span>
+            <span class="marquee-item">Board Game Shops</span>
+            <span class="marquee-item">Hobby Stores</span>
+            <span class="marquee-item">Golf Courses</span>
+            <span class="marquee-item">Bike Shops</span>
+            <span class="marquee-item">Gift Shops</span>
+            <span class="marquee-item">Food Trucks</span>
+            <span class="marquee-item">Delis & Cafes</span>
+            <span class="marquee-item">Auto Shops</span>
+            <span class="marquee-item">Fitness Studios</span>
+            <span class="marquee-item">Pet Stores</span>
+        </div>
+    </div>
+
+    <!-- INDUSTRY PILLS -->
+    <section class="pills-section" id="showcase">
+        <div class="industry-pills">
+            <div class="ind-pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#cd7f32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a6 6 0 0 1 6 6c0 3-2 5-6 5s-6-2-6-5a6 6 0 0 1 6-6z"/><path d="M4 13h16v2a6 6 0 0 1-6 6h-4a6 6 0 0 1-6-6v-2z"/></svg><span>Bakeries</span></div>
+            <div class="ind-pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef5350" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/></svg><span>Restaurants</span></div>
+            <div class="ind-pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12L12 12"/><path d="M20 4L8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg><span>Barbershops</span></div>
+            <div class="ind-pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg><span>Retail Shops</span></div>
+            <div class="ind-pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M12 6V2"/><path d="M6 12h4"/><path d="M14 12h4"/><circle cx="12" cy="12" r="2"/></svg><span>Hobby Shops</span></div>
+            <div class="ind-pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg><span>Services</span></div>
+        </div>
+    </section>
+
+    <!-- ===== FEATURE SHOWCASES ===== -->
+
+    <!-- SHOWCASE: REWARDS / LOYALTY (Members tier) -->
+    <section class="section-wrap showcase">
+        <div class="showcase-grid">
+            <div class="showcase-text">
+                <span class="showcase-badge members">Members</span>
+                <h2>A loyalty program they'll <span style="color: #3b82f6;">actually use</span></h2>
+                <ul class="feature-list">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Automatic points on every purchase</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Bronze, Silver, Gold tier upgrades</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Customers track balance and rewards</li>
+                </ul>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg></div>
-                <h3>Online Ordering Systems</h3>
-                <p>Real order management that fits your business. Customers order, you fulfill — with live tracking, notifications, and zero commission fees from a platform.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg></div>
-                <h3>Inventory Management</h3>
-                <p>Track what's in stock, get low-stock alerts, update quantities in real time. Your website knows what you have before your customer orders something you don't.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"></path><path d="M18 20V4"></path><path d="M6 20v-4"></path></svg></div>
-                <h3>Business Analytics</h3>
-                <p>Daily summaries, order trends, customer insights — see how your business is performing at a glance, not buried in some third-party analytics tool you'll never check.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
-                <h3>Lightning Fast</h3>
-                <p>No bloated page builders. No 47 plugins slowing things down. Clean code means your site loads in under 2 seconds — because your customers won't wait for 5.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg></div>
-                <h3>You Own Everything</h3>
-                <p>No vendor lock-in. No "upgrade to premium to unlock this feature." The code is yours. The design is yours. You're never held hostage by a platform.</p>
+            <div class="showcase-mockup">
+                <div class="mockup-frame">
+                    <div class="mf-strip blue"></div>
+                    <div class="mf-chrome">
+                        <div class="mf-dot"></div><div class="mf-dot"></div><div class="mf-dot"></div>
+                        <span class="mf-url">yourbusiness.com/rewards</span>
+                    </div>
+                    <div class="mf-body">
+                        <div class="rm-header">
+                            <div class="rm-title"></div>
+                            <div class="rm-pts-badge">1,240 pts</div>
+                        </div>
+                        <div class="rm-card">
+                            <div class="rm-card-top">
+                                <span class="rm-card-tier">Gold Member</span>
+                                <span class="rm-card-stars">&#9733; &#9733; &#9733;</span>
+                            </div>
+                            <div class="rm-card-pts">1,240</div>
+                            <div class="rm-card-pts-label">Reward Points</div>
+                            <div class="rm-progress-track"><div class="rm-progress-fill" style="width: 83%;"></div></div>
+                            <div class="rm-progress-label">260 pts to Platinum</div>
+                        </div>
+                        <div class="rm-subtitle"></div>
+                        <div class="rm-rewards-row">
+                            <div class="rm-reward">
+                                <div class="rm-reward-icon green"></div>
+                                <div class="rm-reward-text"></div>
+                                <div class="rm-reward-pts">+50</div>
+                            </div>
+                            <div class="rm-reward">
+                                <div class="rm-reward-icon blue"></div>
+                                <div class="rm-reward-text"></div>
+                                <div class="rm-reward-pts">+25</div>
+                            </div>
+                            <div class="rm-reward">
+                                <div class="rm-reward-icon purple"></div>
+                                <div class="rm-reward-text"></div>
+                                <div class="rm-reward-pts">+75</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- COMPARISON -->
-    <section class="comparison">
-        <div class="section-label">The Difference</div>
-        <h2>Template builders vs. what we do</h2>
-        <div class="comparison-grid">
-            <div class="comparison-col them">
-                <h3>Wix / Squarespace / Shopify</h3>
-                <ul>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Same templates everyone else uses</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Monthly fees that add up forever</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>"Powered by..." in your footer</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>No real database — customer data lives in spreadsheets or third-party apps</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Real-time orders? Scheduling? Rewards? Good luck — that's 5 plugins and $200/mo</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Limited to what their drag-and-drop allows</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>Slow load times from bloated code</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>You don't own the code — they do</li>
+    <!-- SHOWCASE: ORDERING / BOOKING (Public tier) -->
+    <div class="showcase-bg">
+        <section class="section-wrap showcase">
+            <div class="showcase-grid flip">
+                <div class="showcase-text">
+                    <span class="showcase-badge public">Public</span>
+                    <h2>Ordering and booking, <span style="color: #22c55e;">built right in</span></h2>
+                    <ul class="feature-list">
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Online ordering or appointment booking</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>No third-party apps taking a cut</li>
+                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Real-time availability and confirmation</li>
+                    </ul>
+                </div>
+                <div class="showcase-mockup">
+                    <div class="mockup-frame">
+                        <div class="mf-strip green"></div>
+                        <div class="mf-chrome">
+                            <div class="mf-dot"></div><div class="mf-dot"></div><div class="mf-dot"></div>
+                            <span class="mf-url">yourbusiness.com/order</span>
+                        </div>
+                        <div class="mf-body">
+                            <div class="om-header">
+                                <div class="om-title"></div>
+                                <div class="om-cart-badge">2</div>
+                            </div>
+                            <div class="om-tabs">
+                                <div class="om-tab active">All</div>
+                                <div class="om-tab">Pastries</div>
+                                <div class="om-tab">Drinks</div>
+                            </div>
+                            <div class="om-products">
+                                <div class="om-product">
+                                    <div class="om-prod-img a"></div>
+                                    <div class="om-prod-name"></div>
+                                    <div class="om-prod-bottom"><span class="om-price">$4.50</span><span class="om-add">+</span></div>
+                                </div>
+                                <div class="om-product">
+                                    <div class="om-prod-img b"></div>
+                                    <div class="om-prod-name"></div>
+                                    <div class="om-prod-bottom"><span class="om-price">$3.25</span><span class="om-add">+</span></div>
+                                </div>
+                                <div class="om-product">
+                                    <div class="om-prod-img c"></div>
+                                    <div class="om-prod-name"></div>
+                                    <div class="om-prod-bottom"><span class="om-price">$5.00</span><span class="om-add">+</span></div>
+                                </div>
+                            </div>
+                            <div class="om-cart-bar">
+                                <div>
+                                    <div class="om-cart-label">Subtotal</div>
+                                    <div class="om-cart-total">$12.75</div>
+                                </div>
+                                <div class="om-cart-btn">Place Order</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- SHOWCASE: ADMIN DASHBOARD (Admin tier) -->
+    <section class="section-wrap dashboard-section showcase">
+        <div class="dashboard-layout">
+            <div class="dashboard-text">
+                <span class="showcase-badge admin">Admin</span>
+                <div class="section-label">Your Command Center</div>
+                <h2>An admin dashboard built for <span style="color: var(--color-accent)">your</span> business</h2>
+                <p>A real dashboard showing today's orders, revenue, inventory, and customer activity — organized around how you make decisions.</p>
+                <ul class="dashboard-features">
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Manage incoming orders in real time</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Track inventory with automatic low-stock alerts</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Daily revenue summary & trend charts</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Customer analytics & loyalty tier breakdowns</li>
+                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Update menus, products & content — no developer needed</li>
                 </ul>
             </div>
-            <div class="comparison-col us">
-                <h3>Global Storefront</h3>
-                <ul>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>100% custom design — no templates</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>One-time build, minimal hosting costs</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Your brand, no one else's</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Real database — customer profiles, order history, and business data all connected</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Real-time orders, scheduling, loyalty rewards — built in, not bolted on</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Custom features built for your workflow</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Actually fast — clean code, no plugins weighing it down</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Full code ownership — it's yours forever</li>
-                </ul>
+            <div class="dash-mockup">
+                <div class="dash-topbar">
+                    <span class="dash-topbar-title">Dashboard</span>
+                    <span class="dash-topbar-user">Admin</span>
+                </div>
+                <div class="dash-body">
+                    <div class="dash-sidebar">
+                        <div class="dash-nav-item active">Overview</div>
+                        <div class="dash-nav-item">Orders</div>
+                        <div class="dash-nav-item">Inventory</div>
+                        <div class="dash-nav-item">Customers</div>
+                        <div class="dash-nav-item">Analytics</div>
+                        <div class="dash-nav-item">Settings</div>
+                    </div>
+                    <div class="dash-main">
+                        <div class="dash-stats">
+                            <div class="dash-stat">
+                                <div class="dash-stat-label">Today</div>
+                                <div class="dash-stat-val">$1,240</div>
+                            </div>
+                            <div class="dash-stat">
+                                <div class="dash-stat-label">Orders</div>
+                                <div class="dash-stat-val">23</div>
+                            </div>
+                            <div class="dash-stat">
+                                <div class="dash-stat-label">Customers</div>
+                                <div class="dash-stat-val">156</div>
+                            </div>
+                        </div>
+                        <div class="dash-chart">
+                            <div class="dash-bar"></div>
+                            <div class="dash-bar"></div>
+                            <div class="dash-bar"></div>
+                            <div class="dash-bar"></div>
+                            <div class="dash-bar"></div>
+                            <div class="dash-bar"></div>
+                            <div class="dash-bar"></div>
+                        </div>
+                        <div class="dash-chart-label">
+                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MOBILE APP SPOTLIGHT -->
+    <section class="app-section">
+        <div class="app-inner">
+            <div class="section-label">Add-On</div>
+            <h2>Turn their website into <span class="accent">a mobile app</span></h2>
+            <p class="app-subtitle">Same features, native on their phone. An optional upgrade that adds real value.</p>
+            <div class="phone-frame">
+                <div class="phone-notch"></div>
+                <div class="phone-screen">
+                    <div class="ps-header">
+                        <div class="ps-logo"></div>
+                        <div class="ps-menu"><div class="ps-menu-line"></div><div class="ps-menu-line"></div><div class="ps-menu-line"></div></div>
+                    </div>
+                    <div class="ps-hero">
+                        <div class="ps-hero-text"></div>
+                        <div class="ps-hero-sub"></div>
+                        <div class="ps-hero-btn"></div>
+                    </div>
+                    <div class="ps-products">
+                        <div class="ps-product"><div class="ps-prod-img"></div><div class="ps-prod-text"></div><div class="ps-prod-price"></div></div>
+                        <div class="ps-product"><div class="ps-prod-img"></div><div class="ps-prod-text"></div><div class="ps-prod-price"></div></div>
+                        <div class="ps-product"><div class="ps-prod-img"></div><div class="ps-prod-text"></div><div class="ps-prod-price"></div></div>
+                        <div class="ps-product"><div class="ps-prod-img"></div><div class="ps-prod-text"></div><div class="ps-prod-price"></div></div>
+                    </div>
+                    <div class="ps-tab-bar">
+                        <div class="ps-tab-dot active"></div>
+                        <div class="ps-tab-dot"></div>
+                        <div class="ps-tab-dot"></div>
+                        <div class="ps-tab-dot"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="app-benefits">
+                <span class="app-benefit">Push Notifications</span>
+                <span class="app-benefit">Home Screen Icon</span>
+                <span class="app-benefit">Offline Access</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- COMPACT CAPABILITIES -->
+    <div class="caps-strip">
+        <div class="caps-label">Every site also includes</div>
+        <div class="caps-flow">
+            <span class="cap-tag hl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>Payment Processing</span>
+            <span class="cap-tag hl"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>AI Chat Support</span>
+            <span class="cap-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>Ratings & Reviews</span>
+            <span class="cap-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20V10"></path><path d="M18 20V4"></path><path d="M6 20v-4"></path></svg>Business Analytics</span>
+            <span class="cap-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>Full Code Ownership</span>
+            <span class="cap-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>Mobile Responsive</span>
+            <span class="cap-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>Email Collection</span>
+        </div>
+    </div>
+
+    <hr class="section-divider">
+
+    <!-- COST COMPARISON -->
+    <section class="cost-section">
+        <div class="section-wrap">
+            <div class="section-label">The Real Cost</div>
+            <h2 class="section-heading">Template builders aren't cheap. They're just slow about it.</h2>
+            <div class="cost-layout">
+                <div class="cost-col them">
+                    <h3>Template Builders (per year)</h3>
+                    <div class="cost-bars">
+                        <div class="cost-bar-row">
+                            <div class="cost-bar-label">Year 1</div>
+                            <div class="cost-bar-track"><div class="cost-bar-fill" style="width: 30%;">$180 – 600</div></div>
+                        </div>
+                        <div class="cost-bar-row">
+                            <div class="cost-bar-label">Year 3 (cumulative)</div>
+                            <div class="cost-bar-track"><div class="cost-bar-fill" style="width: 60%;">$540 – 1,800</div></div>
+                        </div>
+                        <div class="cost-bar-row">
+                            <div class="cost-bar-label">Year 5 (cumulative)</div>
+                            <div class="cost-bar-track"><div class="cost-bar-fill" style="width: 95%;">$900 – 3,000+</div></div>
+                        </div>
+                    </div>
+                    <p class="cost-note">Based on published $15–50/mo mid-tier plans. Excludes premium plugins, transaction fees, and theme upgrades.</p>
+                </div>
+                <div class="cost-col us">
+                    <h3>Global Storefront</h3>
+                    <div class="cost-bars">
+                        <div class="cost-bar-row">
+                            <div class="cost-bar-label">One-time build investment</div>
+                            <div class="cost-bar-track"><div class="cost-bar-fill" style="width: 35%;">Custom quote</div></div>
+                        </div>
+                        <div class="cost-bar-row">
+                            <div class="cost-bar-label">Hosting (ongoing)</div>
+                            <div class="cost-bar-track"><div class="cost-bar-fill" style="width: 8%;">$0 – 20/mo</div></div>
+                        </div>
+                        <div class="cost-bar-row">
+                            <div class="cost-bar-label">Plugins & add-ons</div>
+                            <div class="cost-bar-track"><div class="cost-bar-fill" style="width: 5%;">$0</div></div>
+                        </div>
+                    </div>
+                    <p class="cost-note">One-time build. Free hosting for most sites. No monthly fees, no plugin subs, no commissions. The code is yours.</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- HOW IT WORKS -->
-    <section class="section">
+    <section class="section-wrap">
         <div class="section-label">How It Works</div>
-        <h2>From conversation to launch</h2>
-        <p class="section-desc">No 47-step onboarding. No committees. One real conversation about what you need, then we get to work.</p>
-        <div class="process-list">
-            <div class="process-step">
+        <h2 class="section-heading">From conversation to launch</h2>
+        <div class="process-grid">
+            <div class="process-card">
                 <div class="process-num">1</div>
-                <div><h3>We talk about your business</h3><p>Not your "brand colors" or "user personas." We talk about what you actually need — what your customers do, what's annoying about your current setup, what would make your day easier.</p></div>
+                <h3>We talk about your business</h3>
+                <p>What do your customers actually do? What's annoying about your current setup? What would make your day easier?</p>
             </div>
-            <div class="process-step">
+            <div class="process-card">
                 <div class="process-num">2</div>
-                <div><h3>We build it — from scratch</h3><p>Custom code, custom design, custom features. You get a private portal here on Global Storefront to preview everything as it comes together. No surprises.</p></div>
+                <h3>We build it from scratch</h3>
+                <p>Custom code, custom design, custom features. You get a private preview portal right here to watch it come together.</p>
             </div>
-            <div class="process-step">
+            <div class="process-card">
                 <div class="process-num">3</div>
-                <div><h3>You launch and actually use it</h3><p>Your site goes live with admin tools, analytics, and whatever else you need from day one. Not just a brochure.</p></div>
+                <h3>You launch and use it</h3>
+                <p>Your site goes live with admin tools, analytics, and everything your business needs from day one.</p>
             </div>
         </div>
     </section>
 
     <!-- CTA -->
-    <section class="cta">
+    <section class="cta-section">
         <div class="cta-card">
-            <h2>Ready to ditch the template?</h2>
-            <p>Let's talk about what your site could actually be doing for you. No pitch deck, no jargon — just a straight conversation.</p>
-            <a href="#clientLogin" class="cta-btn">Get Started</a>
+            <h2>Ready to see what your site could actually do?</h2>
+            <p>No pitch deck, no jargon — just a straight conversation about your business. We'll show you what's possible before you spend a dollar.</p>
+            <a href="#clientLogin" class="hero-cta" style="display: inline-flex;">
+                Get Started
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
         </div>
     </section>
 
@@ -324,60 +1312,70 @@
         </div>
     </section>
 
-    <footer class="site-footer">&copy; 2026 Global Media. All rights reserved.</footer>
+    <footer class="site-footer">&copy; 2026 Global Storefront. Built by <a href="#">Globally Ballin LLC</a>.</footer>
 
-    <script>
-        document.querySelector('.toggle-password').addEventListener('click', function() {
-            const input = document.getElementById('password');
-            const isPassword = input.type === 'password';
-            input.type = isPassword ? 'text' : 'password';
-            this.innerHTML = isPassword
-                ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>'
-                : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
-        });
+</div><!-- /.page-content -->
 
-        document.getElementById('loginFormEl').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const error = document.getElementById('error');
-            const btn = document.getElementById('loginBtn');
-            error.classList.remove('show');
-            btn.disabled = true;
-            btn.textContent = 'Signing in...';
-            try {
-                const response = await fetch('/.netlify/functions/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    localStorage.setItem('gsToken', data.token);
-                    localStorage.setItem('gsClientName', data.name);
-                    localStorage.setItem('gsCompany', data.company);
-                    localStorage.setItem('gsUsername', data.username || '');
-                    window.location.href = data.projectUrl;
-                } else {
-                    error.textContent = data.error || 'Login failed. Please try again.';
-                    error.classList.add('show');
-                    btn.disabled = false;
-                    btn.textContent = 'Sign In';
-                }
-            } catch (err) {
-                error.textContent = 'Connection error. Please try again.';
+<script>
+    // Password toggle
+    document.querySelector('.toggle-password').addEventListener('click', function() {
+        const input = document.getElementById('password');
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        this.innerHTML = isPassword
+            ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>'
+            : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+    });
+
+    // Login form
+    document.getElementById('loginFormEl').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        const error = document.getElementById('error');
+        const btn = document.getElementById('loginBtn');
+        error.classList.remove('show');
+        btn.disabled = true;
+        btn.textContent = 'Signing in...';
+        try {
+            const response = await fetch('/.netlify/functions/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
+            if (response.ok) {
+                localStorage.setItem('gsToken', data.token);
+                localStorage.setItem('gsClientName', data.name);
+                localStorage.setItem('gsCompany', data.company);
+                localStorage.setItem('gsUsername', data.username || '');
+                window.location.href = data.projectUrl;
+            } else {
+                error.textContent = data.error || 'Login failed. Please try again.';
                 error.classList.add('show');
                 btn.disabled = false;
                 btn.textContent = 'Sign In';
             }
-        });
+        } catch (err) {
+            error.textContent = 'Connection error. Please try again.';
+            error.classList.add('show');
+            btn.disabled = false;
+            btn.textContent = 'Sign In';
+        }
+    });
 
-        // Track page visit (fire and forget)
-        fetch('/.netlify/functions/track-visit', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ page: 'home', referrer: document.referrer || '' })
-        }).catch(() => {});
-    </script>
+    // Track page visit (fire and forget)
+    fetch('/.netlify/functions/track-visit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ page: 'home', referrer: document.referrer || '' })
+    }).catch(() => {});
+
+    // Scroll reveal for showcase sections
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.showcase').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
