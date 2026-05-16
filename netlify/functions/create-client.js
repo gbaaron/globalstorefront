@@ -1,5 +1,4 @@
 const Airtable = require('airtable');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.handler = async (event) => {
@@ -64,15 +63,13 @@ exports.handler = async (event) => {
             };
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
-
         const newRecord = await base('Clients').create([
             {
                 fields: {
                     Name: name.trim(),
                     Email: email.trim().toLowerCase(),
                     Username: username.trim(),
-                    PasswordHash: hashedPassword,
+                    Password: password,
                     Company: company ? company.trim() : '',
                     ProjectURL: projectUrl.trim(),
                     CreatedAt: new Date().toISOString()
