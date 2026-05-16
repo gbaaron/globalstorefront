@@ -162,25 +162,35 @@
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 1rem;
         }
-        .hv-logo-placeholder { width: 80px; height: 12px; background: var(--color-accent); border-radius: 4px; opacity: 0.5; }
-        .hv-nav-dots { display: flex; gap: 10px; }
-        .hv-nav-dot { width: 40px; height: 6px; background: rgba(255,255,255,0.12); border-radius: 3px; }
+        .hv-logo-placeholder { font-size: 0.65rem; font-weight: 800; color: var(--color-accent); letter-spacing: 0.04em; opacity: 0.8; }
+        .hv-nav-dots { display: flex; gap: 12px; }
+        .hv-nav-dot { font-size: 0.5rem; color: rgba(255,255,255,0.35); font-weight: 500; }
         .hv-hero-block {
             background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.02));
             border-radius: var(--radius-sm); padding: 1.5rem; margin-bottom: 1rem;
             border: 1px solid rgba(212,175,55,0.1);
         }
-        .hv-hero-title { width: 70%; height: 14px; background: rgba(255,255,255,0.25); border-radius: 4px; margin-bottom: 0.5rem; }
-        .hv-hero-sub { width: 50%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 1rem; }
-        .hv-hero-btn { width: 90px; height: 26px; background: var(--grad-gold); border-radius: 6px; opacity: 0.7; }
+        .hv-hero-title { font-size: 0.85rem; font-weight: 800; color: rgba(255,255,255,0.85); margin-bottom: 0.35rem; line-height: 1.3; }
+        .hv-hero-sub { font-size: 0.5rem; color: rgba(255,255,255,0.35); margin-bottom: 0.85rem; }
+        .hv-hero-btn {
+            display: inline-block; padding: 0.4rem 1rem; background: var(--grad-gold);
+            border-radius: 6px; font-size: 0.5rem; font-weight: 700; color: #0f0f1a;
+        }
         .hv-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem; }
         .hv-card {
             background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
             border-radius: 6px; padding: 0.75rem;
         }
-        .hv-card-img { width: 100%; height: 40px; background: rgba(212,175,55,0.06); border-radius: 4px; margin-bottom: 0.4rem; }
-        .hv-card-title { width: 80%; height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; margin-bottom: 0.3rem; }
-        .hv-card-sub { width: 50%; height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; }
+        .hv-card-img {
+            width: 100%; height: 44px; border-radius: 4px; margin-bottom: 0.4rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+        .hv-card-img.img-a { background: linear-gradient(135deg, rgba(205,127,50,0.15), rgba(205,127,50,0.06)); }
+        .hv-card-img.img-b { background: linear-gradient(135deg, rgba(34,197,94,0.12), rgba(34,197,94,0.04)); }
+        .hv-card-img.img-c { background: linear-gradient(135deg, rgba(59,130,246,0.12), rgba(59,130,246,0.04)); }
+        .hv-card-title { font-size: 0.48rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.2rem; }
+        .hv-card-sub { font-size: 0.42rem; color: rgba(255,255,255,0.22); }
         .hv-label {
             position: absolute; bottom: -12px; right: 20px;
             background: var(--color-card); border: 1px solid var(--color-border);
@@ -371,9 +381,8 @@
             text-align: right;
         }
         .rm-subtitle {
-            width: 90px; height: 7px;
-            background: rgba(255,255,255,0.12); border-radius: 3px;
-            margin-bottom: 0.65rem;
+            font-size: 0.5rem; font-weight: 600; color: rgba(255,255,255,0.3);
+            text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.65rem;
         }
         .rm-rewards-row {
             display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;
@@ -384,14 +393,15 @@
             border-radius: 8px; padding: 0.6rem; text-align: center;
         }
         .rm-reward-icon {
-            width: 24px; height: 24px; border-radius: 50%;
+            width: 28px; height: 28px; border-radius: 50%;
             margin: 0 auto 0.35rem;
+            display: flex; align-items: center; justify-content: center; font-size: 0.75rem;
         }
         .rm-reward-icon.green { background: rgba(34,197,94,0.2); }
         .rm-reward-icon.blue { background: rgba(59,130,246,0.2); }
         .rm-reward-icon.purple { background: rgba(168,85,247,0.2); }
         .rm-reward-text {
-            width: 70%; height: 5px; background: rgba(255,255,255,0.1);
+            font-size: 0.42rem; color: rgba(255,255,255,0.4); font-weight: 500;
             border-radius: 3px; margin: 0 auto 0.3rem;
         }
         .rm-reward-pts {
@@ -404,8 +414,7 @@
             margin-bottom: 0.75rem;
         }
         .om-title {
-            width: 90px; height: 10px;
-            background: rgba(255,255,255,0.2); border-radius: 4px;
+            font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.6);
         }
         .om-cart-badge {
             width: 26px; height: 26px; border-radius: 50%;
@@ -437,15 +446,16 @@
             border-radius: 8px; padding: 0.6rem; overflow: hidden;
         }
         .om-prod-img {
-            width: 100%; height: 44px; border-radius: 5px;
+            width: 100%; height: 50px; border-radius: 5px;
             margin-bottom: 0.4rem;
+            display: flex; align-items: center; justify-content: center; font-size: 1.3rem;
         }
         .om-prod-img.a { background: linear-gradient(135deg, rgba(212,175,55,0.1), rgba(212,175,55,0.04)); }
         .om-prod-img.b { background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.03)); }
         .om-prod-img.c { background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(59,130,246,0.03)); }
         .om-prod-name {
-            width: 75%; height: 5px; background: rgba(255,255,255,0.15);
-            border-radius: 3px; margin-bottom: 0.4rem;
+            font-size: 0.48rem; font-weight: 600; color: rgba(255,255,255,0.5);
+            margin-bottom: 0.35rem;
         }
         .om-prod-bottom {
             display: flex; justify-content: space-between; align-items: center;
@@ -585,8 +595,7 @@
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         .ps-logo {
-            width: 40px; height: 7px;
-            background: var(--color-accent); border-radius: 3px; opacity: 0.5;
+            font-size: 0.4rem; font-weight: 800; color: var(--color-accent); opacity: 0.7;
         }
         .ps-menu {
             display: flex; flex-direction: column; gap: 2px;
@@ -601,18 +610,17 @@
             border-bottom: 1px solid rgba(255,255,255,0.04);
         }
         .ps-hero-text {
-            width: 80%; height: 8px;
-            background: rgba(255,255,255,0.2); border-radius: 3px;
-            margin-bottom: 5px;
+            font-size: 0.5rem; font-weight: 700; color: rgba(255,255,255,0.7);
+            margin-bottom: 3px; line-height: 1.3;
         }
         .ps-hero-sub {
-            width: 55%; height: 5px;
-            background: rgba(255,255,255,0.08); border-radius: 3px;
-            margin-bottom: 8px;
+            font-size: 0.3rem; color: rgba(255,255,255,0.3);
+            margin-bottom: 7px;
         }
         .ps-hero-btn {
-            width: 60px; height: 16px;
-            background: var(--grad-gold); border-radius: 4px; opacity: 0.7;
+            display: inline-block; padding: 3px 10px;
+            background: var(--grad-gold); border-radius: 4px;
+            font-size: 0.32rem; font-weight: 700; color: #0f0f1a;
         }
         .ps-products {
             padding: 10px 12px; flex: 1;
@@ -624,18 +632,20 @@
             border-radius: 6px; padding: 6px;
         }
         .ps-prod-img {
-            width: 100%; height: 30px;
-            background: rgba(212,175,55,0.06);
+            width: 100%; height: 32px;
             border-radius: 4px; margin-bottom: 4px;
+            display: flex; align-items: center; justify-content: center; font-size: 0.8rem;
         }
+        .ps-prod-img.pi-a { background: linear-gradient(135deg, rgba(205,127,50,0.12), rgba(205,127,50,0.04)); }
+        .ps-prod-img.pi-b { background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(34,197,94,0.03)); }
+        .ps-prod-img.pi-c { background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(59,130,246,0.03)); }
+        .ps-prod-img.pi-d { background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(168,85,247,0.03)); }
         .ps-prod-text {
-            width: 70%; height: 4px;
-            background: rgba(255,255,255,0.12); border-radius: 2px;
-            margin-bottom: 3px;
+            font-size: 0.3rem; font-weight: 600; color: rgba(255,255,255,0.4);
+            margin-bottom: 2px;
         }
         .ps-prod-price {
-            width: 35%; height: 4px;
-            background: rgba(212,175,55,0.25); border-radius: 2px;
+            font-size: 0.28rem; font-weight: 700; color: var(--color-accent); opacity: 0.6;
         }
         .ps-tab-bar {
             display: flex; justify-content: center; gap: 12px;
@@ -826,6 +836,20 @@
         }
         .site-footer a { color: var(--color-accent); text-decoration: none; }
 
+        /* CUSTOM CALLOUT */
+        .custom-callout {
+            max-width: 720px; margin: 0 auto; padding: 2.5rem 2rem;
+            text-align: center;
+        }
+        .custom-callout-text {
+            font-size: 0.95rem; line-height: 1.75;
+            color: var(--color-text-muted);
+            border: 1px solid rgba(212,175,55,0.15);
+            background: rgba(212,175,55,0.03);
+            border-radius: var(--radius-lg); padding: 1.5rem 2rem;
+        }
+        .custom-callout-text strong { color: var(--color-text); }
+
         .section-divider { border: none; border-top: 1px solid var(--color-border); max-width: 1200px; margin: 0 auto; }
 
         /* RESPONSIVE */
@@ -836,7 +860,11 @@
             .hero-visual { max-width: 500px; margin: 0 auto; }
             .showcase-grid, .showcase-grid.flip { grid-template-columns: 1fr; }
             .showcase-grid.flip .showcase-mockup { order: unset; }
+            .showcase-text { text-align: center; }
+            .feature-list { display: inline-block; text-align: left; }
             .dashboard-layout { grid-template-columns: 1fr; }
+            .dashboard-text { text-align: center; }
+            .dashboard-features { text-align: left; max-width: 360px; margin: 0 auto; }
             .cost-layout { grid-template-columns: 1fr; }
             .process-grid { grid-template-columns: 1fr; }
         }
@@ -847,6 +875,7 @@
             .login-card { padding: 1.75rem 1.5rem 1.5rem; }
             .dash-sidebar { display: none; }
             .hv-cards { grid-template-columns: 1fr 1fr; }
+            .hv-cards .hv-card:last-child { display: none; }
             .om-products { grid-template-columns: 1fr 1fr; }
             .rm-rewards-row { grid-template-columns: 1fr 1fr; }
             .rm-rewards-row .rm-reward:last-child { display: none; }
@@ -856,6 +885,24 @@
             .app-benefits { gap: 0.5rem; }
             .app-benefit { font-size: 0.68rem; padding: 0.35rem 0.8rem; }
             .pills-section { padding: 2rem 1.25rem 0.5rem; }
+            .custom-callout { padding: 2rem 1.25rem; }
+            .custom-callout-text { padding: 1.25rem 1.5rem; font-size: 0.88rem; }
+            .caps-strip { padding: 2.5rem 1.25rem; }
+            .nav-brand-name { font-size: 0.85rem; }
+            .nav-brand-tag { font-size: 0.55rem; }
+            .nav-login { padding: 0.5rem 1rem; font-size: 0.72rem; }
+            .hero-cta { width: 100%; justify-content: center; }
+            .cost-col { padding: 1.5rem; }
+            .cost-note { font-size: 0.72rem; }
+            .cta-card { padding: 2.5rem 1.5rem; }
+            .cta-card h2 { font-size: 1.3rem; }
+        }
+        @media (max-width: 380px) {
+            .hero h1 { font-size: 1.35rem; }
+            .subtitle { font-size: 0.82rem; }
+            .om-products { grid-template-columns: 1fr; }
+            .rm-rewards-row { grid-template-columns: 1fr; }
+            .rm-rewards-row .rm-reward:last-child { display: block; }
         }
     </style>
 </head>
@@ -891,18 +938,18 @@
         <div class="hero-visual">
             <div class="hv-browser-bar"><div class="hv-dot"></div><div class="hv-dot"></div><div class="hv-dot"></div></div>
             <div class="hv-header">
-                <div class="hv-logo-placeholder"></div>
-                <div class="hv-nav-dots"><div class="hv-nav-dot"></div><div class="hv-nav-dot"></div><div class="hv-nav-dot"></div><div class="hv-nav-dot"></div></div>
+                <div class="hv-logo-placeholder">Sunrise Bakery</div>
+                <div class="hv-nav-dots"><div class="hv-nav-dot">Menu</div><div class="hv-nav-dot">About</div><div class="hv-nav-dot">Order</div><div class="hv-nav-dot">Rewards</div></div>
             </div>
             <div class="hv-hero-block">
-                <div class="hv-hero-title"></div>
-                <div class="hv-hero-sub"></div>
-                <div class="hv-hero-btn"></div>
+                <div class="hv-hero-title">Fresh-baked daily.<br>Order ahead online.</div>
+                <div class="hv-hero-sub">Family-owned since 2019 &middot; Pickup ready in 15 min</div>
+                <div class="hv-hero-btn">Order Now</div>
             </div>
             <div class="hv-cards">
-                <div class="hv-card"><div class="hv-card-img"></div><div class="hv-card-title"></div><div class="hv-card-sub"></div></div>
-                <div class="hv-card"><div class="hv-card-img"></div><div class="hv-card-title"></div><div class="hv-card-sub"></div></div>
-                <div class="hv-card"><div class="hv-card-img"></div><div class="hv-card-title"></div><div class="hv-card-sub"></div></div>
+                <div class="hv-card"><div class="hv-card-img img-a">&#127854;</div><div class="hv-card-title">Cinnamon Roll</div><div class="hv-card-sub">$4.50</div></div>
+                <div class="hv-card"><div class="hv-card-img img-b">&#127861;</div><div class="hv-card-title">Matcha Latte</div><div class="hv-card-sub">$5.25</div></div>
+                <div class="hv-card"><div class="hv-card-img img-c">&#127856;</div><div class="hv-card-title">Blueberry Muffin</div><div class="hv-card-sub">$3.75</div></div>
             </div>
             <div class="hv-label">Custom built for your brand</div>
         </div>
@@ -996,21 +1043,21 @@
                             <div class="rm-progress-track"><div class="rm-progress-fill" style="width: 83%;"></div></div>
                             <div class="rm-progress-label">260 pts to Platinum</div>
                         </div>
-                        <div class="rm-subtitle"></div>
+                        <div class="rm-subtitle">Recent Activity</div>
                         <div class="rm-rewards-row">
                             <div class="rm-reward">
-                                <div class="rm-reward-icon green"></div>
-                                <div class="rm-reward-text"></div>
+                                <div class="rm-reward-icon green">&#127854;</div>
+                                <div class="rm-reward-text">Online order</div>
                                 <div class="rm-reward-pts">+50</div>
                             </div>
                             <div class="rm-reward">
-                                <div class="rm-reward-icon blue"></div>
-                                <div class="rm-reward-text"></div>
+                                <div class="rm-reward-icon blue">&#9733;</div>
+                                <div class="rm-reward-text">Left a review</div>
                                 <div class="rm-reward-pts">+25</div>
                             </div>
                             <div class="rm-reward">
-                                <div class="rm-reward-icon purple"></div>
-                                <div class="rm-reward-text"></div>
+                                <div class="rm-reward-icon purple">&#127381;</div>
+                                <div class="rm-reward-text">Referral bonus</div>
                                 <div class="rm-reward-pts">+75</div>
                             </div>
                         </div>
@@ -1042,7 +1089,7 @@
                         </div>
                         <div class="mf-body">
                             <div class="om-header">
-                                <div class="om-title"></div>
+                                <div class="om-title">Order Ahead</div>
                                 <div class="om-cart-badge">2</div>
                             </div>
                             <div class="om-tabs">
@@ -1052,18 +1099,18 @@
                             </div>
                             <div class="om-products">
                                 <div class="om-product">
-                                    <div class="om-prod-img a"></div>
-                                    <div class="om-prod-name"></div>
+                                    <div class="om-prod-img a">&#127950;</div>
+                                    <div class="om-prod-name">Almond Croissant</div>
                                     <div class="om-prod-bottom"><span class="om-price">$4.50</span><span class="om-add">+</span></div>
                                 </div>
                                 <div class="om-product">
-                                    <div class="om-prod-img b"></div>
-                                    <div class="om-prod-name"></div>
+                                    <div class="om-prod-img b">&#127861;</div>
+                                    <div class="om-prod-name">Iced Latte</div>
                                     <div class="om-prod-bottom"><span class="om-price">$3.25</span><span class="om-add">+</span></div>
                                 </div>
                                 <div class="om-product">
-                                    <div class="om-prod-img c"></div>
-                                    <div class="om-prod-name"></div>
+                                    <div class="om-prod-img c">&#127856;</div>
+                                    <div class="om-prod-name">Blueberry Scone</div>
                                     <div class="om-prod-bottom"><span class="om-price">$5.00</span><span class="om-add">+</span></div>
                                 </div>
                             </div>
@@ -1154,19 +1201,19 @@
                 <div class="phone-notch"></div>
                 <div class="phone-screen">
                     <div class="ps-header">
-                        <div class="ps-logo"></div>
+                        <div class="ps-logo">Sunrise Bakery</div>
                         <div class="ps-menu"><div class="ps-menu-line"></div><div class="ps-menu-line"></div><div class="ps-menu-line"></div></div>
                     </div>
                     <div class="ps-hero">
-                        <div class="ps-hero-text"></div>
-                        <div class="ps-hero-sub"></div>
-                        <div class="ps-hero-btn"></div>
+                        <div class="ps-hero-text">Order ahead,<br>skip the line</div>
+                        <div class="ps-hero-sub">Pickup ready in 15 min</div>
+                        <div class="ps-hero-btn">Browse Menu</div>
                     </div>
                     <div class="ps-products">
-                        <div class="ps-product"><div class="ps-prod-img"></div><div class="ps-prod-text"></div><div class="ps-prod-price"></div></div>
-                        <div class="ps-product"><div class="ps-prod-img"></div><div class="ps-prod-text"></div><div class="ps-prod-price"></div></div>
-                        <div class="ps-product"><div class="ps-prod-img"></div><div class="ps-prod-text"></div><div class="ps-prod-price"></div></div>
-                        <div class="ps-product"><div class="ps-prod-img"></div><div class="ps-prod-text"></div><div class="ps-prod-price"></div></div>
+                        <div class="ps-product"><div class="ps-prod-img pi-a">&#127854;</div><div class="ps-prod-text">Cinnamon Roll</div><div class="ps-prod-price">$4.50</div></div>
+                        <div class="ps-product"><div class="ps-prod-img pi-b">&#127861;</div><div class="ps-prod-text">Matcha Latte</div><div class="ps-prod-price">$5.25</div></div>
+                        <div class="ps-product"><div class="ps-prod-img pi-c">&#127856;</div><div class="ps-prod-text">Blueberry Muffin</div><div class="ps-prod-price">$3.75</div></div>
+                        <div class="ps-product"><div class="ps-prod-img pi-d">&#127950;</div><div class="ps-prod-text">Croissant</div><div class="ps-prod-price">$3.50</div></div>
                     </div>
                     <div class="ps-tab-bar">
                         <div class="ps-tab-dot active"></div>
@@ -1196,6 +1243,11 @@
             <span class="cap-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>Mobile Responsive</span>
             <span class="cap-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>Email Collection</span>
         </div>
+    </div>
+
+    <!-- CUSTOM BUILD CALLOUT -->
+    <div class="custom-callout">
+        <p class="custom-callout-text">What you see above is just a sample. <strong>Every site is built from scratch around your business.</strong> If you can describe it, we can build it &mdash; menus, booking systems, photo galleries, customer portals, whatever you need.</p>
     </div>
 
     <hr class="section-divider">
@@ -1376,6 +1428,12 @@
         entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
     }, { threshold: 0.12 });
     document.querySelectorAll('.showcase').forEach(el => observer.observe(el));
+
+    // Haptic feedback on interactive elements (mobile)
+    function haptic(ms) { if (navigator.vibrate) navigator.vibrate(ms || 10); }
+    document.querySelectorAll('a, button, .ind-pill, .hero-cta, .nav-login, .btn-login, .om-add, .om-cart-btn').forEach(el => {
+        el.addEventListener('touchstart', () => haptic(8), { passive: true });
+    });
 </script>
 </body>
 </html>
