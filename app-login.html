@@ -239,8 +239,15 @@
                     username: data.username
                 }));
 
-                // Redirect to app
-                window.location.href = '/app.html';
+                // Smart redirect: native app → app.html, web browser → client's site
+                const isNativeApp = !!(window.Capacitor || (window.NativeBridge && window.NativeBridge.isNative));
+                if (isNativeApp) {
+                    window.location.href = '/app.html';
+                } else if (data.projectUrl) {
+                    window.location.href = data.projectUrl;
+                } else {
+                    window.location.href = '/app.html';
+                }
 
             } catch (err) {
                 errorEl.textContent = err.message;
@@ -252,7 +259,15 @@
 
         // If already logged in, redirect
         if (localStorage.getItem('gs_token')) {
-            window.location.href = '/app.html';
+            const isNativeApp = !!(window.Capacitor || (window.NativeBridge && window.NativeBridge.isNative));
+            const user = JSON.parse(localStorage.getItem('gs_user') || '{}');
+            if (isNativeApp) {
+                window.location.href = '/app.html';
+            } else if (user.projectUrl) {
+                window.location.href = user.projectUrl;
+            } else {
+                window.location.href = '/app.html';
+            }
         }
     </script>
 </body>

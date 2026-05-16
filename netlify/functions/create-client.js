@@ -25,7 +25,7 @@ exports.handler = async (event) => {
             };
         }
 
-        const { name, email, username, password, company, projectUrl } = JSON.parse(event.body);
+        const { name, email, username, password, company, projectUrl, baseId } = JSON.parse(event.body);
 
         if (!name || !email || !username || !password || !projectUrl) {
             return {
@@ -63,19 +63,36 @@ exports.handler = async (event) => {
             };
         }
 
-        const newRecord = await base('Clients').create([
-            {
-                fields: {
-                    Name: name.trim(),
-                    Email: email.trim().toLowerCase(),
-                    Username: username.trim(),
-                    Password: password,
-                    Company: company ? company.trim() : '',
-                    ProjectURL: projectUrl.trim(),
-                    CreatedAt: new Date().toISOString()
-                }
+        const fields = {
+            Name: name.trim(),
+            Email: email.trim().toLowerCase(),
+            Username: username.trim(),
+            Password: password,
+            Company: company ? company.trim() : '',
+            ProjectURL: projectUrl.trim(),
+            CreatedAt: new Date().toISOString()
+        };
+        if (baseId) fields.BaseID = baseId.trim();
+
+        const newRecord = await base('Clients').create([{ fields }]);
+
+        // Sync admin user to the client's own Airtable base (non-blocking)
+        if (baseId) {
+            try {
+                const clientBase = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(baseId.trim());
+                await clientBase('Users').create([{
+                    fields: {
+                        Name: name.trim(),
+                        Email: email.trim().toLowerCase(),
+                        PasswordHash: password,
+                        IsAdmin: true,
+                        MemberSince: new Date().toISOString().split('T')[0]
+                    }
+                }]);
+            } catch (syncError) {
+                console.error('Admin user sync failed (non-blocking):', syncError.message);
             }
-        ]);
+        }
 
         return {
             statusCode: 200,
