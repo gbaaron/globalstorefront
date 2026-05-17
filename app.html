@@ -510,6 +510,25 @@
             color: var(--text-muted);
         }
 
+        .view-site-btn {
+            width: 100%;
+            padding: 14px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: var(--radius-sm);
+            color: var(--gold);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
         .logout-btn {
             width: 100%;
             padding: 14px;
@@ -708,6 +727,10 @@
                     </div>
                 </div>
 
+                <a class="view-site-btn" id="viewSiteBtn" href="#" target="_blank">
+                    <i data-lucide="external-link"></i>
+                    View My Site
+                </a>
                 <button class="logout-btn" id="logoutBtn">Sign Out</button>
             </div>
         </main>
@@ -769,6 +792,11 @@
         document.getElementById('settingsCompany').textContent = user.company || '-';
         document.getElementById('settingsUrl').textContent = user.projectUrl ? new URL(user.projectUrl).hostname : '-';
         document.getElementById('settingsUsername').textContent = user.username || user.name || '-';
+        if (user.projectUrl) {
+            document.getElementById('viewSiteBtn').href = user.projectUrl;
+        } else {
+            document.getElementById('viewSiteBtn').style.display = 'none';
+        }
 
         lucide.createIcons();
 
