@@ -113,7 +113,7 @@
             flex-direction: column;
             align-items: center;
             gap: 3px;
-            padding: 8px 16px;
+            padding: 8px 12px;
             background: none;
             border: none;
             color: var(--text-muted);
@@ -482,6 +482,34 @@
             margin-bottom: 3px;
         }
 
+        /* Analytics page */
+        .analytics-recent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .analytics-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .analytics-item__page {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .analytics-item__time {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
         /* Settings page */
         .settings-section {
             background: var(--surface);
@@ -701,6 +729,44 @@
                 <div id="ordersList" class="order-list"></div>
             </div>
 
+            <!-- Analytics page -->
+            <div class="page" id="pageAnalytics">
+                <div class="section-header">Site Traffic</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card__label">Today</div>
+                        <div class="stat-card__value stat-card__value--gold" id="analyticsToday">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">This Week</div>
+                        <div class="stat-card__value stat-card__value--blue" id="analyticsWeek">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">Total Views</div>
+                        <div class="stat-card__value" id="analyticsTotal">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">Total Orders</div>
+                        <div class="stat-card__value stat-card__value--green" id="analyticsTotalOrders">-</div>
+                    </div>
+                </div>
+
+                <div class="section-header">Revenue</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-card__label">Total Revenue</div>
+                        <div class="stat-card__value stat-card__value--green" id="analyticsRevenue">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card__label">Avg Order</div>
+                        <div class="stat-card__value" id="analyticsAvgOrder">-</div>
+                    </div>
+                </div>
+
+                <div class="section-header">Recent Activity</div>
+                <div id="analyticsRecentList" class="analytics-recent-list"></div>
+            </div>
+
             <!-- Settings page -->
             <div class="page" id="pageSettings">
                 <div class="section-header">Account</div>
@@ -749,6 +815,10 @@
             <button class="nav-btn" data-page="orders">
                 <i data-lucide="shopping-bag"></i>
                 <span>Orders</span>
+            </button>
+            <button class="nav-btn" data-page="analytics">
+                <i data-lucide="bar-chart-3"></i>
+                <span>Analytics</span>
             </button>
             <button class="nav-btn" data-page="settings">
                 <i data-lucide="settings"></i>
@@ -865,12 +935,13 @@
             const pageEl = document.getElementById('page' + page.charAt(0).toUpperCase() + page.slice(1));
             if (pageEl) pageEl.classList.add('active');
 
-            const titles = { dashboard: 'Dashboard', inbox: 'Inbox', orders: 'Orders', settings: 'Settings' };
+            const titles = { dashboard: 'Dashboard', inbox: 'Inbox', orders: 'Orders', analytics: 'Analytics', settings: 'Settings' };
             headerTitle.textContent = titles[page] || 'Global Storefront';
 
             if (page === 'dashboard') loadDashboard();
             if (page === 'inbox') loadInbox();
             if (page === 'orders') loadOrders();
+            if (page === 'analytics') loadAnalytics();
         }
 
         navBtns.forEach(btn => {
@@ -1117,6 +1188,37 @@
             } else {
                 container.innerHTML = '<div class="empty-state"><i data-lucide="shopping-bag"></i><p>No orders yet</p></div>';
                 lucide.createIcons({ attrs: { class: '' } });
+            }
+        }
+
+        // --- Analytics ---
+        async function loadAnalytics() {
+            // Load page view analytics from GS
+            const analyticsData = await api('get-tenant-admin?type=analytics');
+            if (analyticsData && analyticsData.data) {
+                const a = analyticsData.data;
+                document.getElementById('analyticsToday').textContent = a.todayViews || 0;
+                document.getElementById('analyticsWeek').textContent = a.weekViews || 0;
+                document.getElementById('analyticsTotal').textContent = a.totalViews || 0;
+                document.getElementById('analyticsTotalOrders').textContent = a.totalOrders || 0;
+                document.getElementById('analyticsRevenue').textContent = '$' + (a.totalRevenue || 0).toLocaleString();
+                document.getElementById('analyticsAvgOrder').textContent = a.totalOrders > 0
+                    ? '$' + Math.round(a.totalRevenue / a.totalOrders).toLocaleString()
+                    : '-';
+
+                // Render recent page views
+                const container = document.getElementById('analyticsRecentList');
+                if (a.recentViews && a.recentViews.length > 0) {
+                    container.innerHTML = a.recentViews.map(v => `
+                        <div class="analytics-item">
+                            <span class="analytics-item__page">${escapeHtml(v.page)}</span>
+                            <span class="analytics-item__time">${v.timestamp ? timeAgo(v.timestamp) : ''}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<div class="empty-state"><i data-lucide="bar-chart-3"></i><p>No page views yet</p></div>';
+                    lucide.createIcons({ attrs: { class: '' } });
+                }
             }
         }
 

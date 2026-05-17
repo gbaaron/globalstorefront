@@ -147,8 +147,59 @@ exports.handler = async (event) => {
                 break;
             }
 
+            case 'analytics': {
+                const analytics = {
+                    todayViews: 0,
+                    weekViews: 0,
+                    totalViews: 0,
+                    totalOrders: 0,
+                    totalRevenue: 0,
+                    recentViews: []
+                };
+
+                // Get page views from GS base (PageViews table tracks per-client)
+                try {
+                    const clientId = decoded.userId;
+                    const pageViews = await base('PageViews').select({
+                        filterByFormula: `{ClientId} = '${clientId}'`,
+                        sort: [{ field: 'Timestamp', direction: 'desc' }],
+                        maxRecords: 200
+                    }).all();
+
+                    const now = new Date();
+                    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+                    const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6).toISOString();
+
+                    analytics.totalViews = pageViews.length;
+                    for (const pv of pageViews) {
+                        const ts = pv.get('Timestamp') || '';
+                        if (ts >= todayStart) analytics.todayViews++;
+                        if (ts >= weekStart) analytics.weekViews++;
+                    }
+                    analytics.recentViews = pageViews.slice(0, 10).map(pv => ({
+                        page: pv.get('Page') || 'Unknown',
+                        timestamp: pv.get('Timestamp') || ''
+                    }));
+                } catch (e) {
+                    // PageViews might not exist or not have ClientId field yet
+                }
+
+                // Get order stats from tenant base
+                try {
+                    const orders = await tenantBase('Orders').select({ maxRecords: 200 }).firstPage();
+                    analytics.totalOrders = orders.length;
+                    for (const order of orders) {
+                        const total = parseFloat(order.get('Total') || order.get('TotalAmount') || 0);
+                        if (!isNaN(total)) analytics.totalRevenue += total;
+                    }
+                } catch (e) {}
+
+                data = analytics;
+                break;
+            }
+
             default:
-                return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid data type. Use: orders, products, appointments, stats' }) };
+                return { statusCode: 400, headers, body: JSON.stringify({ error: 'Invalid data type. Use: orders, products, appointments, stats, analytics' }) };
         }
 
         return {
