@@ -1,8 +1,18 @@
 const Airtable = require('airtable');
 
+const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json'
+};
+
 exports.handler = async (event) => {
+    if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 200, headers, body: '' };
+    }
     if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, body: 'Method Not Allowed' };
+        return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
     }
 
     try {
@@ -18,9 +28,9 @@ exports.handler = async (event) => {
             }
         }]);
 
-        return { statusCode: 200, body: JSON.stringify({ success: true }) };
+        return { statusCode: 200, headers, body: JSON.stringify({ success: true }) };
     } catch (error) {
         // Fail silently — don't break the page if tracking fails
-        return { statusCode: 200, body: JSON.stringify({ success: false }) };
+        return { statusCode: 200, headers, body: JSON.stringify({ success: false }) };
     }
 };

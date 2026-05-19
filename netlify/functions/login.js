@@ -1,9 +1,19 @@
 const Airtable = require('airtable');
 const jwt = require('jsonwebtoken');
 
+const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json'
+};
+
 exports.handler = async (event) => {
+    if (event.httpMethod === 'OPTIONS') {
+        return { statusCode: 200, headers, body: '' };
+    }
     if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, body: 'Method Not Allowed' };
+        return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
     }
 
     try {
@@ -12,6 +22,7 @@ exports.handler = async (event) => {
         if (!username || !password) {
             return {
                 statusCode: 400,
+                headers,
                 body: JSON.stringify({ error: 'Username and password are required' })
             };
         }
@@ -33,6 +44,7 @@ exports.handler = async (event) => {
         if (records.length === 0) {
             return {
                 statusCode: 401,
+                headers,
                 body: JSON.stringify({ error: 'Invalid username or password' })
             };
         }
@@ -43,6 +55,7 @@ exports.handler = async (event) => {
         if (password !== stored) {
             return {
                 statusCode: 401,
+                headers,
                 body: JSON.stringify({ error: 'Invalid username or password' })
             };
         }
@@ -55,6 +68,7 @@ exports.handler = async (event) => {
 
         return {
             statusCode: 200,
+            headers,
             body: JSON.stringify({
                 token,
                 name: client.get('Name'),
@@ -68,6 +82,7 @@ exports.handler = async (event) => {
         console.error('Login error:', error);
         return {
             statusCode: 500,
+            headers,
             body: JSON.stringify({ error: 'Server error. Please try again.' })
         };
     }

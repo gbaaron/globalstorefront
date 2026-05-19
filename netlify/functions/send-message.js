@@ -32,7 +32,9 @@ exports.handler = async (event) => {
     }
 
     try {
-        const { conversationId, content } = JSON.parse(event.body);
+        const body = JSON.parse(event.body);
+        const conversationId = body.conversationId;
+        const content = body.content || body.message;
 
         if (!conversationId || !content) {
             return { statusCode: 400, headers, body: JSON.stringify({ error: 'conversationId and content required' }) };
