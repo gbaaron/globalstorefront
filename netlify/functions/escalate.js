@@ -1,5 +1,6 @@
 const Airtable = require('airtable');
 const fetch = require('node-fetch');
+const jwt = require('jsonwebtoken');
 
 const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -7,6 +8,39 @@ const headers = {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Content-Type': 'application/json'
 };
+
+// Get OAuth2 access token from Firebase service account (FCM v1 API)
+let cachedToken = null;
+let tokenExpiry = 0;
+
+async function getAccessToken() {
+    const now = Math.floor(Date.now() / 1000);
+    if (cachedToken && now < tokenExpiry - 60) {
+        return cachedToken;
+    }
+
+    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    const jwtPayload = {
+        iss: serviceAccount.client_email,
+        scope: 'https://www.googleapis.com/auth/firebase.messaging',
+        aud: serviceAccount.token_uri,
+        iat: now,
+        exp: now + 3600
+    };
+
+    const signed = jwt.sign(jwtPayload, serviceAccount.private_key, { algorithm: 'RS256' });
+
+    const res = await fetch(serviceAccount.token_uri, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer&assertion=${signed}`
+    });
+
+    const data = await res.json();
+    cachedToken = data.access_token;
+    tokenExpiry = now + (data.expires_in || 3600);
+    return cachedToken;
+}
 
 exports.handler = async (event) => {
     if (event.httpMethod === 'OPTIONS') {
@@ -54,33 +88,44 @@ exports.handler = async (event) => {
             }
         }]);
 
-        // Send push notification to store owner
+        // Send push notification via FCM v1 API
         const deviceRecords = await base('DeviceTokens').select({
             filterByFormula: `{ClientID} = '${tenantId}'`
         }).firstPage();
 
-        if (deviceRecords.length > 0 && process.env.FIREBASE_SERVER_KEY) {
+        if (deviceRecords.length > 0 && process.env.FIREBASE_SERVICE_ACCOUNT) {
             const tokens = deviceRecords.map(r => r.get('Token')).filter(Boolean);
+            const accessToken = await getAccessToken();
+            const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+            const projectId = serviceAccount.project_id;
 
             for (const token of tokens) {
                 try {
-                    await fetch('https://fcm.googleapis.com/fcm/send', {
+                    await fetch(`https://fcm.googleapis.com/v1/projects/${projectId}/messages:send`, {
                         method: 'POST',
                         headers: {
-                            'Authorization': `key=${process.env.FIREBASE_SERVER_KEY}`,
+                            'Authorization': `Bearer ${accessToken}`,
                             'Content-Type': 'application/json'
                         },
                         body: JSON.stringify({
-                            to: token,
-                            notification: {
-                                title: `New message from ${customerName || 'a customer'}`,
-                                body: message.substring(0, 100) + (message.length > 100 ? '...' : ''),
-                                sound: 'default',
-                                badge: '1'
-                            },
-                            data: {
-                                conversationId,
-                                type: 'new_escalation'
+                            message: {
+                                token: token,
+                                notification: {
+                                    title: `New message from ${customerName || 'a customer'}`,
+                                    body: message.substring(0, 100) + (message.length > 100 ? '...' : '')
+                                },
+                                apns: {
+                                    payload: {
+                                        aps: {
+                                            sound: 'default',
+                                            badge: 1
+                                        }
+                                    }
+                                },
+                                data: {
+                                    conversationId,
+                                    type: 'new_escalation'
+                                }
                             }
                         })
                     });
