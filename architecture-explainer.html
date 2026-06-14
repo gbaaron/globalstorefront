@@ -668,9 +668,89 @@
   </div>
 </section>
 
-<!-- ============ SECTION 6: Q&A ============ -->
+<!-- ============ SECTION 6: INTEGRATION ============ -->
 <section>
-  <div class="sec-head"><div class="sec-num">6</div><h2>Your exact questions, answered</h2></div>
+  <div class="sec-head"><div class="sec-num">6</div><h2>Making the app + each site work together</h2></div>
+  <p class="sec-sub">Good news: the code is wired correctly end-to-end. Whether a <em>specific</em> client connects comes down to <b>one ID lining up</b> and a few config values.</p>
+
+  <div class="diagram">
+    <p class="cap" style="margin-top:0;font-weight:600;color:var(--text)">One identifier threads through everything — the client's record ID</p>
+    <svg viewBox="0 0 960 240" role="img" aria-label="The shared tenant ID threading through the system">
+      <!-- shared wire -->
+      <path d="M40,185 H920" fill="none" stroke="#d4af37" stroke-width="3"/>
+      <!-- stems -->
+      <g stroke="#d4af37" stroke-width="2" opacity=".55">
+        <path d="M95,136 V185"/><path d="M285,136 V185"/><path d="M475,136 V185"/>
+        <path d="M665,136 V185"/><path d="M855,136 V185"/>
+      </g>
+      <!-- travelling pill carrying the ID -->
+      <g>
+        <rect x="-48" y="-13" width="96" height="26" rx="13" fill="#d4af37"/>
+        <text x="0" y="5" text-anchor="middle" font-size="12" font-weight="800" fill="#0d0f1a">recABC123</text>
+        <animateMotion dur="6s" repeatCount="indefinite" path="M40,185 H920"/>
+      </g>
+
+      <!-- nodes -->
+      <g><rect x="15" y="40" width="160" height="96" rx="12" fill="#1d2340" stroke="#e08a3c" stroke-width="1.5"/>
+        <text x="95" y="74" text-anchor="middle" font-size="20">🌐</text>
+        <text x="95" y="98" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">On the client site</text>
+        <text x="95" y="120" text-anchor="middle" fill="#d4af37" font-size="11" font-family="ui-monospace,monospace">data-tenant</text></g>
+      <g><rect x="205" y="40" width="160" height="96" rx="12" fill="#1d2340" stroke="#46c18a" stroke-width="1.5"/>
+        <text x="285" y="74" text-anchor="middle" font-size="20">⚙️</text>
+        <text x="285" y="98" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Bot &amp; escalate</text>
+        <text x="285" y="120" text-anchor="middle" fill="#d4af37" font-size="11" font-family="ui-monospace,monospace">tenantId</text></g>
+      <g><rect x="395" y="40" width="160" height="96" rx="12" fill="#1d2340" stroke="#d4af37" stroke-width="1.5"/>
+        <text x="475" y="74" text-anchor="middle" font-size="20">🗄️</text>
+        <text x="475" y="98" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Conversation row</text>
+        <text x="475" y="120" text-anchor="middle" fill="#d4af37" font-size="11" font-family="ui-monospace,monospace">TenantID</text></g>
+      <g><rect x="585" y="40" width="160" height="96" rx="12" fill="#1d2340" stroke="#d4af37" stroke-width="1.5"/>
+        <text x="665" y="74" text-anchor="middle" font-size="20">📱</text>
+        <text x="665" y="98" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">App login (JWT)</text>
+        <text x="665" y="120" text-anchor="middle" fill="#d4af37" font-size="11" font-family="ui-monospace,monospace">userId</text></g>
+      <g><rect x="775" y="40" width="160" height="96" rx="12" fill="#1d2340" stroke="#46c18a" stroke-width="1.5"/>
+        <text x="855" y="74" text-anchor="middle" font-size="20">🔔</text>
+        <text x="855" y="98" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Push token</text>
+        <text x="855" y="120" text-anchor="middle" fill="#d4af37" font-size="11" font-family="ui-monospace,monospace">ClientID</text></g>
+    </svg>
+    <p class="cap">All five are the <b>same</b> client record ID. You only ever set the first one by hand (<code>data-tenant</code>) — the code fills in the rest.</p>
+  </div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card" style="border-color:var(--zeeland-soft)">
+      <h3>✅ Per client — set these when onboarding</h3>
+      <ul class="clean">
+        <li><b>Widget <code>data-tenant</code></b> = that client's Airtable <em>Clients</em> record ID (the single most important match)</li>
+        <li><b>Widget <code>src</code></b> points at the Global Storefront deployment (never self-hosted on the client domain)</li>
+        <li><b><code>Clients.BaseID</code></b> filled in → or the Orders/Products tabs come back empty</li>
+        <li><b><code>Clients.SiteType</code></b> set (product / restaurant / service) → controls which tables the app reads</li>
+        <li><b>KB rows</b> in <code>BotKnowledgeBase</code> tagged with the same record ID</li>
+        <li><b>Their own base</b> uses the expected tables/fields: <code>Orders</code>(OrderDate, Status, Total), <code>Products</code>/<code>MenuItems</code>, <code>Appointments</code>(Date)</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:var(--blue-soft)">
+      <h3>🔑 Platform — set once</h3>
+      <ul class="clean">
+        <li><b><code>AIRTABLE_API_KEY</code></b> — must have access to the GS base <em>and every client base</em></li>
+        <li><b><code>OPENAI_API_KEY</code></b> — powers the helper bot</li>
+        <li><b><code>FIREBASE_SERVICE_ACCOUNT</code></b> — the JSON the push code actually uses <span class="pill pink">docs say SERVER_KEY ⚠</span></li>
+        <li><b><code>JWT_SECRET</code></b> — signs owner login tokens</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="link-callout" style="margin-top:18px;text-align:left">
+    <b style="color:var(--text)">⚠️ Watch-outs I found in the code (won't crash — they fail <em>quietly</em>):</b>
+    <ul class="clean" style="margin-top:10px">
+      <li>If <code>FIREBASE_SERVICE_ACCOUNT</code> is missing, escalations are still saved but the owner gets <b>no push</b> — they only see the message next time they open the app</li>
+      <li>If a new client's base isn't shared with the Airtable token, their <b>Orders tab is just empty</b> (no error shown)</li>
+      <li>If <code>data-tenant</code> is wrong/missing, the bot returns "tenant not found" and <b>nothing escalates</b></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ SECTION 7: Q&A ============ -->
+<section>
+  <div class="sec-head"><div class="sec-num">7</div><h2>Your exact questions, answered</h2></div>
   <div class="qa">
     <details open>
       <summary>What's the difference between the iOS app and the web / mobile web version for admins?</summary>
