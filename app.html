@@ -571,6 +571,20 @@
             margin-top: 24px;
         }
 
+        .delete-account-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--red);
+            border: none;
+            border-radius: var(--radius-sm);
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 12px;
+        }
+
         /* Empty state */
         .empty-state {
             text-align: center;
@@ -798,6 +812,15 @@
                     View My Site
                 </a>
                 <button class="logout-btn" id="logoutBtn">Sign Out</button>
+
+                <div class="section-header">Danger Zone</div>
+                <div class="settings-section">
+                    <div class="settings-item" style="flex-direction:column;align-items:flex-start;gap:6px">
+                        <span class="settings-item__label">Delete Account</span>
+                        <span class="settings-item__value" style="text-align:left;line-height:1.5">Permanently deletes your account, conversations, and messages. This cannot be undone.</span>
+                    </div>
+                </div>
+                <button class="delete-account-btn" id="deleteAccountBtn">Delete My Account</button>
             </div>
         </main>
 
@@ -1227,6 +1250,37 @@
             localStorage.removeItem('gs_token');
             localStorage.removeItem('gs_user');
             window.location.href = '/app-login.html';
+        });
+
+        document.getElementById('deleteAccountBtn').addEventListener('click', async () => {
+            if (!confirm('Delete your account permanently? This erases your account and all conversations and cannot be undone.')) return;
+            if (prompt('Type DELETE to confirm.') !== 'DELETE') {
+                showToast('Account not deleted');
+                return;
+            }
+            const btn = document.getElementById('deleteAccountBtn');
+            btn.disabled = true;
+            btn.textContent = 'Deleting...';
+            try {
+                const res = await api('delete-account', {
+                    method: 'POST',
+                    body: JSON.stringify({ confirm: 'DELETE' })
+                });
+                if (res && res.success) {
+                    localStorage.removeItem('gs_token');
+                    localStorage.removeItem('gs_user');
+                    alert('Your account has been deleted.');
+                    window.location.href = '/app-login.html';
+                } else {
+                    showToast((res && res.error) || 'Could not delete account');
+                    btn.disabled = false;
+                    btn.textContent = 'Delete My Account';
+                }
+            } catch (e) {
+                showToast('Could not delete account');
+                btn.disabled = false;
+                btn.textContent = 'Delete My Account';
+            }
         });
 
         // --- Utilities ---
