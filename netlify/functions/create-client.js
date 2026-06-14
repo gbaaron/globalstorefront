@@ -1,5 +1,6 @@
 const Airtable = require('airtable');
 const jwt = require('jsonwebtoken');
+const { normalizeTier, normalizeCycle } = require('./lib/tiers');
 
 exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
@@ -25,7 +26,7 @@ exports.handler = async (event) => {
             };
         }
 
-        const { name, email, username, password, company, projectUrl, baseId } = JSON.parse(event.body);
+        const { name, email, username, password, company, projectUrl, baseId, tier, billingCycle } = JSON.parse(event.body);
 
         if (!name || !email || !username || !password || !projectUrl) {
             return {
@@ -63,6 +64,16 @@ exports.handler = async (event) => {
             };
         }
 
+        const resolvedTier = normalizeTier(tier);
+        const resolvedCycle = normalizeCycle(billingCycle);
+        const now = new Date();
+        const nextBilling = new Date(now);
+        if (resolvedCycle === 'annual') {
+            nextBilling.setFullYear(nextBilling.getFullYear() + 1);
+        } else {
+            nextBilling.setMonth(nextBilling.getMonth() + 1);
+        }
+
         const fields = {
             Name: name.trim(),
             Email: email.trim().toLowerCase(),
@@ -70,7 +81,12 @@ exports.handler = async (event) => {
             Password: password,
             Company: company ? company.trim() : '',
             ProjectURL: projectUrl.trim(),
-            CreatedAt: new Date().toISOString()
+            CreatedAt: now.toISOString(),
+            Tier: resolvedTier,
+            BillingCycle: resolvedCycle,
+            SubStatus: 'active',
+            SubStartDate: now.toISOString().split('T')[0],
+            NextBillingDate: nextBilling.toISOString().split('T')[0]
         };
         if (baseId) fields.BaseID = baseId.trim();
 
@@ -105,7 +121,10 @@ exports.handler = async (event) => {
                     username: newRecord[0].get('Username'),
                     company: newRecord[0].get('Company'),
                     projectUrl: newRecord[0].get('ProjectURL'),
-                    createdAt: newRecord[0].get('CreatedAt')
+                    createdAt: newRecord[0].get('CreatedAt'),
+                    tier: newRecord[0].get('Tier'),
+                    billingCycle: newRecord[0].get('BillingCycle'),
+                    subStatus: newRecord[0].get('SubStatus')
                 }
             })
         };

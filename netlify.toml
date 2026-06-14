@@ -5,6 +5,36 @@
 [functions]
   node_bundler = "esbuild"
 
+# Daily payout sweep: aggregate pending Transactions into Payouts (next-business-day).
+# Stripe transfers fire only when STRIPE_SECRET_KEY is present; otherwise records-only.
+[functions."sweep-payouts"]
+  schedule = "@daily"
+
+# Monthly report generation: for each Growth+ client, compute the prior calendar
+# month's metrics and write one Reports row per client. PDFs are rebuilt on
+# demand by get-reports (not stored, to stay under Airtable's long-text cap).
+[functions."generate-reports"]
+  schedule = "@monthly"
+
+# Weekly Smart Suggestions: for each Growth+ client, analyze the last 7 days of
+# traffic + orders/revenue vs the prior 7 and emit rule-based suggestion rows
+# (optionally polished by OpenAI). Idempotent per run via open-suggestion dedupe.
+[functions."generate-suggestions"]
+  schedule = "@weekly"
+
+# Daily campaign sweep: send every Growth+ EmailCampaigns row in 'scheduled'
+# status whose Schedule time is now due. Recipient lists are read from each
+# client's own base; delivery fires only when an email-provider key is present
+# (RESEND_API_KEY / SENDGRID_API_KEY), otherwise records-only.
+[functions."send-campaign"]
+  schedule = "@daily"
+
+# Weekly social-post suggestions: for each Concierge client, generate a fresh
+# batch of suggested SocialPosts rows (captions + hashtags, optionally polished
+# by OpenAI). The owner acts on them via update-social (schedule/post/archive).
+[functions."generate-social"]
+  schedule = "@weekly"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"

@@ -9,6 +9,7 @@
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏪</text></svg>">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -510,6 +511,376 @@
             color: var(--text-muted);
         }
 
+        /* Charts */
+        .chart-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 8px;
+        }
+        .chart-card--doughnut {
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Upgrade gate */
+        .upgrade-gate {
+            background: var(--surface);
+            border: 1px solid var(--gold-dim);
+            border-radius: var(--radius);
+            padding: 28px 20px;
+            text-align: center;
+        }
+        .upgrade-gate i {
+            width: 32px;
+            height: 32px;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+        .upgrade-gate h3 {
+            font-size: 1.05rem;
+            color: var(--text);
+            margin: 0 0 6px;
+        }
+        .upgrade-gate p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.5;
+        }
+        .upgrade-gate strong { color: var(--gold); }
+
+        /* Monthly reports */
+        .reports-list { display: flex; flex-direction: column; gap: 10px; }
+        .report-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+        }
+        .report-item__period { font-weight: 600; color: var(--text); }
+        .report-item__meta { font-size: 0.78rem; color: var(--text-muted); margin-top: 2px; }
+        .report-item__dl {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--gold-dim);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        .report-item__dl i { width: 15px; height: 15px; }
+        .report-item__dl:disabled { opacity: 0.6; cursor: default; }
+
+        /* Smart Suggestions */
+        .section-header--row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .suggestions-count {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--gold);
+            background: var(--gold-dim);
+            border-radius: 20px;
+            padding: 3px 10px;
+        }
+        .suggestions-list { display: flex; flex-direction: column; gap: 12px; }
+        .suggestion-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--gold);
+            border-radius: var(--radius);
+            padding: 16px;
+        }
+        .suggestion-card--done { border-left-color: var(--text-muted); opacity: 0.82; }
+        .suggestion-card__top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .suggestion-card__cat {
+            font-size: 0.66rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(96, 165, 250, 0.14);
+            color: var(--blue);
+        }
+        .suggestion-card__cat--traffic { background: rgba(96, 165, 250, 0.14); color: var(--blue); }
+        .suggestion-card__cat--revenue { background: rgba(52, 211, 153, 0.14); color: var(--green); }
+        .suggestion-card__cat--orders { background: var(--gold-dim); color: var(--gold); }
+        .suggestion-card__cat--retention { background: rgba(167, 139, 250, 0.16); color: #a78bfa; }
+        .suggestion-card__cat--engagement { background: rgba(248, 113, 113, 0.14); color: var(--red); }
+        .suggestion-card__status {
+            margin-left: auto;
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: capitalize;
+        }
+        .suggestion-card__title {
+            font-size: 0.98rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 0 0 6px;
+            line-height: 1.35;
+        }
+        .suggestion-card__body {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+            margin: 0 0 12px;
+        }
+        .suggestion-card__movement {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 0 0 12px;
+        }
+        .movement-chip {
+            font-size: 0.72rem;
+            color: var(--text);
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 5px 9px;
+        }
+        .movement-chip strong { color: var(--gold); font-weight: 600; }
+        .movement-chip .mv-up { color: var(--green); }
+        .movement-chip .mv-down { color: var(--red); }
+        .suggestion-card__actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .sug-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            transition: opacity 0.15s ease;
+        }
+        .sug-btn:active { opacity: 0.7; }
+        .sug-btn:disabled { opacity: 0.5; cursor: default; }
+        .sug-btn i { width: 14px; height: 14px; }
+        .sug-btn--primary { background: var(--gold-dim); color: var(--gold); border-color: var(--gold); }
+        .sug-btn--keep { color: var(--green); border-color: rgba(52, 211, 153, 0.4); }
+        .sug-btn--stop { color: var(--red); border-color: rgba(248, 113, 113, 0.4); }
+        .suggestions-empty {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 22px 18px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Email marketing */
+        .email-new-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.74rem;
+            font-weight: 600;
+            color: var(--gold);
+            background: var(--gold-dim);
+            border: 1px solid var(--gold);
+            border-radius: 20px;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .email-new-btn i { width: 13px; height: 13px; }
+        .email-form {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .email-form__label {
+            display: block;
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin: 10px 0 5px;
+        }
+        .email-form__label:first-child { margin-top: 0; }
+        .email-form__hint { font-weight: 400; color: var(--text-muted); opacity: 0.75; }
+        .email-form__input {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            color: var(--text);
+            font-size: 0.85rem;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+        .email-form__textarea { resize: vertical; line-height: 1.5; }
+        .email-form__actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 14px;
+        }
+        .campaigns-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .campaign-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+        }
+        .campaign-item__top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .campaign-item__type {
+            font-size: 0.64rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(96, 165, 250, 0.14);
+            color: var(--blue);
+        }
+        .campaign-item__status {
+            margin-left: auto;
+            font-size: 0.66rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: var(--text-muted);
+        }
+        .campaign-item__status--scheduled { color: var(--blue); }
+        .campaign-item__status--sending { color: var(--gold); }
+        .campaign-item__status--sent { color: var(--green); }
+        .campaign-item__status--failed { color: var(--red); }
+        .campaign-item__status--archived { color: var(--text-muted); opacity: 0.7; }
+        .campaign-item__subject {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text);
+            margin: 0 0 4px;
+            line-height: 1.35;
+        }
+        .campaign-item__meta {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        .campaign-item__actions { display: flex; flex-wrap: wrap; gap: 8px; }
+
+        /* Social posts (Concierge) */
+        .social-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .social-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+        }
+        .social-card__top {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .social-card__platform {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.66rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+        }
+        .social-card__platform svg { width: 14px; height: 14px; }
+        .social-card__caption {
+            font-size: 0.9rem;
+            color: var(--text);
+            margin: 0 0 8px;
+            line-height: 1.45;
+            white-space: pre-wrap;
+        }
+        .social-card__tags {
+            font-size: 0.8rem;
+            color: var(--blue);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .social-card__scheduled {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+        .social-card__scheduled svg { width: 13px; height: 13px; }
+
+        /* Dev hours summary (Concierge) */
+        .dev-hours-summary {
+            margin-bottom: 12px;
+        }
+        .dev-hours-summary__row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            padding: 10px 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+        }
+        .dev-hours-summary__free { color: var(--green); font-weight: 600; }
+        .dev-hours-summary__owed { color: var(--gold); font-weight: 600; }
+        .dev-hours-estimate {
+            font-size: 0.78rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+            min-height: 1em;
+        }
+
         /* Settings page */
         .settings-section {
             background: var(--surface);
@@ -691,6 +1062,25 @@
                         <div class="stat-card__value" id="statRevenue">-</div>
                     </div>
                 </div>
+
+                <!-- Smart Suggestions (Growth+) -->
+                <div id="suggestionsBlock" style="display:none;">
+                    <div class="section-header section-header--row">
+                        <span>Smart Suggestions</span>
+                        <span class="suggestions-count" id="suggestionsCount"></span>
+                    </div>
+                    <div id="suggestionsList" class="suggestions-list"></div>
+                </div>
+
+                <!-- Social Posts (Concierge) -->
+                <div id="socialBlock" style="display:none;">
+                    <div class="section-header section-header--row">
+                        <span>Social Posts</span>
+                        <span class="suggestions-count" id="socialCount"></span>
+                    </div>
+                    <div id="socialList" class="social-list"></div>
+                </div>
+
                 <div class="section-header">Recent Messages</div>
                 <div id="dashRecentMessages" class="conversation-list"></div>
             </div>
@@ -763,8 +1153,33 @@
                     </div>
                 </div>
 
+                <!-- Advanced analytics (Growth+) -->
+                <div id="analyticsAdvanced" style="display:none;">
+                    <div class="section-header">Traffic — Last 14 Days</div>
+                    <div class="chart-card"><canvas id="chartViews" height="160"></canvas></div>
+
+                    <div class="section-header">Revenue — Last 14 Days</div>
+                    <div class="chart-card"><canvas id="chartRevenue" height="160"></canvas></div>
+
+                    <div class="section-header">Orders by Status</div>
+                    <div class="chart-card chart-card--doughnut"><canvas id="chartStatus" height="200"></canvas></div>
+                </div>
+
+                <!-- Upgrade gate (Essentials) -->
+                <div id="analyticsUpgradeGate" class="upgrade-gate" style="display:none;">
+                    <i data-lucide="lock"></i>
+                    <h3>Unlock Advanced Analytics</h3>
+                    <p>See 14-day traffic and revenue trends, plus order breakdowns. Upgrade to <strong>Growth</strong> to turn this on.</p>
+                </div>
+
                 <div class="section-header">Recent Activity</div>
                 <div id="analyticsRecentList" class="analytics-recent-list"></div>
+
+                <!-- Monthly reports (Growth+) -->
+                <div id="reportsBlock" style="display:none;">
+                    <div class="section-header">Monthly Reports</div>
+                    <div id="reportsList" class="reports-list"></div>
+                </div>
             </div>
 
             <!-- Settings page -->
@@ -791,6 +1206,83 @@
                         <span class="settings-item__label">Push Notifications</span>
                         <span class="settings-item__value" id="settingsPush">Enabled</span>
                     </div>
+                </div>
+
+                <!-- Email marketing (Growth+) -->
+                <div id="emailBlock" style="display:none;">
+                    <div class="section-header section-header--row">
+                        <span>Email Marketing</span>
+                        <button class="email-new-btn" id="emailNewBtn"><i data-lucide="plus"></i> New</button>
+                    </div>
+
+                    <!-- Create form (hidden until New is tapped) -->
+                    <div class="email-form" id="emailForm" style="display:none;">
+                        <label class="email-form__label">Type</label>
+                        <select class="email-form__input" id="emailType">
+                            <option value="blast">Blast</option>
+                            <option value="seasonal">Seasonal</option>
+                            <option value="cart_abandon">Cart Abandon</option>
+                        </select>
+                        <label class="email-form__label">Subject</label>
+                        <input type="text" class="email-form__input" id="emailSubject" placeholder="Subject line" maxlength="200">
+                        <label class="email-form__label">Body</label>
+                        <textarea class="email-form__input email-form__textarea" id="emailBody" placeholder="Write your email... (HTML allowed)" rows="5"></textarea>
+                        <label class="email-form__label">Schedule <span class="email-form__hint">(optional — leave blank to save as draft)</span></label>
+                        <input type="datetime-local" class="email-form__input" id="emailSchedule">
+                        <div class="email-form__actions">
+                            <button class="sug-btn" id="emailCancelBtn">Cancel</button>
+                            <button class="sug-btn sug-btn--primary" id="emailSaveBtn">Save Campaign</button>
+                        </div>
+                    </div>
+
+                    <div id="campaignsList" class="campaigns-list"></div>
+                </div>
+
+                <!-- Strategy Calls (Concierge) -->
+                <div id="strategyBlock" style="display:none;">
+                    <div class="section-header section-header--row">
+                        <span>Strategy Calls</span>
+                        <button class="email-new-btn" id="strategyNewBtn"><i data-lucide="plus"></i> Request</button>
+                    </div>
+
+                    <div class="email-form" id="strategyForm" style="display:none;">
+                        <label class="email-form__label">Quarter</label>
+                        <input type="text" class="email-form__input" id="strategyQuarter" placeholder="2026-Q2" maxlength="10">
+                        <label class="email-form__label">Topic</label>
+                        <input type="text" class="email-form__input" id="strategyTopic" placeholder="What do you want to cover?" maxlength="200">
+                        <label class="email-form__label">Preferred Slot <span class="email-form__hint">(optional)</span></label>
+                        <input type="text" class="email-form__input" id="strategySlot" placeholder="e.g. Tue afternoons" maxlength="120">
+                        <div class="email-form__actions">
+                            <button class="sug-btn" id="strategyCancelBtn">Cancel</button>
+                            <button class="sug-btn sug-btn--primary" id="strategySaveBtn">Request Call</button>
+                        </div>
+                    </div>
+
+                    <div id="strategyList" class="campaigns-list"></div>
+                </div>
+
+                <!-- Dev Hours (Concierge) -->
+                <div id="devHoursBlock" style="display:none;">
+                    <div class="section-header section-header--row">
+                        <span>Dev Hours</span>
+                        <button class="email-new-btn" id="devHoursNewBtn"><i data-lucide="plus"></i> Request</button>
+                    </div>
+
+                    <div class="dev-hours-summary" id="devHoursSummary"></div>
+
+                    <div class="email-form" id="devHoursForm" style="display:none;">
+                        <label class="email-form__label">Description</label>
+                        <textarea class="email-form__input email-form__textarea" id="devHoursDesc" placeholder="What do you need built or changed?" rows="3" maxlength="500"></textarea>
+                        <label class="email-form__label">Hours <span class="email-form__hint">(1 free hour/month included, then $50/hr)</span></label>
+                        <input type="number" class="email-form__input" id="devHoursAmount" placeholder="e.g. 2" min="0.25" step="0.25">
+                        <div class="dev-hours-estimate" id="devHoursEstimate"></div>
+                        <div class="email-form__actions">
+                            <button class="sug-btn" id="devHoursCancelBtn">Cancel</button>
+                            <button class="sug-btn sug-btn--primary" id="devHoursSaveBtn">Request Hours</button>
+                        </div>
+                    </div>
+
+                    <div id="devHoursList" class="campaigns-list"></div>
                 </div>
 
                 <a class="view-site-btn" id="viewSiteBtn" href="#" target="_blank">
@@ -942,6 +1434,7 @@
             if (page === 'inbox') loadInbox();
             if (page === 'orders') loadOrders();
             if (page === 'analytics') loadAnalytics();
+            if (page === 'settings') { loadCampaigns(); loadStrategyCalls(); loadDevHours(); }
         }
 
         navBtns.forEach(btn => {
@@ -978,6 +1471,9 @@
                 inboxBadge.textContent = unread > 0 ? unread : '';
                 renderRecentMessages();
             }
+
+            loadSuggestions();
+            loadSocial();
         }
 
         function renderRecentMessages() {
@@ -994,6 +1490,200 @@
             container.querySelectorAll('.conversation-item').forEach(el => {
                 el.addEventListener('click', () => openChat(el.dataset.id));
             });
+        }
+
+        // --- Smart Suggestions (Growth+) ---
+        let suggestions = [];
+
+        // Friendly labels for the metric keys captured in baseline/result snapshots.
+        const SUGGESTION_METRIC_LABELS = {
+            viewsThisWeek: 'Visits',
+            viewsPrevWeek: 'Prev visits',
+            ordersThisWeek: 'Orders',
+            revenueThisWeek: 'Revenue',
+            avgOrderThisWeek: 'Avg order',
+            pendingOrders: 'Pending'
+        };
+        const SUGGESTION_MONEY_KEYS = ['revenueThisWeek', 'avgOrderThisWeek'];
+
+        async function loadSuggestions() {
+            const block = document.getElementById('suggestionsBlock');
+            const result = await api('get-suggestions?status=new');
+            // Locked (Essentials) or endpoint unavailable → keep the block hidden.
+            if (!result || result.locked || !Array.isArray(result.data)) {
+                block.style.display = 'none';
+                return;
+            }
+            suggestions = result.data;
+            if (suggestions.length === 0) {
+                block.style.display = 'none';
+                return;
+            }
+            block.style.display = '';
+            document.getElementById('suggestionsCount').textContent =
+                suggestions.length + (suggestions.length === 1 ? ' new' : ' new');
+            renderSuggestions();
+        }
+
+        function renderSuggestions() {
+            const container = document.getElementById('suggestionsList');
+            if (!suggestions.length) {
+                container.innerHTML = '<div class="suggestions-empty">You\'re all caught up — new suggestions arrive weekly.</div>';
+                return;
+            }
+            container.innerHTML = suggestions.map(renderSuggestionCard).join('');
+            container.querySelectorAll('.sug-btn').forEach(btn => {
+                btn.addEventListener('click', () => suggestionAction(btn.dataset.id, btn.dataset.action));
+            });
+            lucide.createIcons({ attrs: { class: '' } });
+        }
+
+        function renderSuggestionCard(s) {
+            const cat = (s.category || 'general').toLowerCase();
+            const isNew = (s.status || 'new') === 'new';
+            const doneClass = isNew ? '' : ' suggestion-card--done';
+            const statusLabel = isNew ? '' : `<span class="suggestion-card__status">${escapeHtml(s.status)}</span>`;
+            const movement = renderMovement(s);
+
+            let actions = '';
+            if (isNew) {
+                actions = `
+                    <button class="sug-btn sug-btn--primary" data-id="${s.id}" data-action="create"><i data-lucide="check"></i>Create This</button>
+                    <button class="sug-btn" data-id="${s.id}" data-action="archive"><i data-lucide="x"></i>Dismiss</button>`;
+            } else if (s.status === 'created' || s.status === 'kept') {
+                actions = `
+                    <button class="sug-btn sug-btn--keep" data-id="${s.id}" data-action="keep"><i data-lucide="refresh-cw"></i>Check Progress</button>
+                    <button class="sug-btn sug-btn--stop" data-id="${s.id}" data-action="stop"><i data-lucide="square"></i>Stop</button>`;
+            } else {
+                actions = `<button class="sug-btn" data-id="${s.id}" data-action="archive"><i data-lucide="archive"></i>Archive</button>`;
+            }
+
+            return `
+                <div class="suggestion-card${doneClass}">
+                    <div class="suggestion-card__top">
+                        <span class="suggestion-card__cat suggestion-card__cat--${cat}">${escapeHtml(cat)}</span>
+                        ${statusLabel}
+                    </div>
+                    <h4 class="suggestion-card__title">${escapeHtml(s.title)}</h4>
+                    <p class="suggestion-card__body">${escapeHtml(s.body)}</p>
+                    ${movement}
+                    <div class="suggestion-card__actions">${actions}</div>
+                </div>`;
+        }
+
+        // Show movement vs baseline once a result snapshot exists (keep/stop captured it).
+        function renderMovement(s) {
+            const baseline = s.baseline || {};
+            const result = s.result || {};
+            const keys = Object.keys(result);
+            if (!keys.length) return '';
+            const chips = keys.map(k => {
+                const label = SUGGESTION_METRIC_LABELS[k] || k;
+                const isMoney = SUGGESTION_MONEY_KEYS.includes(k);
+                const fmt = v => isMoney ? '$' + Number(v || 0).toLocaleString() : Number(v || 0).toLocaleString();
+                const before = baseline[k];
+                const after = result[k];
+                let arrow = '';
+                if (before !== undefined && Number(after) !== Number(before)) {
+                    const up = Number(after) > Number(before);
+                    arrow = ` <span class="${up ? 'mv-up' : 'mv-down'}">${up ? '▲' : '▼'}</span>`;
+                }
+                const beforeStr = before !== undefined ? fmt(before) + ' → ' : '';
+                return `<span class="movement-chip">${escapeHtml(label)}: ${beforeStr}<strong>${fmt(after)}</strong>${arrow}</span>`;
+            }).join('');
+            return `<div class="suggestion-card__movement">${chips}</div>`;
+        }
+
+        async function suggestionAction(id, action) {
+            const result = await api('update-suggestion', {
+                method: 'POST',
+                body: JSON.stringify({ id, action })
+            });
+            if (!result || !result.success) {
+                showToast('Could not update suggestion');
+                return;
+            }
+            const messages = { created: 'Marked as created', kept: 'Progress updated', stopped: 'Marked as stopped', archived: 'Dismissed' };
+            showToast(messages[result.status] || 'Updated');
+            // Reload so counts + status/movement reflect the change.
+            loadSuggestions();
+        }
+
+        // --- Social Posts (Concierge) ---
+        let socialPosts = [];
+        const SOCIAL_PLATFORM_ICONS = { instagram: 'instagram', facebook: 'facebook', twitter: 'twitter', tiktok: 'music' };
+
+        async function loadSocial() {
+            const block = document.getElementById('socialBlock');
+            const result = await api('get-social');
+            // Locked (not Concierge) or endpoint unavailable → keep the block hidden.
+            if (!result || result.locked || !Array.isArray(result.data)) {
+                block.style.display = 'none';
+                return;
+            }
+            // Only surface posts that still need the owner's attention.
+            socialPosts = result.data.filter(p => p.status === 'new' || p.status === 'scheduled');
+            if (socialPosts.length === 0) {
+                block.style.display = 'none';
+                return;
+            }
+            block.style.display = '';
+            document.getElementById('socialCount').textContent = socialPosts.length + ' to review';
+            renderSocial();
+        }
+
+        function renderSocial() {
+            const container = document.getElementById('socialList');
+            container.innerHTML = socialPosts.map(renderSocialCard).join('');
+            container.querySelectorAll('.sug-btn').forEach(btn => {
+                btn.addEventListener('click', () => socialAction(btn.dataset.id, btn.dataset.action));
+            });
+            lucide.createIcons({ attrs: { class: '' } });
+        }
+
+        function renderSocialCard(p) {
+            const platform = (p.platform || 'instagram').toLowerCase();
+            const icon = SOCIAL_PLATFORM_ICONS[platform] || 'share-2';
+            const cat = (p.category || 'promo').toLowerCase();
+            const scheduled = p.status === 'scheduled' && p.scheduledFor
+                ? `<div class="social-card__scheduled"><i data-lucide="calendar-clock"></i>${escapeHtml(formatDate(p.scheduledFor))}</div>`
+                : '';
+            const hashtags = p.hashtags ? `<div class="social-card__tags">${escapeHtml(p.hashtags)}</div>` : '';
+            return `
+                <div class="social-card">
+                    <div class="social-card__top">
+                        <span class="social-card__platform"><i data-lucide="${icon}"></i>${escapeHtml(platform)}</span>
+                        <span class="suggestion-card__cat suggestion-card__cat--${cat}">${escapeHtml(cat)}</span>
+                    </div>
+                    <p class="social-card__caption">${escapeHtml(p.caption)}</p>
+                    ${hashtags}
+                    ${scheduled}
+                    <div class="suggestion-card__actions">
+                        <button class="sug-btn sug-btn--primary" data-id="${p.id}" data-action="post"><i data-lucide="check"></i>Mark Posted</button>
+                        <button class="sug-btn" data-id="${p.id}" data-action="schedule"><i data-lucide="calendar"></i>Schedule</button>
+                        <button class="sug-btn sug-btn--stop" data-id="${p.id}" data-action="archive"><i data-lucide="x"></i>Dismiss</button>
+                    </div>
+                </div>`;
+        }
+
+        async function socialAction(id, action) {
+            const body = { id, action };
+            if (action === 'schedule') {
+                const when = prompt('Schedule for (YYYY-MM-DD or leave blank for no date):', '');
+                if (when === null) return; // cancelled
+                body.scheduledFor = when.trim();
+            }
+            const result = await api('update-social', {
+                method: 'POST',
+                body: JSON.stringify(body)
+            });
+            if (!result || !result.success) {
+                showToast('Could not update post');
+                return;
+            }
+            const messages = { post: 'Marked as posted', scheduled: 'Scheduled', archived: 'Dismissed' };
+            showToast(messages[result.post && result.post.status] || 'Updated');
+            loadSocial();
         }
 
         // --- Inbox ---
@@ -1192,6 +1882,7 @@
         }
 
         // --- Analytics ---
+        let analyticsCharts = {};
         async function loadAnalytics() {
             // Load page view analytics from GS
             const analyticsData = await api('get-tenant-admin?type=analytics');
@@ -1205,6 +1896,21 @@
                 document.getElementById('analyticsAvgOrder').textContent = a.totalOrders > 0
                     ? '$' + Math.round(a.totalRevenue / a.totalOrders).toLocaleString()
                     : '-';
+
+                // Advanced charts (Growth+) vs upgrade gate
+                const advancedBlock = document.getElementById('analyticsAdvanced');
+                const upgradeGate = document.getElementById('analyticsUpgradeGate');
+                if (a.advanced) {
+                    advancedBlock.style.display = 'block';
+                    upgradeGate.style.display = 'none';
+                    renderAnalyticsCharts(a);
+                    loadReports();
+                } else {
+                    advancedBlock.style.display = 'none';
+                    upgradeGate.style.display = 'block';
+                    document.getElementById('reportsBlock').style.display = 'none';
+                    lucide.createIcons({ attrs: { class: '' } });
+                }
 
                 // Render recent page views
                 const container = document.getElementById('analyticsRecentList');
@@ -1221,6 +1927,519 @@
                 }
             }
         }
+
+        function renderAnalyticsCharts(a) {
+            const gold = '#d4af37';
+            const blue = '#5b8def';
+            const green = '#22c55e';
+            const muted = 'rgba(255,255,255,0.55)';
+            const grid = 'rgba(255,255,255,0.06)';
+            const baseOpts = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { ticks: { color: muted, maxRotation: 0, autoSkip: true, maxTicksLimit: 7 }, grid: { color: grid } },
+                    y: { beginAtZero: true, ticks: { color: muted }, grid: { color: grid } }
+                }
+            };
+            // Destroy any existing charts before re-render
+            Object.values(analyticsCharts).forEach(c => { if (c) c.destroy(); });
+            analyticsCharts = {};
+
+            const fmtLabel = (d) => { const p = (d || '').split('-'); return p.length === 3 ? p[1] + '/' + p[2] : d; };
+
+            // Views line chart
+            const views = a.viewsSeries || [];
+            analyticsCharts.views = new Chart(document.getElementById('chartViews'), {
+                type: 'line',
+                data: {
+                    labels: views.map(v => fmtLabel(v.date)),
+                    datasets: [{
+                        data: views.map(v => v.count),
+                        borderColor: gold,
+                        backgroundColor: 'rgba(212,175,55,0.15)',
+                        fill: true, tension: 0.35, pointRadius: 2, borderWidth: 2
+                    }]
+                },
+                options: baseOpts
+            });
+
+            // Revenue bar chart
+            const rev = a.revenueSeries || [];
+            analyticsCharts.revenue = new Chart(document.getElementById('chartRevenue'), {
+                type: 'bar',
+                data: {
+                    labels: rev.map(r => fmtLabel(r.date)),
+                    datasets: [{
+                        data: rev.map(r => r.revenue),
+                        backgroundColor: green, borderRadius: 4
+                    }]
+                },
+                options: baseOpts
+            });
+
+            // Orders by status doughnut
+            const statusObj = a.ordersByStatus || {};
+            const statusLabels = Object.keys(statusObj);
+            analyticsCharts.status = new Chart(document.getElementById('chartStatus'), {
+                type: 'doughnut',
+                data: {
+                    labels: statusLabels,
+                    datasets: [{
+                        data: statusLabels.map(k => statusObj[k]),
+                        backgroundColor: [gold, blue, green, '#ef4444', '#a855f7', '#f97316'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom', labels: { color: muted, boxWidth: 12, padding: 12 } } }
+                }
+            });
+        }
+
+        // --- Monthly reports ---
+        async function loadReports() {
+            const block = document.getElementById('reportsBlock');
+            const list = document.getElementById('reportsList');
+            const result = await api('get-reports');
+            if (!result || result.locked) {
+                block.style.display = 'none';
+                return;
+            }
+            block.style.display = 'block';
+            const reports = result.data || [];
+            if (!reports.length) {
+                list.innerHTML = '<div class="empty-state"><i data-lucide="file-text"></i><p>No reports yet — your first monthly report generates after the month closes.</p></div>';
+                lucide.createIcons({ attrs: { class: '' } });
+                return;
+            }
+            list.innerHTML = reports.map(r => `
+                <div class="report-item">
+                    <div>
+                        <div class="report-item__period">${escapeHtml(formatPeriod(r.period))}</div>
+                        <div class="report-item__meta">${r.views} views · ${r.orders} orders · $${(r.revenue || 0).toLocaleString()}</div>
+                    </div>
+                    <button class="report-item__dl" onclick="downloadReport('${r.id}', '${escapeHtml(r.period)}')">
+                        <i data-lucide="download"></i> PDF
+                    </button>
+                </div>
+            `).join('');
+            lucide.createIcons({ attrs: { class: '' } });
+        }
+
+        function formatPeriod(period) {
+            const parts = (period || '').split('-');
+            if (parts.length !== 2) return period;
+            const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            const m = parseInt(parts[1], 10);
+            return (months[m - 1] || parts[1]) + ' ' + parts[0];
+        }
+
+        async function downloadReport(id, period) {
+            try {
+                showToast('Building report...');
+                const res = await fetch(`/api/get-reports?id=${encodeURIComponent(id)}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (!res.ok) { showToast('Could not build report'); return; }
+                const blob = await res.blob();
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `report-${period}.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                URL.revokeObjectURL(url);
+            } catch (e) {
+                showToast('Could not build report');
+            }
+        }
+
+        // --- Email marketing (Growth+) ---
+        let campaigns = [];
+
+        async function loadCampaigns() {
+            const block = document.getElementById('emailBlock');
+            const result = await api('manage-campaign');
+            // Hidden entirely for non-entitled tiers (soft-lock) or if the table isn't there.
+            if (!result || result.locked || !Array.isArray(result.data)) {
+                block.style.display = 'none';
+                return;
+            }
+            block.style.display = 'block';
+            campaigns = result.data;
+            renderCampaigns();
+        }
+
+        function renderCampaigns() {
+            const list = document.getElementById('campaignsList');
+            // Hide archived (soft-deleted) rows from the owner view.
+            const visible = campaigns.filter(c => c.status !== 'archived');
+            if (!visible.length) {
+                list.innerHTML = '<div class="suggestions-empty">No campaigns yet. Tap <strong>New</strong> to write your first one.</div>';
+                return;
+            }
+            list.innerHTML = visible.map(c => renderCampaignItem(c)).join('');
+            lucide.createIcons({ attrs: { class: '' } });
+        }
+
+        function renderCampaignItem(c) {
+            const status = c.status || 'draft';
+            const editable = status === 'draft' || status === 'scheduled';
+            const sendable = status === 'draft' || status === 'scheduled' || status === 'failed';
+
+            let meta = '';
+            if (status === 'scheduled' && c.schedule) {
+                meta = 'Scheduled for ' + formatDate(c.schedule) + ' ' + formatTime(c.schedule);
+            } else if (status === 'sent') {
+                meta = (c.sentCount || 0) + ' / ' + (c.recipientCount || 0) + ' sent'
+                    + (c.lastSentAt ? ' · ' + formatDate(c.lastSentAt) : '');
+            } else if (status === 'draft') {
+                meta = 'Draft — not sent yet';
+            } else if (status === 'failed') {
+                meta = 'Last send failed — tap Send to retry';
+            } else if (status === 'sending') {
+                meta = 'Sending…';
+            }
+
+            const actions = [];
+            if (sendable) {
+                actions.push(`<button class="sug-btn sug-btn--primary" onclick="sendCampaignNow('${c.id}')"><i data-lucide="send"></i> Send now</button>`);
+            }
+            if (editable) {
+                actions.push(`<button class="sug-btn sug-btn--stop" onclick="deleteCampaign('${c.id}')"><i data-lucide="trash-2"></i> Delete</button>`);
+            }
+
+            return `
+                <div class="campaign-item">
+                    <div class="campaign-item__top">
+                        <span class="campaign-item__type">${escapeHtml((c.type || 'blast').replace('_', ' '))}</span>
+                        <span class="campaign-item__status campaign-item__status--${status}">${escapeHtml(status)}</span>
+                    </div>
+                    <div class="campaign-item__subject">${escapeHtml(c.subject || '(no subject)')}</div>
+                    <div class="campaign-item__meta">${escapeHtml(meta)}</div>
+                    ${actions.length ? `<div class="campaign-item__actions">${actions.join('')}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function toggleEmailForm(show) {
+            const form = document.getElementById('emailForm');
+            form.style.display = show ? 'block' : 'none';
+            if (!show) {
+                document.getElementById('emailSubject').value = '';
+                document.getElementById('emailBody').value = '';
+                document.getElementById('emailSchedule').value = '';
+                document.getElementById('emailType').value = 'blast';
+            }
+        }
+
+        document.getElementById('emailNewBtn').addEventListener('click', () => toggleEmailForm(true));
+        document.getElementById('emailCancelBtn').addEventListener('click', () => toggleEmailForm(false));
+
+        document.getElementById('emailSaveBtn').addEventListener('click', async () => {
+            const subject = document.getElementById('emailSubject').value.trim();
+            const body = document.getElementById('emailBody').value.trim();
+            const type = document.getElementById('emailType').value;
+            const scheduleLocal = document.getElementById('emailSchedule').value;
+            if (!subject || !body) {
+                showToast('Subject and body are required');
+                return;
+            }
+            // datetime-local → ISO; blank stays a draft.
+            const schedule = scheduleLocal ? new Date(scheduleLocal).toISOString() : '';
+            const btn = document.getElementById('emailSaveBtn');
+            btn.disabled = true;
+            const result = await api('manage-campaign', {
+                method: 'POST',
+                body: JSON.stringify({ action: 'create', type, subject, body, schedule })
+            });
+            btn.disabled = false;
+            if (result && result.success) {
+                showToast(schedule ? 'Campaign scheduled' : 'Draft saved');
+                toggleEmailForm(false);
+                loadCampaigns();
+            } else {
+                showToast((result && result.error) || 'Could not save campaign');
+            }
+        });
+
+        async function sendCampaignNow(id) {
+            showToast('Sending campaign…');
+            const result = await api('manage-campaign', {
+                method: 'POST',
+                body: JSON.stringify({ action: 'send', id })
+            });
+            if (result && result.success) {
+                const r = result.result || {};
+                const live = r.liveSend ? `${r.sentCount || 0} of ${r.recipientCount || 0} sent` : `${r.recipientCount || 0} recipients queued`;
+                showToast(live);
+                loadCampaigns();
+            } else {
+                showToast((result && result.error) || 'Send failed');
+            }
+        }
+
+        async function deleteCampaign(id) {
+            const result = await api('manage-campaign', {
+                method: 'POST',
+                body: JSON.stringify({ action: 'delete', id })
+            });
+            if (result && result.success) {
+                showToast('Campaign deleted');
+                loadCampaigns();
+            } else {
+                showToast((result && result.error) || 'Could not delete');
+            }
+        }
+        window.sendCampaignNow = sendCampaignNow;
+        window.deleteCampaign = deleteCampaign;
+
+        // --- Strategy Calls (Concierge) ---
+        async function loadStrategyCalls() {
+            const block = document.getElementById('strategyBlock');
+            const result = await api('manage-strategy-call');
+            if (!result || result.locked || !Array.isArray(result.data)) {
+                block.style.display = 'none';
+                return;
+            }
+            block.style.display = 'block';
+            // Pre-fill the quarter input with the current quarter.
+            const quarterInput = document.getElementById('strategyQuarter');
+            if (quarterInput && !quarterInput.value && result.quarter) quarterInput.value = result.quarter;
+            // Hide the Request button if this quarter's call is already used.
+            const newBtn = document.getElementById('strategyNewBtn');
+            if (newBtn) newBtn.style.display = result.usedThisQuarter ? 'none' : '';
+            renderStrategyCalls(result.data);
+        }
+
+        function renderStrategyCalls(calls) {
+            const list = document.getElementById('strategyList');
+            if (!calls.length) {
+                list.innerHTML = '<div class="empty-state">No strategy calls yet. Request one for this quarter.</div>';
+                return;
+            }
+            list.innerHTML = calls.map(renderStrategyItem).join('');
+            lucide.createIcons({ attrs: { class: '' } });
+        }
+
+        function renderStrategyItem(c) {
+            const status = c.status || 'requested';
+            let meta = '';
+            if (status === 'scheduled' && c.scheduledAt) {
+                meta = 'Scheduled for ' + formatDate(c.scheduledAt) + ' ' + formatTime(c.scheduledAt);
+            } else if (status === 'requested') {
+                meta = c.requestedSlot ? 'Requested · prefers ' + c.requestedSlot : 'Requested — awaiting scheduling';
+            } else if (status === 'completed') {
+                meta = 'Completed' + (c.scheduledAt ? ' · ' + formatDate(c.scheduledAt) : '');
+            } else if (status === 'canceled') {
+                meta = 'Canceled';
+            }
+            const actions = [];
+            if (status === 'requested') {
+                actions.push(`<button class="sug-btn sug-btn--stop" onclick="cancelStrategyCall('${c.id}')"><i data-lucide="x"></i> Cancel</button>`);
+            }
+            return `
+                <div class="campaign-item">
+                    <div class="campaign-item__top">
+                        <span class="campaign-item__type">${escapeHtml(c.quarter || '')}</span>
+                        <span class="campaign-item__status campaign-item__status--${status}">${escapeHtml(status)}</span>
+                    </div>
+                    <div class="campaign-item__subject">${escapeHtml(c.topic || '(no topic)')}</div>
+                    <div class="campaign-item__meta">${escapeHtml(meta)}</div>
+                    ${c.notes ? `<div class="campaign-item__meta">${escapeHtml(c.notes)}</div>` : ''}
+                    ${actions.length ? `<div class="campaign-item__actions">${actions.join('')}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function toggleStrategyForm(show) {
+            const form = document.getElementById('strategyForm');
+            form.style.display = show ? 'block' : 'none';
+            if (!show) {
+                document.getElementById('strategyTopic').value = '';
+                document.getElementById('strategySlot').value = '';
+            }
+        }
+
+        document.getElementById('strategyNewBtn').addEventListener('click', () => toggleStrategyForm(true));
+        document.getElementById('strategyCancelBtn').addEventListener('click', () => toggleStrategyForm(false));
+
+        document.getElementById('strategySaveBtn').addEventListener('click', async () => {
+            const quarter = document.getElementById('strategyQuarter').value.trim();
+            const topic = document.getElementById('strategyTopic').value.trim();
+            const requestedSlot = document.getElementById('strategySlot').value.trim();
+            if (!topic) {
+                showToast('A topic is required');
+                return;
+            }
+            const btn = document.getElementById('strategySaveBtn');
+            btn.disabled = true;
+            const result = await api('manage-strategy-call', {
+                method: 'POST',
+                body: JSON.stringify({ action: 'request', quarter, topic, requestedSlot })
+            });
+            btn.disabled = false;
+            if (result && result.success) {
+                showToast('Strategy call requested');
+                toggleStrategyForm(false);
+                loadStrategyCalls();
+            } else {
+                showToast((result && result.error) || 'Could not request call');
+            }
+        });
+
+        async function cancelStrategyCall(id) {
+            const result = await api('manage-strategy-call', {
+                method: 'POST',
+                body: JSON.stringify({ action: 'cancel', id })
+            });
+            if (result && result.success) {
+                showToast('Call canceled');
+                loadStrategyCalls();
+            } else {
+                showToast((result && result.error) || 'Could not cancel');
+            }
+        }
+        window.cancelStrategyCall = cancelStrategyCall;
+
+        // --- Dev Hours (Concierge) ---
+        const DEV_HOUR_RATE = 50;
+        let devHoursSummary = null;
+
+        async function loadDevHours() {
+            const block = document.getElementById('devHoursBlock');
+            const result = await api('manage-dev-hours');
+            if (!result || result.locked || !Array.isArray(result.data)) {
+                block.style.display = 'none';
+                return;
+            }
+            block.style.display = 'block';
+            devHoursSummary = result.summary || null;
+            renderDevHoursSummary();
+            renderDevHours(result.data);
+        }
+
+        function renderDevHoursSummary() {
+            const el = document.getElementById('devHoursSummary');
+            if (!devHoursSummary) { el.innerHTML = ''; return; }
+            const s = devHoursSummary;
+            const owed = s.overageOwed > 0
+                ? `<span class="dev-hours-summary__owed">$${s.overageOwed.toFixed(2)} overage this month</span>`
+                : `<span class="dev-hours-summary__free">${s.freeRemaining} free hr remaining</span>`;
+            el.innerHTML = `
+                <div class="dev-hours-summary__row">
+                    <span>${s.hoursUsed} hr used in ${escapeHtml(s.month)}</span>
+                    ${owed}
+                </div>
+            `;
+        }
+
+        function renderDevHours(entries) {
+            const list = document.getElementById('devHoursList');
+            if (!entries.length) {
+                list.innerHTML = '<div class="empty-state">No dev hours requested yet.</div>';
+                return;
+            }
+            list.innerHTML = entries.map(renderDevHoursItem).join('');
+            lucide.createIcons({ attrs: { class: '' } });
+        }
+
+        function renderDevHoursItem(e) {
+            const status = e.status || 'requested';
+            let meta = (e.hours || 0) + ' hr';
+            if (e.billable && e.overageAmount > 0) {
+                meta += ' · $' + Number(e.overageAmount).toFixed(2) + ' overage';
+            } else {
+                meta += ' · included';
+            }
+            const actions = [];
+            if (status === 'requested') {
+                actions.push(`<button class="sug-btn sug-btn--stop" onclick="cancelDevHours('${e.id}')"><i data-lucide="x"></i> Cancel</button>`);
+            }
+            return `
+                <div class="campaign-item">
+                    <div class="campaign-item__top">
+                        <span class="campaign-item__type">${escapeHtml(e.month || '')}</span>
+                        <span class="campaign-item__status campaign-item__status--${status}">${escapeHtml(status.replace('_', ' '))}</span>
+                    </div>
+                    <div class="campaign-item__subject">${escapeHtml(e.description || '')}</div>
+                    <div class="campaign-item__meta">${escapeHtml(meta)}</div>
+                    ${actions.length ? `<div class="campaign-item__actions">${actions.join('')}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function updateDevHoursEstimate() {
+            const el = document.getElementById('devHoursEstimate');
+            const hours = Number(document.getElementById('devHoursAmount').value);
+            if (!hours || hours <= 0) { el.textContent = ''; return; }
+            const freeRemaining = devHoursSummary ? Math.max(0, devHoursSummary.freeRemaining) : 1;
+            const billable = Math.max(0, hours - freeRemaining);
+            const overage = billable * DEV_HOUR_RATE;
+            el.textContent = overage > 0
+                ? `Estimated overage: $${overage.toFixed(2)} (${billable} billable hr beyond your free hour)`
+                : 'Covered by your free hour — no charge.';
+        }
+
+        function toggleDevHoursForm(show) {
+            const form = document.getElementById('devHoursForm');
+            form.style.display = show ? 'block' : 'none';
+            if (!show) {
+                document.getElementById('devHoursDesc').value = '';
+                document.getElementById('devHoursAmount').value = '';
+                document.getElementById('devHoursEstimate').textContent = '';
+            }
+        }
+
+        document.getElementById('devHoursNewBtn').addEventListener('click', () => toggleDevHoursForm(true));
+        document.getElementById('devHoursCancelBtn').addEventListener('click', () => toggleDevHoursForm(false));
+        document.getElementById('devHoursAmount').addEventListener('input', updateDevHoursEstimate);
+
+        document.getElementById('devHoursSaveBtn').addEventListener('click', async () => {
+            const description = document.getElementById('devHoursDesc').value.trim();
+            const hours = Number(document.getElementById('devHoursAmount').value);
+            if (!description) {
+                showToast('A description is required');
+                return;
+            }
+            if (!hours || hours <= 0) {
+                showToast('Hours must be a positive number');
+                return;
+            }
+            const btn = document.getElementById('devHoursSaveBtn');
+            btn.disabled = true;
+            const result = await api('manage-dev-hours', {
+                method: 'POST',
+                body: JSON.stringify({ action: 'request', description, hours })
+            });
+            btn.disabled = false;
+            if (result && result.success) {
+                showToast('Dev hours requested');
+                toggleDevHoursForm(false);
+                loadDevHours();
+            } else {
+                showToast((result && result.error) || 'Could not request hours');
+            }
+        });
+
+        async function cancelDevHours(id) {
+            const result = await api('manage-dev-hours', {
+                method: 'POST',
+                body: JSON.stringify({ action: 'cancel', id })
+            });
+            if (result && result.success) {
+                showToast('Request canceled');
+                loadDevHours();
+            } else {
+                showToast((result && result.error) || 'Could not cancel');
+            }
+        }
+        window.cancelDevHours = cancelDevHours;
 
         // --- Settings ---
         document.getElementById('logoutBtn').addEventListener('click', () => {

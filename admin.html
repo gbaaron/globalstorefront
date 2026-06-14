@@ -760,6 +760,108 @@
             display: block;
         }
 
+        /* ===== TIER BADGES ===== */
+        .tier-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+        }
+        .tier-badge.tier-essentials {
+            background: rgba(136, 146, 160, 0.15);
+            color: #b0b8c4;
+            border-color: rgba(136, 146, 160, 0.35);
+        }
+        .tier-badge.tier-growth {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.35);
+        }
+        .tier-badge.tier-concierge {
+            background: var(--color-accent-glow);
+            color: var(--color-accent);
+            border-color: rgba(212, 175, 55, 0.4);
+        }
+        .cycle-tag {
+            font-size: 0.66rem;
+            color: var(--color-text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            font-weight: 600;
+        }
+        .substatus-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            margin-right: 0.35rem;
+        }
+        .substatus-active { background: var(--color-success); }
+        .substatus-past_due { background: #f59e0b; }
+        .substatus-canceled { background: var(--color-danger); }
+
+        /* ===== BILLING VIEW ===== */
+        .billing-totals {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .billing-stat {
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+        }
+        .billing-stat-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .billing-stat-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--color-text);
+            letter-spacing: -0.02em;
+        }
+        .billing-stat-value.accent { color: var(--color-accent); }
+        .billing-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+        .billing-table th,
+        .billing-table td {
+            text-align: left;
+            padding: 0.85rem 1rem;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .billing-table th {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+            font-weight: 700;
+            background: var(--color-input-bg);
+        }
+        .billing-table td.num { text-align: right; font-variant-numeric: tabular-nums; }
+        .billing-table th.num { text-align: right; }
+        .billing-table tr:last-child td { border-bottom: none; }
+        .billing-table .owed { color: var(--color-accent); font-weight: 700; }
+
         /* ===== BOT KNOWLEDGE ===== */
         .kb-header {
             display: flex;
@@ -1171,6 +1273,7 @@
             <!-- TAB NAV -->
             <div class="dash-tabs">
                 <button class="dash-tab active" data-tab="clients">Clients</button>
+                <button class="dash-tab" data-tab="billing">Billing</button>
                 <button class="dash-tab" data-tab="knowledge">Bot Knowledge</button>
                 <button class="dash-tab" data-tab="testbot">Test Bot</button>
             </div>
@@ -1190,6 +1293,23 @@
 
                 <div id="clientsContainer">
                     <div class="loading-state">Loading clients...</div>
+                </div>
+            </div>
+
+            <!-- BILLING TAB -->
+            <div class="tab-content" id="tabBilling">
+                <div class="dash-toolbar">
+                    <h3>Billing &amp; Payouts</h3>
+                    <button class="btn-add" id="refreshBillingBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="23 4 23 10 17 10"></polyline>
+                            <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                        </svg>
+                        Refresh
+                    </button>
+                </div>
+                <div id="billingContainer">
+                    <div class="loading-state">Loading billing...</div>
                 </div>
             </div>
 
@@ -1288,6 +1408,23 @@
                 <div class="form-group">
                     <label for="clientProjectUrl">Project URL</label>
                     <input type="url" id="clientProjectUrl" placeholder="https://example.netlify.app/demo.html" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="clientTier">Subscription Tier</label>
+                    <select id="clientTier">
+                        <option value="Essentials">Essentials — $50/mo annual ($65 m2m)</option>
+                        <option value="Growth">Growth — $100/mo annual ($130 m2m)</option>
+                        <option value="Concierge">Concierge — $175/mo annual ($225 m2m)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="clientBillingCycle">Billing Cycle</label>
+                    <select id="clientBillingCycle">
+                        <option value="annual">Annual (discounted)</option>
+                        <option value="m2m">Month-to-month</option>
+                    </select>
                 </div>
 
                 <div class="error" id="modalError"></div>
@@ -1520,6 +1657,11 @@
                                 <div>
                                     <div class="client-name">${escapeHtml(client.name)}</div>
                                     <div class="client-company">${escapeHtml(client.company || 'No company')}</div>
+                                    <div style="margin-top:0.5rem; display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;">
+                                        <span class="tier-badge tier-${(client.tier || 'Essentials').toLowerCase()}">${escapeHtml(client.tier || 'Essentials')}</span>
+                                        <span class="cycle-tag">${client.billingCycle === 'm2m' ? 'Monthly' : 'Annual'}</span>
+                                        <span class="cycle-tag"><span class="substatus-dot substatus-${client.subStatus || 'active'}"></span>${escapeHtml(client.subStatus || 'active')}</span>
+                                    </div>
                                 </div>
                                 <div class="client-card-actions">
                                     <button class="btn-icon" onclick="openEditModal('${client.id}')" title="Edit">
@@ -1578,6 +1720,8 @@
             document.getElementById('clientUsername').required = true;
             document.getElementById('passwordNote').textContent = '';
             document.getElementById('clientForm').reset();
+            document.getElementById('clientTier').value = 'Essentials';
+            document.getElementById('clientBillingCycle').value = 'annual';
             document.getElementById('modalError').classList.remove('show');
             document.getElementById('clientModal').classList.add('active');
         }
@@ -1598,6 +1742,8 @@
             document.getElementById('clientPassword').value = '';
             document.getElementById('clientCompany').value = client.company;
             document.getElementById('clientProjectUrl').value = client.projectUrl;
+            document.getElementById('clientTier').value = client.tier || 'Essentials';
+            document.getElementById('clientBillingCycle').value = client.billingCycle || 'annual';
             document.getElementById('modalError').classList.remove('show');
             document.getElementById('clientModal').classList.add('active');
         }
@@ -1624,7 +1770,9 @@
                 email: document.getElementById('clientEmail').value.trim(),
                 username: document.getElementById('clientUsername').value.trim(),
                 company: document.getElementById('clientCompany').value.trim(),
-                projectUrl: document.getElementById('clientProjectUrl').value.trim()
+                projectUrl: document.getElementById('clientProjectUrl').value.trim(),
+                tier: document.getElementById('clientTier').value,
+                billingCycle: document.getElementById('clientBillingCycle').value
             };
 
             const password = document.getElementById('clientPassword').value;
@@ -1729,7 +1877,7 @@
         });
 
         // ===== TAB NAVIGATION =====
-        const tabMap = { clients: 'tabClients', knowledge: 'tabKnowledge', testbot: 'tabTestbot' };
+        const tabMap = { clients: 'tabClients', billing: 'tabBilling', knowledge: 'tabKnowledge', testbot: 'tabTestbot' };
         document.querySelectorAll('.dash-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
@@ -1738,10 +1886,109 @@
                 const target = tab.dataset.tab;
                 const tabEl = document.getElementById(tabMap[target]);
                 if (tabEl) tabEl.classList.add('active');
+                if (target === 'billing') loadBilling();
                 if (target === 'knowledge') populateKbClientSelect();
                 if (target === 'testbot') populateTestbotClientSelect();
             });
         });
+
+        // ===== BILLING & PAYOUTS =====
+        function fmtMoney(n) {
+            return '$' + (Number(n) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        async function loadBilling() {
+            const container = document.getElementById('billingContainer');
+            container.innerHTML = '<div class="loading">Loading billing data...</div>';
+            try {
+                const response = await fetch('/.netlify/functions/get-billing', {
+                    headers: { 'Authorization': `Bearer ${localStorage.getItem('gsAdminToken')}` }
+                });
+                const data = await response.json();
+                if (!response.ok) {
+                    container.innerHTML = `<div class="loading">${escapeHtml(data.error || 'Failed to load billing.')}</div>`;
+                    return;
+                }
+                renderBilling(data);
+            } catch (err) {
+                container.innerHTML = '<div class="loading">Network error loading billing.</div>';
+            }
+        }
+
+        function renderBilling(data) {
+            const container = document.getElementById('billingContainer');
+            const totals = data.totals || {};
+            const rows = data.clients || [];
+
+            const statsHtml = `
+                <div class="billing-totals">
+                    <div class="billing-stat">
+                        <div class="billing-stat-label">Recurring (MRR)</div>
+                        <div class="billing-stat-value accent">${fmtMoney(totals.mrr)}</div>
+                    </div>
+                    <div class="billing-stat">
+                        <div class="billing-stat-label">Gross Volume</div>
+                        <div class="billing-stat-value">${fmtMoney(totals.gross)}</div>
+                    </div>
+                    <div class="billing-stat">
+                        <div class="billing-stat-label">GS Cut (10%)</div>
+                        <div class="billing-stat-value accent">${fmtMoney(totals.gsCut)}</div>
+                    </div>
+                    <div class="billing-stat">
+                        <div class="billing-stat-label">Client Net (90%)</div>
+                        <div class="billing-stat-value">${fmtMoney(totals.clientNet)}</div>
+                    </div>
+                    <div class="billing-stat">
+                        <div class="billing-stat-label">Pending Payout</div>
+                        <div class="billing-stat-value owed">${fmtMoney(totals.pendingPayout)}</div>
+                    </div>
+                </div>`;
+
+            let tableHtml;
+            if (rows.length === 0) {
+                tableHtml = '<div class="loading">No clients to bill yet.</div>';
+            } else {
+                tableHtml = `
+                    <table class="billing-table">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Tier</th>
+                                <th class="num">Sub/mo</th>
+                                <th class="num">Gross</th>
+                                <th class="num">GS Cut</th>
+                                <th class="num">Client Net</th>
+                                <th class="num">Pending</th>
+                                <th class="num">Swept</th>
+                                <th class="num">Txns</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${rows.map(c => {
+                                const s = c.sales || {};
+                                const tier = (c.tier || 'Essentials');
+                                return `
+                                <tr>
+                                    <td>${escapeHtml(c.company || c.name || c.id || 'Unknown')}</td>
+                                    <td><span class="tier-badge tier-${tier.toLowerCase()}">${escapeHtml(tier)}</span></td>
+                                    <td class="num">${fmtMoney(c.subscriptionMonthly)}</td>
+                                    <td class="num">${fmtMoney(s.gross)}</td>
+                                    <td class="num">${fmtMoney(s.gsCut)}</td>
+                                    <td class="num">${fmtMoney(s.clientNet)}</td>
+                                    <td class="num owed">${fmtMoney(s.pendingPayout)}</td>
+                                    <td class="num">${fmtMoney(s.sweptPayout)}</td>
+                                    <td class="num">${s.transactionCount || 0}</td>
+                                </tr>`;
+                            }).join('')}
+                        </tbody>
+                    </table>`;
+            }
+
+            container.innerHTML = statsHtml + tableHtml;
+        }
+
+        const refreshBillingBtn = document.getElementById('refreshBillingBtn');
+        if (refreshBillingBtn) refreshBillingBtn.addEventListener('click', loadBilling);
 
         // ===== BOT KNOWLEDGE BASE =====
         let kbEntries = [];

@@ -60,8 +60,19 @@ exports.handler = async (event) => {
             };
         }
 
+        const tier = client.get('Tier') || 'Essentials';
+        const billingCycle = client.get('BillingCycle') || 'annual';
+        const baseId = client.get('BaseID') || '';
+
         const token = jwt.sign(
-            { userId: client.id, email: client.get('Email'), role: 'client' },
+            {
+                userId: client.id,
+                email: client.get('Email'),
+                role: 'client',
+                tier,
+                billingCycle,
+                baseId
+            },
             process.env.JWT_SECRET || 'globalstorefront-secret-change-in-production',
             { expiresIn: '7d' }
         );
@@ -74,7 +85,11 @@ exports.handler = async (event) => {
                 name: client.get('Name'),
                 company: client.get('Company'),
                 projectUrl: client.get('ProjectURL'),
-                username: client.get('Username') || ''
+                username: client.get('Username') || '',
+                tier,
+                billingCycle,
+                subStatus: client.get('SubStatus') || 'active',
+                baseId
             })
         };
 

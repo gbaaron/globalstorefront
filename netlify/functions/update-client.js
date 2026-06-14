@@ -1,5 +1,6 @@
 const Airtable = require('airtable');
 const jwt = require('jsonwebtoken');
+const { normalizeTier, normalizeCycle } = require('./lib/tiers');
 
 exports.handler = async (event) => {
     if (event.httpMethod !== 'POST') {
@@ -25,7 +26,7 @@ exports.handler = async (event) => {
             };
         }
 
-        const { clientId, name, email, username, password, company, projectUrl } = JSON.parse(event.body);
+        const { clientId, name, email, username, password, company, projectUrl, tier, billingCycle } = JSON.parse(event.body);
 
         if (!clientId) {
             return {
@@ -73,6 +74,8 @@ exports.handler = async (event) => {
         }
         if (company !== undefined) fields.Company = company.trim();
         if (projectUrl) fields.ProjectURL = projectUrl.trim();
+        if (tier) fields.Tier = normalizeTier(tier);
+        if (billingCycle) fields.BillingCycle = normalizeCycle(billingCycle);
 
         if (Object.keys(fields).length === 0) {
             return {

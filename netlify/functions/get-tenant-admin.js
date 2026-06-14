@@ -1,5 +1,6 @@
 const Airtable = require('airtable');
 const jwt = require('jsonwebtoken');
+const { tierIncludes, normalizeTier } = require('./lib/tiers');
 
 const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -148,14 +149,41 @@ exports.handler = async (event) => {
             }
 
             case 'analytics': {
+                const tier = normalizeTier(decoded.tier);
+                const advanced = tierIncludes(tier, 'advanced_analytics');
+
                 const analytics = {
+                    tier,
+                    advanced,
                     todayViews: 0,
                     weekViews: 0,
                     totalViews: 0,
                     totalOrders: 0,
                     totalRevenue: 0,
-                    recentViews: []
+                    recentViews: [],
+                    // Richer series for Chart.js (Growth+ only; basic tiers get empty arrays)
+                    viewsSeries: [],
+                    revenueSeries: [],
+                    ordersByStatus: {}
                 };
+
+                const now = new Date();
+                const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+                const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6).toISOString();
+
+                // Build the trailing 14-day date axis (YYYY-MM-DD keys) used by both series.
+                const dayKeys = [];
+                const viewsByDay = {};
+                const revenueByDay = {};
+                const ordersByDay = {};
+                for (let i = 13; i >= 0; i--) {
+                    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+                    const key = d.toISOString().split('T')[0];
+                    dayKeys.push(key);
+                    viewsByDay[key] = 0;
+                    revenueByDay[key] = 0;
+                    ordersByDay[key] = 0;
+                }
 
                 // Get page views from GS base (PageViews table tracks per-client)
                 try {
@@ -163,18 +191,16 @@ exports.handler = async (event) => {
                     const pageViews = await base('PageViews').select({
                         filterByFormula: `{ClientId} = '${clientId}'`,
                         sort: [{ field: 'Timestamp', direction: 'desc' }],
-                        maxRecords: 200
+                        maxRecords: 500
                     }).all();
-
-                    const now = new Date();
-                    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
-                    const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 6).toISOString();
 
                     analytics.totalViews = pageViews.length;
                     for (const pv of pageViews) {
                         const ts = pv.get('Timestamp') || '';
                         if (ts >= todayStart) analytics.todayViews++;
                         if (ts >= weekStart) analytics.weekViews++;
+                        const dayKey = ts.split('T')[0];
+                        if (dayKey in viewsByDay) viewsByDay[dayKey]++;
                     }
                     analytics.recentViews = pageViews.slice(0, 10).map(pv => ({
                         page: pv.get('Page') || 'Unknown',
@@ -186,13 +212,33 @@ exports.handler = async (event) => {
 
                 // Get order stats from tenant base
                 try {
-                    const orders = await tenantBase('Orders').select({ maxRecords: 200 }).firstPage();
+                    const orders = await tenantBase('Orders').select({ maxRecords: 500 }).firstPage();
                     analytics.totalOrders = orders.length;
                     for (const order of orders) {
                         const total = parseFloat(order.get('Total') || order.get('TotalAmount') || 0);
-                        if (!isNaN(total)) analytics.totalRevenue += total;
+                        const revenue = isNaN(total) ? 0 : total;
+                        analytics.totalRevenue += revenue;
+
+                        const status = (order.get('Status') || 'unknown').toLowerCase();
+                        analytics.ordersByStatus[status] = (analytics.ordersByStatus[status] || 0) + 1;
+
+                        const dayKey = (order.get('OrderDate') || '').split('T')[0];
+                        if (dayKey in revenueByDay) {
+                            revenueByDay[dayKey] += revenue;
+                            ordersByDay[dayKey]++;
+                        }
                     }
                 } catch (e) {}
+
+                // Only surface the heavy time-series to Growth+ owners.
+                if (advanced) {
+                    analytics.viewsSeries = dayKeys.map(k => ({ date: k, count: viewsByDay[k] }));
+                    analytics.revenueSeries = dayKeys.map(k => ({
+                        date: k,
+                        revenue: Math.round(revenueByDay[k] * 100) / 100,
+                        orders: ordersByDay[k]
+                    }));
+                }
 
                 data = analytics;
                 break;

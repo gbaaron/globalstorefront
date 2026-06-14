@@ -38,7 +38,12 @@ exports.handler = async (event) => {
             username: r.get('Username') || '',
             company: r.get('Company') || '',
             projectUrl: r.get('ProjectURL') || '',
-            createdAt: r.get('CreatedAt') || ''
+            createdAt: r.get('CreatedAt') || '',
+            tier: r.get('Tier') || 'Essentials',
+            billingCycle: r.get('BillingCycle') || 'annual',
+            subStatus: r.get('SubStatus') || 'active',
+            nextBillingDate: r.get('NextBillingDate') || '',
+            baseId: r.get('BaseID') || ''
         }));
 
         return {
