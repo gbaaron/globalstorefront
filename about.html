@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en" style="scroll-behavior: smooth;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Aaron | Global Storefront</title>
+    <meta name="description" content="Meet Aaron, the person behind Global Storefront. Personally involved in every project from first idea to launch. No faceless agency, no templates.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127978;</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #0f0f1a;
+            --color-surface: #141425;
+            --color-card: #1a1a2e;
+            --color-accent: #d4af37;
+            --color-accent-dark: #b8962e;
+            --color-accent-glow: rgba(212, 175, 55, 0.16);
+            --color-text: #ffffff;
+            --color-text-muted: #8892a0;
+            --color-text-label: #b0b8c4;
+            --color-border: #2a2a4a;
+            --color-border-soft: #20203a;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --grad-gold: linear-gradient(135deg, #d4af37 0%, #b8962e 100%);
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { background: var(--color-bg); }
+        body { font-family: var(--font-body); color: var(--color-text); line-height: 1.7; overflow-x: hidden; min-height: 100vh; }
+        body::before {
+            content: ''; position: fixed; inset: -10%;
+            background:
+                radial-gradient(ellipse 900px 700px at 12% 8%, rgba(212, 175, 55, 0.10), transparent 55%),
+                radial-gradient(ellipse 800px 650px at 90% 28%, rgba(212, 175, 55, 0.06), transparent 55%),
+                radial-gradient(ellipse 700px 600px at 50% 85%, rgba(184, 150, 46, 0.06), transparent 60%);
+            z-index: 0; pointer-events: none; animation: ambientShift 22s ease-in-out infinite alternate; filter: blur(10px);
+        }
+        body::after {
+            content: ''; position: fixed; inset: 0;
+            background-image:
+                radial-gradient(circle at 1px 1px, rgba(212, 175, 55, 0.05) 1px, transparent 1.5px),
+                linear-gradient(to right, rgba(212, 175, 55, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(212, 175, 55, 0.02) 1px, transparent 1px),
+                radial-gradient(ellipse at center, transparent 40%, rgba(0, 0, 0, 0.45) 100%);
+            background-size: 24px 24px, 80px 80px, 80px 80px, 100% 100%;
+            z-index: 0; pointer-events: none;
+        }
+        @keyframes ambientShift { 0% { transform: translate(0, 0); } 100% { transform: translate(-2%, -3%); } }
+        main, header, footer, section { position: relative; z-index: 1; }
+
+        .nav { position: sticky; top: 0; z-index: 10; background: rgba(15, 15, 26, 0.88); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-bottom: 1px solid rgba(42, 42, 74, 0.4); }
+        .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0.75rem 1.5rem; display: flex; align-items: center; justify-content: space-between; }
+        .nav-brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--color-text); }
+        .nav-brand img { height: 38px; width: auto; }
+        .nav-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
+        .nav-brand-name { font-weight: 700; font-size: 1rem; letter-spacing: -0.01em; }
+        .nav-brand-tag { font-size: 0.6rem; color: var(--color-accent); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+        .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+        .nav-links a { color: var(--color-text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s ease; }
+        .nav-links a:hover, .nav-links a.active { color: var(--color-text); }
+        .nav-login { padding: 0.55rem 1.4rem; background: var(--grad-gold); color: #0f0f1a !important; border-radius: var(--radius-sm); font-weight: 700 !important; text-decoration: none; transition: opacity 0.2s ease, transform 0.2s ease; }
+        .nav-login:hover { opacity: 0.9; transform: translateY(-1px); }
+        @media (max-width: 720px) { .nav-links li:not(.nav-cta-wrap) { display: none; } }
+
+        /* ---- INTRO / PORTRAIT ---- */
+        .intro { max-width: 1080px; margin: 0 auto; padding: 4rem 1.5rem 1.5rem; display: grid; grid-template-columns: 320px 1fr; gap: 3rem; align-items: center; }
+        @media (max-width: 800px) { .intro { grid-template-columns: 1fr; gap: 2rem; padding-top: 2.5rem; justify-items: center; text-align: center; } }
+
+        .portrait { position: relative; width: 300px; height: 300px; flex-shrink: 0; }
+        .portrait::after { content: ''; position: absolute; inset: -14px; border-radius: 30px; background: var(--grad-gold); opacity: 0.16; filter: blur(26px); z-index: -1; }
+        .portrait-frame { position: relative; width: 100%; height: 100%; border-radius: 24px; padding: 5px; background: var(--grad-gold); box-shadow: 0 30px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04); }
+        .portrait-inner { position: relative; width: 100%; height: 100%; border-radius: 20px; overflow: hidden; background: #0a0a12; }
+        .portrait-inner img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; }
+        .portrait-plate { position: absolute; left: 0; right: 0; bottom: 0; height: 42%; background: linear-gradient(to top, rgba(15,15,26,0.96) 12%, rgba(15,15,26,0.72) 48%, transparent 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 0 1.1rem 1rem; pointer-events: none; }
+        .portrait-plate .pp-name { font-family: var(--font-display); font-weight: 700; font-size: 1.5rem; line-height: 1; letter-spacing: -0.01em; }
+        .portrait-plate .pp-role { font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-accent); font-weight: 700; margin-top: 0.4rem; }
+
+        .intro-copy .kicker { color: var(--color-accent); font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; font-weight: 700; margin-bottom: 0.75rem; }
+        .intro-copy h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.08; margin-bottom: 1rem; }
+        .intro-copy h1 em { font-family: var(--font-display); font-style: italic; font-weight: 400; color: var(--color-accent); }
+        .intro-copy p { color: var(--color-text-label); font-size: 1.05rem; max-width: 560px; }
+        @media (max-width: 800px) { .intro-copy p { margin: 0 auto; } }
+
+        /* ---- BRAND CHIP (real logo in a box) ---- */
+        .brand-chip { display: inline-flex; align-items: center; gap: 0.85rem; margin-top: 1.5rem; padding: 0.6rem 1rem 0.6rem 0.6rem; background: var(--color-card); border: 1px solid var(--color-border); border-radius: 16px; }
+        .logo-box { width: 72px; height: 72px; border-radius: 14px; background: #0f0f1a; border: 1px solid rgba(212,175,55,0.35); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; box-shadow: 0 10px 26px rgba(0,0,0,0.4); }
+        .logo-box img { width: 100%; height: 100%; object-fit: contain; padding: 8px; }
+        .brand-chip .chip-name { font-weight: 700; font-size: 1rem; letter-spacing: -0.01em; }
+        .brand-chip .chip-tag { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-accent); font-weight: 600; margin-top: 0.15rem; }
+
+        .section { max-width: 780px; margin: 0 auto; padding: 2.25rem 1.5rem; }
+        .section h2 { font-size: 1.55rem; font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.01em; }
+        .section h2 em { font-family: var(--font-display); font-style: italic; font-weight: 400; color: var(--color-accent); }
+        .section p { color: var(--color-text-label); margin-bottom: 1.1rem; font-size: 1rem; }
+        .section p:last-child { margin-bottom: 0; }
+        .section p strong { color: var(--color-text); font-weight: 600; }
+
+        /* ---- WHAT I BUILD ---- */
+        .build-list { display: grid; gap: 0.9rem; margin-top: 1.5rem; }
+        .build-item { display: flex; gap: 1rem; align-items: flex-start; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.1rem 1.25rem; transition: border-color 0.25s ease, transform 0.25s ease; }
+        .build-item:hover { border-color: rgba(212,175,55,0.4); transform: translateY(-2px); }
+        .build-item .bi-ico { width: 38px; height: 38px; border-radius: 9px; background: var(--color-accent-glow); color: var(--color-accent); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .build-item .bi-ico svg { width: 20px; height: 20px; }
+        .build-item h3 { font-size: 0.98rem; font-weight: 700; margin-bottom: 0.2rem; }
+        .build-item p { font-size: 0.86rem; color: var(--color-text-muted); margin: 0; line-height: 1.55; }
+
+        .values { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+        .value { background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 1.4rem; }
+        .value .val-num { font-family: var(--font-display); font-style: italic; color: var(--color-accent); font-size: 1.7rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .value h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem; }
+        .value p { font-size: 0.85rem; color: var(--color-text-muted); line-height: 1.55; margin: 0; }
+
+        /* ---- SISTER BRAND CALLOUT ---- */
+        .gm-callout { display: grid; grid-template-columns: auto 1fr; gap: 1.5rem; align-items: center; background: linear-gradient(135deg, #1a1a2e 0%, #171326 100%); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 1.75rem 1.9rem; margin-top: 1.5rem; position: relative; overflow: hidden; text-decoration: none; color: inherit; transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease; }
+        .gm-callout::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #22d3ee 100%); }
+        .gm-callout:hover { border-color: rgba(168,85,247,0.45); transform: translateY(-3px); box-shadow: 0 24px 50px rgba(0,0,0,0.45); }
+        .gm-mark { width: 72px; height: 72px; border-radius: 14px; background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #22d3ee 100%); display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: #08080d; font-weight: 800; font-size: 1.5rem; letter-spacing: -0.02em; box-shadow: 0 10px 26px rgba(0,0,0,0.4); }
+        .gm-body .gm-eyebrow { font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: #b98cf5; font-weight: 700; margin-bottom: 0.3rem; }
+        .gm-body h3 { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.35rem; letter-spacing: -0.01em; }
+        .gm-body p { font-size: 0.9rem; color: var(--color-text-muted); margin: 0; line-height: 1.55; }
+        .gm-visit { display: inline-flex; align-items: center; gap: 0.4rem; margin-top: 0.7rem; font-size: 0.82rem; font-weight: 700; color: #c4a2f7; }
+        .gm-visit svg { width: 15px; height: 15px; transition: transform 0.25s ease; }
+        .gm-callout:hover .gm-visit svg { transform: translate(2px, -2px); }
+        @media (max-width: 560px) { .gm-callout { grid-template-columns: 1fr; text-align: center; justify-items: center; } }
+
+        .contact-card { background: linear-gradient(135deg, #1a1a2e 0%, #201a2e 100%); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 2.25rem; margin-top: 1.75rem; position: relative; overflow: hidden; }
+        .contact-card::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--grad-gold); }
+        .contact-row { display: flex; align-items: center; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--color-border-soft); }
+        .contact-row:last-child { border-bottom: none; }
+        .contact-row .ico { width: 36px; height: 36px; border-radius: 8px; background: var(--color-accent-glow); display: flex; align-items: center; justify-content: center; color: var(--color-accent); flex-shrink: 0; }
+        .contact-row .ico svg { width: 18px; height: 18px; }
+        .contact-row .label { font-size: 0.72rem; color: var(--color-text-muted); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.15rem; }
+        .contact-row .value { font-weight: 600; font-size: 0.95rem; color: var(--color-text); }
+        .contact-row a { color: inherit; text-decoration: none; }
+        .contact-row a:hover { color: var(--color-accent); }
+
+        .site-footer { text-align: center; padding: 2.5rem 1.5rem 3rem; color: #4a4a60; font-size: 0.78rem; border-top: 1px solid var(--color-border-soft); max-width: 1100px; margin: 0 auto; }
+        .site-footer a { color: var(--color-text-muted); text-decoration: none; margin: 0 0.6rem; }
+        .site-footer a:hover { color: var(--color-accent); }
+        .site-footer .tagline { font-family: var(--font-display); font-style: italic; color: var(--color-text-muted); margin-bottom: 0.75rem; }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="nav-brand">
+                <img src="logo-removebg-preview.png" alt="Global Storefront" width="38" height="38">
+                <div class="nav-brand-text">
+                    <span class="nav-brand-name">Global Storefront</span>
+                    <span class="nav-brand-tag">Custom Web Solutions</span>
+                </div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li class="nav-cta-wrap"><a href="index.html#clientLogin" class="nav-login">Client Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- INTRO -->
+    <section class="intro">
+        <div class="portrait">
+            <div class="portrait-frame">
+                <div class="portrait-inner">
+                    <img src="https://res.cloudinary.com/djngpyv15/image/upload/v1785112053/1760054545899_wawcjz.jpg" alt="Aaron, founder of Global Storefront" loading="eager">
+                    <div class="portrait-plate">
+                        <div class="pp-name">Aaron</div>
+                        <div class="pp-role">Founder &amp; Developer</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="intro-copy">
+            <div class="kicker">About</div>
+            <h1>I'm Aaron, the person <em>behind</em> Global Storefront.</h1>
+            <p>No faceless agency, no templates. Every project has me personally involved from the first idea to launch. I lead the direction, stay hands-on through the build, and make sure your site ends up feeling like your shop.</p>
+            <div class="brand-chip">
+                <div class="logo-box">
+                    <img src="logo-removebg-preview.png" alt="Global Storefront logo">
+                </div>
+                <div>
+                    <div class="chip-name">Global Storefront</div>
+                    <div class="chip-tag">Custom Web Solutions</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- THE STORY -->
+    <section class="section">
+        <h2>Why I started this</h2>
+        <p>A lot of great local businesses (bakeries, restaurants, barbershops, corner shops) end up with a generic template or a page that barely does anything. It looks fine, but it can't take an order, book an appointment, or reward a regular. Global Storefront is my answer to that.</p>
+        <p>Every site is built by hand in real code: HTML, CSS, JavaScript, Airtable, Netlify. No drag-and-drop builders, no theme kits. The result is a site made for <strong>your shop specifically</strong>: your menu, your hours, your customers, and the way you actually run the place.</p>
+    </section>
+
+    <!-- WHAT I BUILD -->
+    <section class="section">
+        <h2>What I <em>actually</em> build</h2>
+        <p>This isn't a pretty homepage with nothing behind it. Here's the real work that goes into every shop I take on:</p>
+        <div class="build-list">
+            <div class="build-item">
+                <div class="bi-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg></div>
+                <div>
+                    <h3>Hand-coded, from a blank file</h3>
+                    <p>Every page is written from scratch, so nothing is bloated, broken, or borrowed from a template the shop down the street is also using.</p>
+                </div>
+            </div>
+            <div class="build-item">
+                <div class="bi-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.3 4.6a1 1 0 00.9 1.4H19"/><circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/></svg></div>
+                <div>
+                    <h3>Online ordering &amp; scheduling that works</h3>
+                    <p>Real order-ahead carts, appointment booking, and payment processing. Working systems your customers actually use, not screenshots of a feature you'll get later.</p>
+                </div>
+            </div>
+            <div class="build-item">
+                <div class="bi-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.66 0-3 .9-3 2s1.34 2 3 2 3 .9 3 2-1.34 2-3 2m0-10V4m0 12v2m0-10c1.11 0 2.08.4 2.6 1M9.4 15c.52.6 1.49 1 2.6 1"/></svg></div>
+                <div>
+                    <h3>Rewards &amp; loyalty for your regulars</h3>
+                    <p>Points on every purchase and Bronze, Silver, and Gold tiers that bring people back. The kind of loyalty a punch card can't track.</p>
+                </div>
+            </div>
+            <div class="build-item">
+                <div class="bi-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3v18h18M7 14l4-4 3 3 5-6"/></svg></div>
+                <div>
+                    <h3>An owner dashboard with the real numbers</h3>
+                    <p>Manage orders, track inventory, and see what's actually selling. A back office built for you, not vanity stats you can't use.</p>
+                </div>
+            </div>
+            <div class="build-item">
+                <div class="bi-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg></div>
+                <div>
+                    <h3>A smart helper bot on every site</h3>
+                    <p>A built-in assistant that answers your customers' questions in your voice (menu, hours, and policies) day or night.</p>
+                </div>
+            </div>
+            <div class="build-item">
+                <div class="bi-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg></div>
+                <div>
+                    <h3>Free preview before you pay a cent</h3>
+                    <p>I spec it, build a live version you can log into and click around, and you only pay when it's ready to go live on your own domain.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW I WORK -->
+    <section class="section">
+        <h2>How I <em>work</em> with you</h2>
+        <div class="values">
+            <div class="value">
+                <div class="val-num">01</div>
+                <h3>I match your shop</h3>
+                <p>A warm neighborhood bakery doesn't get a cold corporate layout. I design around your business, not the latest trend.</p>
+            </div>
+            <div class="value">
+                <div class="val-num">02</div>
+                <h3>No fake data</h3>
+                <p>Previews use real pages and real flows, so what you see is genuinely what launch day feels like.</p>
+            </div>
+            <div class="value">
+                <div class="val-num">03</div>
+                <h3>You own everything</h3>
+                <p>Your domain, your data, your code. I don't hold your site hostage. Walk away with the keys anytime.</p>
+            </div>
+            <div class="value">
+                <div class="val-num">04</div>
+                <h3>You talk to me</h3>
+                <p>No account managers, no phone tree. The person who builds it is the person who answers your email.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- THE FAMILY -->
+    <section class="section">
+        <h2>The bigger <em>picture</em></h2>
+        <p>Global Storefront is one arm of <strong>Globally Ballin LLC</strong>, my company. It's the retail side: bakeries, restaurants, and local shops. A few sister brands handle other corners:</p>
+        <div class="values">
+            <div class="value">
+                <div class="val-num" style="font-size:1.1rem; font-style:normal; font-family:var(--font-body); font-weight:700; color:var(--color-text);">Globally Ballin</div>
+                <p>Sports editorial &amp; media. Where it all started.</p>
+            </div>
+            <div class="value">
+                <div class="val-num" style="font-size:1.1rem; font-style:normal; font-family:var(--font-body); font-weight:700; color:var(--color-text);">Global Storefront</div>
+                <p>You're here. Bakeries, restaurants &amp; local retail.</p>
+            </div>
+            <div class="value">
+                <div class="val-num" style="font-size:1.1rem; font-style:normal; font-family:var(--font-body); font-weight:700; color:var(--color-text);">Global Media</div>
+                <p>Sites for entertainers, leagues &amp; personalities.</p>
+            </div>
+        </div>
+
+        <a class="gm-callout" href="https://globalmedia.ai" target="_blank" rel="noopener">
+            <div class="gm-mark">GM</div>
+            <div class="gm-body">
+                <div class="gm-eyebrow">Sister brand</div>
+                <h3>Global Media</h3>
+                <p>The entertainment side of the business: custom-coded sites for musicians, athletes, podcasters, and small leagues, with fan memberships, live data, and a smart helper bot built for how they connect with their audience.</p>
+                <span class="gm-visit">Visit Global Media
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14L21 3m0 0h-7m7 0v7M21 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h5"/></svg>
+                </span>
+            </div>
+        </a>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="section">
+        <h2>Let's build <em>yours</em></h2>
+        <div class="contact-card">
+            <div class="contact-row">
+                <div class="ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+                <div>
+                    <div class="label">Email me directly</div>
+                    <div class="value"><a href="mailto:aarendsen@theglobalstorefront.com">aarendsen@theglobalstorefront.com</a></div>
+                </div>
+            </div>
+            <div class="contact-row">
+                <div class="ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <div>
+                    <div class="label">Based in</div>
+                    <div class="value">United States. Working with shops everywhere.</div>
+                </div>
+            </div>
+            <div class="contact-row">
+                <div class="ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 14L21 3m0 0h-7m7 0v7M21 14v5a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h5"/></svg></div>
+                <div>
+                    <div class="label">Start a project</div>
+                    <div class="value"><a href="index.html">Tell me about your shop &rarr;</a></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <p class="tagline">Custom websites for bakeries, restaurants &amp; local shops.</p>
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="mailto:aarendsen@theglobalstorefront.com">Contact</a>
+        <p style="margin-top: 1rem;">&copy; 2026 Global Storefront &middot; A Globally Ballin LLC brand</p>
+    </footer>
+</body>
+</html>
