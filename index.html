@@ -95,6 +95,13 @@
         .nav-brand-text { display: flex; flex-direction: column; line-height: 1.15; }
         .nav-brand-name { font-weight: 700; font-size: 1rem; letter-spacing: -0.01em; }
         .nav-brand-tag { font-size: 0.6rem; color: var(--color-accent); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
+        .nav-actions { display: flex; align-items: center; gap: 1.5rem; }
+        .nav-link {
+            color: var(--color-text); text-decoration: none;
+            font-size: 0.85rem; font-weight: 600; letter-spacing: 0.01em;
+            opacity: 0.85; transition: opacity 0.2s var(--ease), color 0.2s var(--ease);
+        }
+        .nav-link:hover { opacity: 1; color: var(--color-accent); }
         .nav-login {
             padding: 0.55rem 1.4rem;
             background: var(--grad-gold); color: #0f0f1a;
@@ -892,6 +899,8 @@
             .nav-brand-name { font-size: 0.85rem; }
             .nav-brand-tag { font-size: 0.55rem; }
             .nav-login { padding: 0.5rem 1rem; font-size: 0.72rem; }
+            .nav-actions { gap: 1rem; }
+            .nav-link { font-size: 0.78rem; }
             .hero-cta { width: 100%; justify-content: center; }
             .cost-col { padding: 1.5rem; }
             .cost-note { font-size: 0.72rem; }
@@ -920,7 +929,10 @@
                     <span class="nav-brand-tag">Custom Web Solutions</span>
                 </div>
             </a>
-            <a href="#clientLogin" class="nav-login">Client Login</a>
+            <div class="nav-actions">
+                <a href="about.html" class="nav-link">About</a>
+                <a href="#clientLogin" class="nav-login">Client Login</a>
+            </div>
         </div>
     </nav>
 
