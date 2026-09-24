@@ -418,13 +418,20 @@ function renderNav(){
   });
 }
 
-function go(page){
+function go(page, skipHash){
   S.page = page;
+  // Deep-linkable tabs: /dashboard.html#reach opens Reach directly, the back
+  // button works, and a tab can be bookmarked or sent to someone.
+  if (!skipHash && location.hash.slice(1) !== page) location.hash = page;
   renderNav();
   render();
-  document.querySelector('.main').scrollTo({ top:0 });
   window.scrollTo({ top:0, behavior:'smooth' });
 }
+
+window.addEventListener('hashchange', () => {
+  const page = location.hash.slice(1);
+  if (page && page !== S.page && visiblePages().some(p => p.key === page)) go(page, true);
+});
 
 /* =========================================================================
    Pages
@@ -1048,6 +1055,10 @@ function signOut(){
     .filter(Boolean).join(' · ');
   $('#mobBiz').textContent = biz.company || biz.name || 'Your business';
   $('#mobTier').textContent = biz.tier || '';
+
+  // Honour a deep link on first load, falling back to Home.
+  const wanted = location.hash.slice(1);
+  if (wanted && visiblePages().some(p => p.key === wanted)) S.page = wanted;
 
   renderNav();
   render();
