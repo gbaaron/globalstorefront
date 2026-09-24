@@ -4,6 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Global Storefront | Custom Web Solutions for Local Business</title>
+    <!-- Link preview. The whole pitch is that people don't trust a bare URL
+         sent over text, so the preview card has to look like something. -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Global Storefront">
+    <meta property="og:title" content="Global Storefront — custom sites for local business">
+    <meta property="og:description" content="Ordering, scheduling, rewards and an owner dashboard. Custom-coded for how you actually run your shop.">
+    <meta property="og:image" content="https://globalstorefront.netlify.app/assets/og-image.jpg">
+    <meta property="og:image:width" content="1920">
+    <meta property="og:image:height" content="1080">
+    <meta property="og:url" content="https://globalstorefront.netlify.app/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Global Storefront — custom sites for local business">
+    <meta name="twitter:description" content="Ordering, scheduling, rewards and an owner dashboard. Custom-coded for how you actually run your shop.">
+    <meta name="twitter:image" content="https://globalstorefront.netlify.app/assets/og-image.jpg">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect x='10' y='35' width='80' height='55' rx='4' fill='%231a1a2e'/><rect x='10' y='25' width='80' height='18' rx='3' fill='%23d4af37'/><rect x='35' y='55' width='30' height='35' rx='2' fill='%23d4af37' fill-opacity='0.3'/><text x='50' y='22' font-family='sans-serif' font-size='20' font-weight='bold' fill='%23d4af37' text-anchor='middle'>G</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -157,53 +171,6 @@
             content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
             background: var(--grad-gold);
         }
-        .hv-browser-bar {
-            display: flex; gap: 6px; margin-bottom: 1rem; padding-bottom: 0.75rem;
-            border-bottom: 1px solid rgba(42,42,74,0.4);
-        }
-        .hv-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .hv-dot:nth-child(1) { background: #ff5f57; }
-        .hv-dot:nth-child(2) { background: #febc2e; }
-        .hv-dot:nth-child(3) { background: #28c840; }
-        .hv-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 1rem;
-        }
-        .hv-logo-placeholder { font-size: 0.65rem; font-weight: 800; color: var(--color-accent); letter-spacing: 0.04em; opacity: 0.8; }
-        .hv-nav-dots { display: flex; gap: 12px; }
-        .hv-nav-dot { font-size: 0.5rem; color: rgba(255,255,255,0.35); font-weight: 500; }
-        .hv-hero-block {
-            background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(212,175,55,0.02));
-            border-radius: var(--radius-sm); padding: 1.5rem; margin-bottom: 1rem;
-            border: 1px solid rgba(212,175,55,0.1);
-        }
-        .hv-hero-title { font-size: 0.85rem; font-weight: 800; color: rgba(255,255,255,0.85); margin-bottom: 0.35rem; line-height: 1.3; }
-        .hv-hero-sub { font-size: 0.5rem; color: rgba(255,255,255,0.35); margin-bottom: 0.85rem; }
-        .hv-hero-btn {
-            display: inline-block; padding: 0.4rem 1rem; background: var(--grad-gold);
-            border-radius: 6px; font-size: 0.5rem; font-weight: 700; color: #0f0f1a;
-        }
-        .hv-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem; }
-        .hv-card {
-            background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 6px; padding: 0.75rem;
-        }
-        .hv-card-img {
-            width: 100%; height: 44px; border-radius: 4px; margin-bottom: 0.4rem;
-            background-size: cover; background-position: center;
-        }
-        .hv-card-img.img-a { background-image: url('https://static.wixstatic.com/media/4154dd_e2baf17ec9f2402f86a3beca5b5fcd8f~mv2.jpg'); }
-        .hv-card-img.img-b { background-image: url('https://static.wixstatic.com/media/4154dd_47a0643174f2423db960069f29dd3a94~mv2.jpg'); }
-        .hv-card-img.img-c { background-image: url('https://static.wixstatic.com/media/4154dd_3a3ebafa379f48ffb3a8b6a4088380b2~mv2.jpg'); }
-        .hv-card-title { font-size: 0.48rem; font-weight: 600; color: rgba(255,255,255,0.5); margin-bottom: 0.2rem; }
-        .hv-card-sub { font-size: 0.42rem; color: rgba(255,255,255,0.22); }
-        .hv-label {
-            position: absolute; bottom: -12px; right: 20px;
-            background: var(--color-card); border: 1px solid var(--color-border);
-            padding: 0.35rem 0.9rem; border-radius: 20px;
-            font-size: 0.65rem; color: var(--color-accent); font-weight: 600;
-            letter-spacing: 0.05em;
-        }
 
         /* INDUSTRY MARQUEE */
         .marquee-section {
@@ -306,188 +273,20 @@
             font-size: 0.88rem; color: var(--color-text-label);
         }
         .feature-list li svg { width: 16px; height: 16px; color: var(--color-accent); flex-shrink: 0; }
-
-        /* MOCKUP FRAME — shared browser chrome for all mockups */
-        .mockup-frame {
-            background: var(--color-card);
-            border: 1px solid var(--color-border);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow-card), var(--shadow-glow);
-        }
-        .mf-strip { height: 3px; }
         .mf-strip.green { background: linear-gradient(135deg, #22c55e, #16a34a); }
         .mf-strip.red { background: linear-gradient(135deg, #D63031, #b71c1c); }
         .mf-strip.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
         .mf-strip.gold { background: var(--grad-gold); }
-        .mf-chrome {
-            display: flex; align-items: center; gap: 6px;
-            padding: 0.55rem 1rem;
-            border-bottom: 1px solid var(--color-border);
-        }
-        .mf-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .mf-dot:nth-child(1) { background: #ff5f57; }
-        .mf-dot:nth-child(2) { background: #febc2e; }
-        .mf-dot:nth-child(3) { background: #28c840; }
-        .mf-url {
-            margin-left: 10px; padding: 0.2rem 0.6rem;
-            background: rgba(255,255,255,0.04); border-radius: 4px;
-            font-size: 0.5rem; color: var(--color-text-muted);
-        }
-        .mf-body { padding: 1.1rem; }
-
-        /* REWARDS MOCKUP */
-        .rm-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 0.85rem;
-        }
-        .rm-title {
-            width: 100px; height: 10px;
-            background: rgba(255,255,255,0.2); border-radius: 4px;
-        }
-        .rm-pts-badge {
-            padding: 0.2rem 0.6rem; border-radius: 50px;
-            background: rgba(59,130,246,0.15);
-            font-size: 0.6rem; font-weight: 700; color: #60a5fa;
-        }
-        .rm-card {
-            background: linear-gradient(135deg, #d4a537 0%, #f0d060 30%, #d4af37 50%, #c49b2e 70%, #d4af37 100%);
-            border-radius: 12px; padding: 1.25rem; color: #1a1a2e;
-            position: relative; overflow: hidden;
-            margin-bottom: 1rem;
-        }
-        .rm-card::after {
-            content: ''; position: absolute; inset: 0;
-            background: linear-gradient(110deg, transparent 25%, rgba(255,255,255,0.2) 50%, transparent 75%);
-            pointer-events: none;
-        }
-        .rm-card-top {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 0.6rem;
-        }
-        .rm-card-tier {
-            font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em;
-            text-transform: uppercase;
-        }
-        .rm-card-stars { font-size: 0.7rem; letter-spacing: 2px; }
-        .rm-card-pts {
-            font-size: 1.5rem; font-weight: 800; margin-bottom: 0.1rem;
-        }
-        .rm-card-pts-label { font-size: 0.55rem; font-weight: 600; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.05em; }
-        .rm-progress-track {
-            height: 6px; background: rgba(0,0,0,0.15);
-            border-radius: 3px; margin: 0.65rem 0 0.3rem;
-            overflow: hidden;
-        }
-        .rm-progress-fill {
-            height: 100%; border-radius: 3px;
-            background: rgba(255,255,255,0.85);
-        }
-        .rm-progress-label {
-            font-size: 0.5rem; font-weight: 600; opacity: 0.65;
-            text-align: right;
-        }
-        .rm-subtitle {
-            font-size: 0.5rem; font-weight: 600; color: rgba(255,255,255,0.3);
-            text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.65rem;
-        }
-        .rm-rewards-row {
-            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;
-        }
-        .rm-reward {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 8px; padding: 0.6rem; text-align: center;
-        }
-        .rm-reward-icon {
-            width: 28px; height: 28px; border-radius: 50%;
-            margin: 0 auto 0.35rem;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .rm-reward-icon svg { width: 14px; height: 14px; }
         .rm-reward-icon.green { background: rgba(34,197,94,0.2); }
         .rm-reward-icon.blue { background: rgba(59,130,246,0.2); }
         .rm-reward-icon.purple { background: rgba(168,85,247,0.2); }
-        .rm-reward-text {
-            font-size: 0.42rem; color: rgba(255,255,255,0.4); font-weight: 500;
-            border-radius: 3px; margin: 0 auto 0.3rem;
-        }
-        .rm-reward-pts {
-            font-size: 0.6rem; font-weight: 700; color: #22c55e;
-        }
-
-        /* ORDERING MOCKUP */
-        .om-header {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 0.75rem;
-        }
-        .om-title {
-            font-size: 0.65rem; font-weight: 700; color: rgba(255,255,255,0.6);
-        }
-        .om-cart-badge {
-            width: 26px; height: 26px; border-radius: 50%;
-            background: rgba(214,48,49,0.2); display: flex;
-            align-items: center; justify-content: center;
-            font-size: 0.6rem; font-weight: 700; color: #D63031;
-            position: relative;
-        }
-        .om-tabs {
-            display: flex; gap: 0.4rem; margin-bottom: 0.85rem;
-        }
-        .om-tab {
-            padding: 0.3rem 0.7rem; border-radius: 50px;
-            font-size: 0.55rem; font-weight: 600;
-            background: rgba(255,255,255,0.04); color: var(--color-text-muted);
-            border: 1px solid rgba(255,255,255,0.06);
-        }
         .om-tab.active {
             background: rgba(214,48,49,0.15); color: #D63031;
             border-color: rgba(214,48,49,0.3);
         }
-        .om-products {
-            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem;
-            margin-bottom: 0.85rem;
-        }
-        .om-product {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            border-radius: 8px; padding: 0.6rem; overflow: hidden;
-        }
-        .om-prod-img {
-            width: 100%; height: 50px; border-radius: 5px;
-            margin-bottom: 0.4rem;
-            background-size: cover; background-position: center;
-        }
         .om-prod-img.a { background-image: url('https://static.wixstatic.com/media/4154dd_e7080a9594c5425eb188e26958105b11~mv2.jpg'); }
         .om-prod-img.b { background-image: url('https://static.wixstatic.com/media/4154dd_b5b2e3a53e6e4cb3a3c8316a9ecb235d~mv2.jpg'); }
         .om-prod-img.c { background-image: url('https://static.wixstatic.com/media/4154dd_a7906bb944e14b11b1447255cd915c67~mv2.jpg'); }
-        .om-prod-name {
-            font-size: 0.48rem; font-weight: 600; color: rgba(255,255,255,0.5);
-            margin-bottom: 0.35rem;
-        }
-        .om-prod-bottom {
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .om-price { font-size: 0.6rem; font-weight: 700; color: var(--color-text-label); }
-        .om-add {
-            width: 20px; height: 20px; border-radius: 50%;
-            background: rgba(214,48,49,0.2);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 0.65rem; color: #D63031; font-weight: 700;
-        }
-        .om-cart-bar {
-            background: rgba(214,48,49,0.06);
-            border: 1px solid rgba(214,48,49,0.15);
-            border-radius: 8px; padding: 0.65rem 0.8rem;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .om-cart-label { font-size: 0.5rem; color: var(--color-text-muted); }
-        .om-cart-total { font-size: 0.75rem; font-weight: 800; color: var(--color-text); }
-        .om-cart-btn {
-            padding: 0.3rem 0.8rem; border-radius: 6px;
-            background: #D63031; color: #fff;
-            font-size: 0.55rem; font-weight: 700;
-        }
 
         /* DASHBOARD MOCKUP (existing — preserved) */
         .dashboard-section { overflow: hidden; }
@@ -497,59 +296,7 @@
         .dashboard-features { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
         .dashboard-features li { display: flex; align-items: center; gap: 0.6rem; font-size: 0.88rem; color: var(--color-text-label); }
         .dashboard-features li svg { width: 16px; height: 16px; color: var(--color-accent); flex-shrink: 0; }
-
-        .dash-mockup {
-            background: var(--color-card); border: 1px solid var(--color-border);
-            border-radius: var(--radius-lg); overflow: hidden;
-            box-shadow: var(--shadow-card), var(--shadow-glow);
-        }
-        .dash-topbar {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0.6rem 1rem; background: rgba(0,0,0,0.2);
-            border-bottom: 1px solid var(--color-border);
-        }
-        .dash-topbar::before {
-            content: ''; height: 3px; position: absolute; top: 0; left: 0; right: 0;
-            background: var(--grad-gold);
-        }
-        .dash-mockup { position: relative; }
-        .dash-topbar-title { font-size: 0.7rem; font-weight: 700; color: var(--color-text-label); }
-        .dash-topbar-user { font-size: 0.6rem; color: var(--color-text-muted); }
-        .dash-body { display: flex; min-height: 240px; }
-        .dash-sidebar {
-            width: 100px; padding: 0.75rem 0.5rem;
-            border-right: 1px solid var(--color-border);
-            display: flex; flex-direction: column; gap: 0.3rem;
-        }
-        .dash-nav-item {
-            padding: 0.35rem 0.5rem; border-radius: 5px; font-size: 0.55rem;
-            color: var(--color-text-muted); font-weight: 500;
-        }
         .dash-nav-item.active { background: var(--color-accent-glow); color: var(--color-accent); }
-        .dash-main { flex: 1; padding: 1rem; }
-        .dash-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-bottom: 1rem; }
-        .dash-stat {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 8px; padding: 0.6rem;
-        }
-        .dash-stat-label { font-size: 0.5rem; color: var(--color-text-muted); margin-bottom: 0.15rem; text-transform: uppercase; letter-spacing: 0.05em; }
-        .dash-stat-val { font-size: 1rem; font-weight: 800; color: var(--color-accent); }
-        .dash-chart { display: flex; align-items: flex-end; gap: 6px; height: 70px; padding-top: 0.5rem; }
-        .dash-bar {
-            flex: 1; border-radius: 3px 3px 0 0;
-        }
-        .dash-bar:nth-child(1) { height: 45%; background: rgba(212,175,55,0.25); }
-        .dash-bar:nth-child(2) { height: 65%; background: rgba(212,175,55,0.35); }
-        .dash-bar:nth-child(3) { height: 55%; background: rgba(212,175,55,0.3); }
-        .dash-bar:nth-child(4) { height: 80%; background: rgba(212,175,55,0.45); }
-        .dash-bar:nth-child(5) { height: 70%; background: rgba(212,175,55,0.4); }
-        .dash-bar:nth-child(6) { height: 90%; background: var(--color-accent); opacity: 0.6; }
-        .dash-bar:nth-child(7) { height: 60%; background: rgba(212,175,55,0.35); }
-        .dash-chart-label {
-            display: flex; justify-content: space-between;
-            font-size: 0.45rem; color: var(--color-text-muted); margin-top: 0.3rem;
-            padding: 0 2px;
-        }
 
         /* MOBILE APP SPOTLIGHT */
         .app-section {
@@ -572,97 +319,9 @@
             color: var(--color-text-muted); font-size: 0.92rem;
             margin-bottom: 2.5rem;
         }
-        .phone-frame {
-            width: 220px; height: 450px;
-            border-radius: 34px; border: 3px solid var(--color-border);
-            background: #0a0a14;
-            padding: 10px; margin: 0 auto 2rem;
-            position: relative;
-            box-shadow: var(--shadow-card), 0 0 60px rgba(212,175,55,0.06);
-            animation: phoneFloat 5s ease-in-out infinite;
-        }
         @keyframes phoneFloat {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
-        }
-        .phone-notch {
-            width: 70px; height: 5px; border-radius: 3px;
-            background: rgba(255,255,255,0.08);
-            margin: 2px auto 8px;
-        }
-        .phone-screen {
-            height: calc(100% - 18px);
-            border-radius: 22px; overflow: hidden;
-            background: var(--color-bg);
-            border: 1px solid rgba(255,255,255,0.05);
-            display: flex; flex-direction: column;
-        }
-        .ps-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 8px 12px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-        .ps-logo {
-            font-size: 0.4rem; font-weight: 800; color: #c9a96e; opacity: 0.9;
-            font-family: var(--font-display); letter-spacing: 0.04em;
-        }
-        .ps-menu {
-            display: flex; flex-direction: column; gap: 2px;
-        }
-        .ps-menu-line {
-            width: 14px; height: 1.5px;
-            background: rgba(255,255,255,0.3); border-radius: 1px;
-        }
-        .ps-hero {
-            padding: 12px;
-            background: linear-gradient(135deg, rgba(201,169,110,0.1), rgba(26,26,46,0.3));
-            border-bottom: 1px solid rgba(201,169,110,0.1);
-        }
-        .ps-hero-text {
-            font-size: 0.5rem; font-weight: 700; color: rgba(255,255,255,0.7);
-            margin-bottom: 3px; line-height: 1.3;
-        }
-        .ps-hero-sub {
-            font-size: 0.3rem; color: rgba(255,255,255,0.3);
-            margin-bottom: 7px;
-        }
-        .ps-hero-btn {
-            display: inline-block; padding: 3px 10px;
-            background: linear-gradient(135deg, #c9a96e, #a8884e); border-radius: 4px;
-            font-size: 0.32rem; font-weight: 700; color: #1a1a2e;
-        }
-        .ps-products {
-            padding: 10px 12px; flex: 1;
-            display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
-        }
-        .ps-product {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 6px; padding: 6px;
-        }
-        .ps-prod-img {
-            width: 100%; height: 32px;
-            border-radius: 4px; margin-bottom: 4px;
-        }
-        .ps-prod-img.pi-a { background: linear-gradient(135deg, rgba(201,169,110,0.18), rgba(201,169,110,0.06)); }
-        .ps-prod-img.pi-b { background: linear-gradient(135deg, rgba(201,169,110,0.14), rgba(201,169,110,0.04)); }
-        .ps-prod-img.pi-c { background: linear-gradient(135deg, rgba(201,169,110,0.10), rgba(201,169,110,0.03)); }
-        .ps-prod-img.pi-d { background: linear-gradient(135deg, rgba(201,169,110,0.12), rgba(201,169,110,0.05)); }
-        .ps-prod-text {
-            font-size: 0.3rem; font-weight: 600; color: rgba(255,255,255,0.4);
-            margin-bottom: 2px;
-        }
-        .ps-prod-price {
-            font-size: 0.28rem; font-weight: 700; color: #c9a96e; opacity: 0.7;
-        }
-        .ps-tab-bar {
-            display: flex; justify-content: center; gap: 12px;
-            padding: 8px 0;
-            border-top: 1px solid rgba(255,255,255,0.06);
-        }
-        .ps-tab-dot {
-            width: 6px; height: 6px; border-radius: 50%;
-            background: rgba(255,255,255,0.12);
         }
         .ps-tab-dot.active { background: var(--color-accent); opacity: 0.6; }
         .app-benefits {
@@ -881,13 +540,6 @@
             .hero h1 { font-size: 1.6rem; }
             .section-wrap { padding: 3rem 1.25rem; }
             .login-card { padding: 1.75rem 1.5rem 1.5rem; }
-            .dash-sidebar { display: none; }
-            .hv-cards { grid-template-columns: 1fr 1fr; }
-            .hv-cards .hv-card:last-child { display: none; }
-            .om-products { grid-template-columns: 1fr 1fr; }
-            .rm-rewards-row { grid-template-columns: 1fr 1fr; }
-            .rm-rewards-row .rm-reward:last-child { display: none; }
-            .phone-frame { width: 190px; height: 390px; }
             .industry-pills { gap: 0.5rem; }
             .ind-pill { font-size: 0.75rem; padding: 0.45rem 0.9rem; }
             .app-benefits { gap: 0.5rem; }
@@ -910,9 +562,125 @@
         @media (max-width: 380px) {
             .hero h1 { font-size: 1.35rem; }
             .subtitle { font-size: 0.82rem; }
-            .om-products { grid-template-columns: 1fr; }
-            .rm-rewards-row { grid-template-columns: 1fr; }
-            .rm-rewards-row .rm-reward:last-child { display: block; }
+        }
+
+        /* ==================================================================
+           REAL PRODUCT SHOTS
+           These replaced hand-built <div> mockups — fake browser chrome, fake
+           reward cards, gradient blocks where the pastry photos belonged. The
+           page was drawing the *category* of the product instead of showing
+           the product, which is the loudest tell that nobody photographed
+           anything. Every image below is a screenshot of the actual running
+           software, captured by scripts/capture-product-shots.js.
+           ================================================================== */
+        .shot {
+            position: relative;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            background: var(--color-card);
+            border: 1px solid var(--color-border);
+            box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 24px 60px rgba(0,0,0,.45);
+        }
+        .shot::after {
+            content: ''; position: absolute; inset: 0; pointer-events: none;
+            border-radius: inherit;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,.05);
+        }
+        .shot__bar {
+            display: flex; align-items: center; gap: 6px;
+            padding: 9px 13px; background: #0b0b14;
+            border-bottom: 1px solid var(--color-border);
+        }
+        .shot__dot { width: 9px; height: 9px; border-radius: 50%; background: #2f2f48; flex: none; }
+        .shot__url {
+            margin-left: 8px; font-size: 0.62rem; color: #5d6672;
+            font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .shot img { display: block; width: 100%; height: auto; }
+
+        /* Phone: a real mobile capture, not a drawn handset. */
+        .shot-phone {
+            position: relative; width: 258px; max-width: 100%; margin: 0 auto;
+            border-radius: 34px; padding: 9px; background: #16161f;
+            border: 1px solid #2c2c42;
+            box-shadow: 0 3px 10px rgba(0,0,0,.5), 0 28px 70px rgba(0,0,0,.55);
+        }
+        .shot-phone::before {
+            content: ''; position: absolute; top: 17px; left: 50%; transform: translateX(-50%);
+            width: 74px; height: 20px; border-radius: 12px; background: #0b0b14; z-index: 2;
+        }
+        .shot-phone img { display: block; width: 100%; height: auto; border-radius: 26px; }
+
+        /* --- HERO STACK: three real screens, overlapped ------------------- */
+        .hero-stack { position: relative; padding-bottom: 42px; }
+        .hero { overflow-x: clip; }
+        @supports not (overflow-x: clip) { .hero { overflow-x: hidden; } }
+        .hero-stack__back {
+            position: absolute; top: -22px; right: -22px; width: 72%;
+            opacity: .5; transform: rotate(2.4deg);
+            filter: saturate(.75);
+        }
+        .hero-stack__main { position: relative; z-index: 2; }
+        .hero-stack__phone {
+            position: absolute; z-index: 3; right: -14px; bottom: -6px; width: 138px;
+        }
+        .hero-stack__phone .shot-phone { width: 100%; padding: 6px; border-radius: 24px; }
+        .hero-stack__phone .shot-phone::before { width: 46px; height: 13px; top: 11px; border-radius: 8px; }
+        .hero-stack__phone .shot-phone img { border-radius: 19px; }
+
+        /* --- FLOW: break the stack-of-drawers rhythm ---------------------- */
+        .bleed {
+            width: calc(100vw - var(--sbw, 0px));
+            margin-left: calc(50% - 50vw + var(--sbw, 0px) / 2);
+            margin-right: calc(50% - 50vw + var(--sbw, 0px) / 2);
+        }
+        .riser { position: relative; z-index: 3; margin-top: -3.5rem; }
+        .showcase-grid.wide-art { grid-template-columns: 1.18fr 0.82fr; }
+        .showcase-grid.flip.wide-art { grid-template-columns: 0.82fr 1.18fr; }
+
+        /* A sideways band of real screens: the eye travels horizontally once
+           and the vertical rhythm resets. */
+        .screenwall { overflow: hidden; padding: 2.6rem 0; position: relative; }
+        .screenwall::before, .screenwall::after {
+            content: ''; position: absolute; top: 0; bottom: 0; width: 13%; z-index: 2; pointer-events: none;
+        }
+        .screenwall::before { left: 0; background: linear-gradient(90deg, var(--color-bg), transparent); }
+        .screenwall::after { right: 0; background: linear-gradient(270deg, var(--color-bg), transparent); }
+        .screenwall__track {
+            display: flex; gap: 1.1rem; width: max-content;
+            animation: screenroll 68s linear infinite;
+        }
+        .screenwall:hover .screenwall__track { animation-play-state: paused; }
+        .screenwall__track img {
+            height: 208px; width: auto; border-radius: 11px;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 14px 40px rgba(0,0,0,.45);
+            filter: saturate(.85) brightness(.92);
+            transition: filter .3s ease, transform .3s ease;
+        }
+        .screenwall__track img:hover { filter: none; transform: translateY(-4px); }
+        @keyframes screenroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* --- REVEAL ------------------------------------------------------- */
+        .reveal {
+            opacity: 0; transform: translateY(18px);
+            transition: opacity 620ms ease, transform 620ms cubic-bezier(.22,1,.36,1);
+        }
+        .reveal.is-in { opacity: 1; transform: none; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal { opacity: 1; transform: none; transition: none; }
+            .screenwall__track { animation: none; }
+        }
+
+        @media (max-width: 900px) {
+            .hero-stack__back { display: none; }
+            .hero-stack__phone { width: 104px; right: -6px; }
+            .showcase-grid.wide-art,
+            .showcase-grid.flip.wide-art { grid-template-columns: 1fr; }
+            .riser { margin-top: 0; }
+            .screenwall__track img { height: 152px; }
         }
     </style>
 </head>
@@ -948,23 +716,25 @@
             </a>
             <p class="hero-proof">No templates. No monthly platform fees. No shortcuts.</p>
         </div>
-        <div class="hero-visual">
-            <div class="hv-browser-bar"><div class="hv-dot"></div><div class="hv-dot"></div><div class="hv-dot"></div></div>
-            <div class="hv-header">
-                <div class="hv-logo-placeholder">Zeeland Bakery</div>
-                <div class="hv-nav-dots"><div class="hv-nav-dot">Menu</div><div class="hv-nav-dot">About</div><div class="hv-nav-dot">Order</div><div class="hv-nav-dot">Rewards</div></div>
+        <div class="hero-stack">
+            <div class="hero-stack__back shot" aria-hidden="true">
+                <img src="assets/product/dashboard-home.jpg" alt="" width="1440" height="900" loading="eager" decoding="async">
             </div>
-            <div class="hv-hero-block">
-                <div class="hv-hero-title">Fresh-baked daily.<br>Order ahead online.</div>
-                <div class="hv-hero-sub">Family-owned since 2019 &middot; Pickup ready in 15 min</div>
-                <div class="hv-hero-btn">Order Now</div>
+            <div class="hero-stack__main shot">
+                <div class="shot__bar">
+                    <span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__dot"></span>
+                    <span class="shot__url">dutchovenbakery.com</span>
+                </div>
+                <img src="assets/product/space-bakery.jpg"
+                     alt="A bakery storefront built on Global Storefront: hours, today's menu and an order button."
+                     width="1440" height="900" loading="eager" decoding="async" fetchpriority="high">
             </div>
-            <div class="hv-cards">
-                <div class="hv-card"><div class="hv-card-img img-a"></div><div class="hv-card-title">Cinnamon Rolls</div><div class="hv-card-sub">$3.50</div></div>
-                <div class="hv-card"><div class="hv-card-img img-b"></div><div class="hv-card-title">Glazed Croissant</div><div class="hv-card-sub">$3.25</div></div>
-                <div class="hv-card"><div class="hv-card-img img-c"></div><div class="hv-card-title">Glazed Donuts</div><div class="hv-card-sub">$1.50</div></div>
+            <div class="hero-stack__phone">
+                <div class="shot-phone">
+                    <img src="assets/product/space-phone.jpg"
+                         alt="The same storefront on a phone." width="402" height="820" loading="lazy" decoding="async">
+                </div>
             </div>
-            <div class="hv-label">Custom built for your brand</div>
         </div>
     </section>
 
@@ -1025,56 +795,21 @@
     <!-- SHOWCASE: REWARDS / LOYALTY (Members tier) -->
     <section class="section-wrap showcase">
         <div class="showcase-grid">
-            <div class="showcase-text">
+            <div class="showcase-text reveal">
                 <span class="showcase-badge members">Members</span>
                 <h2>A loyalty program they'll <span style="color: #3b82f6;">actually use</span></h2>
                 <ul class="feature-list">
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Automatic points on every purchase</li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Bronze, Silver, Gold tier upgrades</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Customers track balance and rewards</li>
                 </ul>
             </div>
-            <div class="showcase-mockup">
-                <div class="mockup-frame">
-                    <div class="mf-strip blue"></div>
-                    <div class="mf-chrome">
-                        <div class="mf-dot"></div><div class="mf-dot"></div><div class="mf-dot"></div>
-                        <span class="mf-url">yourbusiness.com/rewards</span>
+            <div class="showcase-mockup reveal">
+                <div class="shot">
+                    <div class="shot__bar">
+                        <span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__dot"></span>
+                        <span class="shot__url">globalstorefront.com/dashboard#loyalty</span>
                     </div>
-                    <div class="mf-body">
-                        <div class="rm-header">
-                            <div class="rm-title"></div>
-                            <div class="rm-pts-badge">1,240 pts</div>
-                        </div>
-                        <div class="rm-card">
-                            <div class="rm-card-top">
-                                <span class="rm-card-tier">Gold Member</span>
-                                <span class="rm-card-stars"><svg width="10" height="10" viewBox="0 0 24 24" fill="#1a1a2e" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> <svg width="10" height="10" viewBox="0 0 24 24" fill="#1a1a2e" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg> <svg width="10" height="10" viewBox="0 0 24 24" fill="#1a1a2e" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></span>
-                            </div>
-                            <div class="rm-card-pts">1,240</div>
-                            <div class="rm-card-pts-label">Reward Points</div>
-                            <div class="rm-progress-track"><div class="rm-progress-fill" style="width: 83%;"></div></div>
-                            <div class="rm-progress-label">260 pts to Platinum</div>
-                        </div>
-                        <div class="rm-subtitle">Recent Activity</div>
-                        <div class="rm-rewards-row">
-                            <div class="rm-reward">
-                                <div class="rm-reward-icon green"><svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg></div>
-                                <div class="rm-reward-text">Online order</div>
-                                <div class="rm-reward-pts">+50</div>
-                            </div>
-                            <div class="rm-reward">
-                                <div class="rm-reward-icon blue"><svg viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg></div>
-                                <div class="rm-reward-text">Left a review</div>
-                                <div class="rm-reward-pts">+25</div>
-                            </div>
-                            <div class="rm-reward">
-                                <div class="rm-reward-icon purple"><svg viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
-                                <div class="rm-reward-text">Referral bonus</div>
-                                <div class="rm-reward-pts">+75</div>
-                            </div>
-                        </div>
-                    </div>
+                    <img src="assets/product/dashboard-loyalty.jpg" alt="Ten loyalty members listed by balance, showing what each has earned and spent." width="1440" height="900" loading="lazy" decoding="async">
                 </div>
             </div>
         </div>
@@ -1084,59 +819,23 @@
     <div class="showcase-bg">
         <section class="section-wrap showcase">
             <div class="showcase-grid flip">
-                <div class="showcase-text">
+                <div class="showcase-text reveal">
                     <span class="showcase-badge public">Public</span>
                     <h2>Ordering and booking, <span style="color: #22c55e;">built right in</span></h2>
                     <ul class="feature-list">
                         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Online ordering or appointment booking</li>
                         <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>No third-party apps taking a cut</li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Real-time availability and confirmation</li>
                     </ul>
                 </div>
-                <div class="showcase-mockup">
-                    <div class="mockup-frame">
-                        <div class="mf-strip red"></div>
-                        <div class="mf-chrome">
-                            <div class="mf-dot"></div><div class="mf-dot"></div><div class="mf-dot"></div>
-                            <span class="mf-url">zeelandbakery.com/order</span>
-                        </div>
-                        <div class="mf-body">
-                            <div class="om-header">
-                                <div class="om-title">Order Ahead</div>
-                                <div class="om-cart-badge">2</div>
-                            </div>
-                            <div class="om-tabs">
-                                <div class="om-tab active">All</div>
-                                <div class="om-tab">Pastries</div>
-                                <div class="om-tab">Bread</div>
-                            </div>
-                            <div class="om-products">
-                                <div class="om-product">
-                                    <div class="om-prod-img a"></div>
-                                    <div class="om-prod-name">Chocolate Chip Bread</div>
-                                    <div class="om-prod-bottom"><span class="om-price">$6.50</span><span class="om-add">+</span></div>
-                                </div>
-                                <div class="om-product">
-                                    <div class="om-prod-img b"></div>
-                                    <div class="om-prod-name">Strawberry Danish</div>
-                                    <div class="om-prod-bottom"><span class="om-price">$4.25</span><span class="om-add">+</span></div>
-                                </div>
-                                <div class="om-product">
-                                    <div class="om-prod-img c"></div>
-                                    <div class="om-prod-name">Blueberry Muffin</div>
-                                    <div class="om-prod-bottom"><span class="om-price">$3.75</span><span class="om-add">+</span></div>
-                                </div>
-                            </div>
-                            <div class="om-cart-bar">
-                                <div>
-                                    <div class="om-cart-label">Subtotal</div>
-                                    <div class="om-cart-total">$14.50</div>
-                                </div>
-                                <div class="om-cart-btn">Place Order</div>
-                            </div>
-                        </div>
+                <div class="showcase-mockup reveal">
+                <div class="shot">
+                    <div class="shot__bar">
+                        <span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__dot"></span>
+                        <span class="shot__url">globalstorefront.com/dashboard#bookings</span>
                     </div>
+                    <img src="assets/product/dashboard-bookings.jpg" alt="Booking requests waiting on the owner, confirmed appointments, and completed jobs." width="1440" height="900" loading="lazy" decoding="async">
                 </div>
+            </div>
             </div>
         </section>
     </div>
@@ -1152,53 +851,16 @@
                 <ul class="dashboard-features">
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Manage incoming orders in real time</li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Track inventory with automatic low-stock alerts</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Daily revenue summary & trend charts</li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Customer analytics & loyalty tier breakdowns</li>
                     <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>Update menus, products & content — no developer needed</li>
                 </ul>
             </div>
-            <div class="dash-mockup">
-                <div class="dash-topbar">
-                    <span class="dash-topbar-title">Dashboard</span>
-                    <span class="dash-topbar-user">Admin</span>
-                </div>
-                <div class="dash-body">
-                    <div class="dash-sidebar">
-                        <div class="dash-nav-item active">Overview</div>
-                        <div class="dash-nav-item">Orders</div>
-                        <div class="dash-nav-item">Inventory</div>
-                        <div class="dash-nav-item">Customers</div>
-                        <div class="dash-nav-item">Analytics</div>
-                        <div class="dash-nav-item">Settings</div>
+            <div class="dash-mockup reveal">
+                <div class="shot">
+                    <div class="shot__bar">
+                        <span class="shot__dot"></span><span class="shot__dot"></span><span class="shot__dot"></span>
+                        <span class="shot__url">globalstorefront.com/dashboard</span>
                     </div>
-                    <div class="dash-main">
-                        <div class="dash-stats">
-                            <div class="dash-stat">
-                                <div class="dash-stat-label">Today</div>
-                                <div class="dash-stat-val">$1,240</div>
-                            </div>
-                            <div class="dash-stat">
-                                <div class="dash-stat-label">Orders</div>
-                                <div class="dash-stat-val">23</div>
-                            </div>
-                            <div class="dash-stat">
-                                <div class="dash-stat-label">Customers</div>
-                                <div class="dash-stat-val">156</div>
-                            </div>
-                        </div>
-                        <div class="dash-chart">
-                            <div class="dash-bar"></div>
-                            <div class="dash-bar"></div>
-                            <div class="dash-bar"></div>
-                            <div class="dash-bar"></div>
-                            <div class="dash-bar"></div>
-                            <div class="dash-bar"></div>
-                            <div class="dash-bar"></div>
-                        </div>
-                        <div class="dash-chart-label">
-                            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-                        </div>
-                    </div>
+                    <img src="assets/product/dashboard-home.jpg" alt="The owner dashboard: views, orders, revenue and followers, with traffic split by surface." width="1440" height="900" loading="lazy" decoding="async">
                 </div>
             </div>
         </div>
@@ -1210,30 +872,9 @@
             <div class="section-label">Add-On</div>
             <h2>Turn their website into <span class="accent">a mobile app</span></h2>
             <p class="app-subtitle">Same features, native on their phone. An optional upgrade that adds real value.</p>
-            <div class="phone-frame">
-                <div class="phone-notch"></div>
-                <div class="phone-screen">
-                    <div class="ps-header">
-                        <div class="ps-logo">The Sharp</div>
-                        <div class="ps-menu"><div class="ps-menu-line"></div><div class="ps-menu-line"></div><div class="ps-menu-line"></div></div>
-                    </div>
-                    <div class="ps-hero">
-                        <div class="ps-hero-text">Book your cut<br>online</div>
-                        <div class="ps-hero-sub">Walk-ins welcome. Appointments preferred.</div>
-                        <div class="ps-hero-btn">Book Now</div>
-                    </div>
-                    <div class="ps-products">
-                        <div class="ps-product"><div class="ps-prod-img pi-a"></div><div class="ps-prod-text">Classic Cut</div><div class="ps-prod-price">$30</div></div>
-                        <div class="ps-product"><div class="ps-prod-img pi-b"></div><div class="ps-prod-text">Beard Trim</div><div class="ps-prod-price">$20</div></div>
-                        <div class="ps-product"><div class="ps-prod-img pi-c"></div><div class="ps-prod-text">Hot Towel Shave</div><div class="ps-prod-price">$35</div></div>
-                        <div class="ps-product"><div class="ps-prod-img pi-d"></div><div class="ps-prod-text">Lineup</div><div class="ps-prod-price">$15</div></div>
-                    </div>
-                    <div class="ps-tab-bar">
-                        <div class="ps-tab-dot active"></div>
-                        <div class="ps-tab-dot"></div>
-                        <div class="ps-tab-dot"></div>
-                        <div class="ps-tab-dot"></div>
-                    </div>
+            <div class="phone-frame reveal">
+                <div class="shot-phone">
+                    <img src="assets/product/space-phone.jpg" alt="The same storefront running as an app on a phone." width="402" height="820" loading="lazy" decoding="async">
                 </div>
             </div>
             <div class="app-benefits">
@@ -1258,9 +899,29 @@
         </div>
     </div>
 
-    <!-- CUSTOM BUILD CALLOUT -->
+    <!-- REAL SCREENS BAND -->
+    <div class="screenwall bleed">
+        <div class="marquee-label" style="margin-bottom:1.4rem">Real screens from real builds</div>
+        <div class="screenwall__track">
+                    <img src="assets/product/directory-holland.jpg" alt="Shop Holland — the local directory listing" loading="lazy" decoding="async">
+                    <img src="assets/product/dashboard-reach.jpg" alt="Sending a broadcast to followers" loading="lazy" decoding="async">
+                    <img src="assets/product/space-bakery.jpg" alt="A bakery storefront" loading="lazy" decoding="async">
+                    <img src="assets/product/dashboard-insights.jpg" alt="Traffic and revenue, broken down by surface" loading="lazy" decoding="async">
+                    <img src="assets/product/dashboard-bookings.jpg" alt="Bookings waiting on the owner" loading="lazy" decoding="async">
+                    <img src="assets/product/dashboard-loyalty.jpg" alt="Loyalty members by balance" loading="lazy" decoding="async">
+                    <img src="assets/product/directory-phone.jpg" alt="The directory on a phone" loading="lazy" decoding="async">
+                    <img src="assets/product/directory-holland.jpg" alt="" loading="lazy" decoding="async">
+                    <img src="assets/product/dashboard-reach.jpg" alt="" loading="lazy" decoding="async">
+                    <img src="assets/product/space-bakery.jpg" alt="" loading="lazy" decoding="async">
+                    <img src="assets/product/dashboard-insights.jpg" alt="" loading="lazy" decoding="async">
+                    <img src="assets/product/dashboard-bookings.jpg" alt="" loading="lazy" decoding="async">
+                    <img src="assets/product/dashboard-loyalty.jpg" alt="" loading="lazy" decoding="async">
+                    <img src="assets/product/directory-phone.jpg" alt="" loading="lazy" decoding="async">
+        </div>
+    </div>
+
     <div class="custom-callout">
-        <p class="custom-callout-text">What you see above is just a sample. <strong>Every site is built from scratch around your business.</strong> If you can describe it, we can build it &mdash; menus, booking systems, photo galleries, customer portals, whatever you need.</p>
+        <p class="custom-callout-text"><strong>Every site is built from scratch around your business.</strong> If you can describe how you work, it can be built that way.</p>
     </div>
 
     <hr class="section-divider">
@@ -1316,17 +977,17 @@
         <div class="section-label">How It Works</div>
         <h2 class="section-heading">From conversation to launch</h2>
         <div class="process-grid">
-            <div class="process-card">
+            <div class="process-card reveal">
                 <div class="process-num">1</div>
                 <h3>We talk about your business</h3>
                 <p>What do your customers actually do? What's annoying about your current setup? What would make your day easier?</p>
             </div>
-            <div class="process-card">
+            <div class="process-card reveal">
                 <div class="process-num">2</div>
                 <h3>We build it from scratch</h3>
                 <p>Custom code, custom design, custom features. You get a private preview portal right here to watch it come together.</p>
             </div>
-            <div class="process-card">
+            <div class="process-card reveal">
                 <div class="process-num">3</div>
                 <h3>You launch and use it</h3>
                 <p>Your site goes live with admin tools, analytics, and everything your business needs from day one.</p>
@@ -1436,11 +1097,31 @@
         body: JSON.stringify({ page: 'home', referrer: document.referrer || '' })
     }).catch(() => {});
 
-    // Scroll reveal for showcase sections
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.12 });
-    document.querySelectorAll('.showcase').forEach(el => observer.observe(el));
+    // .bleed needs the real scrollbar gutter; 100vw includes it and overflows.
+    const setGutter = () => document.documentElement.style.setProperty(
+        '--sbw', (window.innerWidth - document.documentElement.clientWidth) + 'px');
+    setGutter();
+    addEventListener('resize', setGutter, { passive: true });
+
+    // Scroll reveal. Unobserve after firing — without it, scrolling back up
+    // re-animates everything and reads as a glitch rather than a reveal.
+    const revealIO = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (!e.isIntersecting) return;
+            e.target.classList.add(e.target.classList.contains('reveal') ? 'is-in' : 'visible');
+            revealIO.unobserve(e.target);
+        });
+    }, { threshold: 0.06, rootMargin: '0px 0px -8% 0px' });
+    document.querySelectorAll('.showcase, .reveal').forEach(el => revealIO.observe(el));
+
+    // Anything already on screen at load should not wait for a scroll that may
+    // never come on a short viewport.
+    requestAnimationFrame(() => {
+        document.querySelectorAll('.reveal').forEach(el => {
+            const r = el.getBoundingClientRect();
+            if (r.top < innerHeight && r.bottom > 0) { el.classList.add('is-in'); revealIO.unobserve(el); }
+        });
+    });
 
     // Haptic feedback on interactive elements (mobile)
     function haptic(ms) { if (navigator.vibrate) navigator.vibrate(ms || 10); }
