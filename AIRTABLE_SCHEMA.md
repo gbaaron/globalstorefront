@@ -14,6 +14,8 @@
 | `FIREBASE_SERVER_KEY` | Firebase Cloud Messaging server key (for push notifications) |
 | `STRIPE_SECRET_KEY` | Stripe secret key — **deferred**; when absent, billing runs in records-only mode (no money moves) |
 | `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret — **deferred**; when absent, `stripe-webhook` parses events unverified (test fixtures only) |
+| `HASH_PASSWORDS` | **Leave unset while building.** Set to `1` before the first real member signs up — see "Passwords" below. |
+| `RESEND_API_KEY` / `SENDGRID_API_KEY` | Email delivery — **deferred**; when absent, campaigns run records-only |
 
 ## Tables
 
@@ -268,7 +270,7 @@ One row per dev-hours request for a Concierge client. 1 free hour per calendar m
 
 ## Notes
 
-- Passwords MUST be stored as bcrypt hashes, never plain text
+- Passwords are governed by the `HASH_PASSWORDS` switch in `lib/password.js` — see "Passwords" below. (This line previously claimed bcrypt-always; the code has never done that, and per the playbook it deliberately should not during a build.)
 - Email is the canonical user identity key across all tables
 - PageViews is a public-write table (no auth required) — used for visit analytics only
 - The admin dashboard reads from all tables; the client login reads from Clients only
@@ -318,3 +320,140 @@ All three are gated to Concierge via `tierIncludes(tier, feature)` with a per-ro
 - **Strategy calls (`strategy_calls`):** Concierge clients get one strategy call per quarter. `manage-strategy-call` GET lists the client's calls + `usedThisQuarter`; POST `request` creates a `requested` row (rejects a second active call in the same quarter, 409); POST `cancel` cancels with an ownership check. Aaron schedules from the admin side. Surfaced in the owner app's Settings tab.
 - **Dev hours (`dev_hours`):** 1 free dev hour per calendar month, overage at `$50/hr` (`DEV_HOUR_OVERAGE_RATE` in `lib/tiers.js`). `manage-dev-hours` GET returns the client's entries + a this-month usage `summary` (hoursUsed / freeRemaining / overageOwed); POST `request` computes overage against month-to-date usage and writes a `requested` row; POST `cancel` cancels a still-`requested` entry (in-progress/completed are locked, 409). The cancel write uses `{ typecast: true }`. Surfaced in the owner app's Settings tab with a live overage estimate as the owner types hours.
 - The `SocialPosts`, `StrategyCalls`, and `DevHours` tables were created via the Airtable Meta API.
+
+---
+
+# THE REVAMP — two axes, not a ladder
+
+Everything below was added by the account-and-surfaces revamp. Read this
+section before touching capability gating, the directory, or billing.
+
+## The model in one paragraph
+
+**Global Storefront is the product.** A business has exactly one account and one
+dashboard. Websites, standalone apps and directory listings are **surfaces** that
+the one account publishes to — never separate products with separate logins. What
+a business can do is the union of two independent axes plus an override layer,
+resolved by `netlify/functions/lib/capabilities.js`:
+
+```
+Tier preset  ─┐
+Axis 1: surfaces (space / website / app)  ─┼─► resolveCapabilities() ─► caps[] ─► JWT ─► can(caps, 'x')
+Axis 2: directory (none / free / paid)    ─┤
+Overrides (grants and "-revokes")         ─┘
+```
+
+`Tier` still exists. It is a **preset that seeds the axis flags and drives
+billing**, never a gate. "Essentials with paid directory space" and "Concierge
+with no directory" are both coherent, and neither is a rung.
+
+**Zero-downtime contract:** `resolveCapabilities()` falls back to the tier preset
+when the axis fields are absent, so every row that predates the revamp — and every
+unexpired token — resolves to exactly the capability set it had before.
+
+## New fields on `Clients` (the tenant record)
+
+The table is still named `Clients`; the concept is a Tenant. Every reference goes
+through `TABLES.TENANTS` in `lib/tenants.js`, so renaming it later is one edit.
+
+| Field | Type | Notes |
+|---|---|---|
+| Slug | Single line text | URL-safe id used by the space and the directory |
+| RegionID | Single line text | `Regions` record id. **Empty is normal** — out-of-town tenants have none until their city launches. |
+| HasWebsite | Checkbox | Axis 1 |
+| WebsiteMode | Single select | `none` / `built` (domain points at their space) / `linked` (they keep their own site) |
+| HasApp | Checkbox | Axis 1 |
+| DirectoryStatus | Single select | Axis 2 — `none` / `free` / `paid`. Free = 2 pushes/month. |
+| PaymentChannel | Single select | `us` / `theirs` / `none` — never assumed |
+| MonetizationMode | Single select | `percent_of_sale` / `flat_monthly` / `free` |
+| POSSystem | Single line text | Their point-of-sale, if any |
+| Capabilities | Long text | JSON override array. A bare key grants; `"-key"` revokes. **Revokes win.** |
+| LogoURL, BrandColor, Tagline, Address, Phone, WebsiteURL, Lat, Lng | Single line text | Directory + space presentation |
+| LastLogin | Single line text | ISO timestamp |
+
+## New tables
+
+| Table | What it holds |
+|---|---|
+| `Regions` | A directory instance — Shop [City], Vote [State]. Adding a town is a row, not a deploy. |
+| `Users` | Directory **end users** (shoppers), a separate population from tenants. One account follows many businesses across many regions. |
+| `Follows` | A user follows a tenant. The unit of directory reach. |
+| `PushBroadcasts` | One row per broadcast. **The 2/month free cap is counted off this table.** A refused send is recorded with `Status: blocked`. |
+| `PointsLedger` | Tenant-scoped loyalty. `RegionID` is written but not yet read — the deliberate seam for a future directory-wide layer. |
+| `TenantContent` | Content edited once, rendered on every surface. |
+| `TenantHours` | Opening hours — also the source of booking availability. |
+| `Bookings` | Slots, appointments, jobs. |
+| `Items` | Catalog: products, menu items, services. |
+| `Events` + `EventSignups` | Events with capacity and a waitlist. |
+| `Wishlists` + `WishlistItems` | Registry with claim state, so two people don't buy the same gift. |
+| `RestockSubscriptions` | Notify-me-when-it's-back. Fired by a zero-to-positive `Items.StockCount` change. |
+| `Invoices` | Invoices a tenant issues to their own customers. |
+| `Subscriptions` | Module-level billing — one row per module a tenant pays for. |
+
+Full field definitions live in `scripts/build-schema.js`, which is the source of
+truth and is idempotent: re-running only creates what is missing, and never
+deletes or retypes anything.
+
+## Capability reference
+
+Defined in `lib/capabilities.js`. Surfaces grant:
+
+- **space** (unconditional) → `space`, `content_hours`, `basic_analytics`
+- **website, built** → `website`, `custom_domain`, `website_analytics`
+- **website, linked** → `website_link_out` (the directory card points at their own site)
+- **app** → `app_surface`, `push_app`, `app_analytics`, `own_icon`
+
+Distribution grants:
+
+- **free listing** → `directory_listing`, `directory_link_out`, `followable`, `push_followers` (capped), `directory_analytics`
+- **paid space** → all of the above plus `directory_branded`, `push_unlimited`, `push_segmentation`, `push_scheduling`, `bookings`, `loyalty`, `pay_in_app`, `value_modules`, `data_export`, `advanced_analytics`
+
+Payment channel grants:
+
+- **us** → `invoicing`, `pay_in_app`, `transaction_split`
+- **theirs** → `invoicing` only (we issue the document; we never touch the money)
+- **none** → nothing
+
+## The push cap
+
+`PUSH_FREE_MONTHLY_CAP = 2`, enforced server-side in **two** places:
+
+1. `manage-push.js` counts the tenant's `sent` rows for the current month before
+   every send and refuses the third with a 429.
+2. `send-push.js` (hourly sweep) **re-checks at send time**, not at queue time.
+   That closes the hole where a tenant queues ten broadcasts while they still have
+   quota; it also means a downgrade pauses pending sends, matching how
+   `send-campaign.js` already treats email.
+
+A refusal is written as a `blocked` row rather than silently dropped — the
+control room lists those tenants as the month's upgrade conversations.
+
+## Passwords
+
+`lib/password.js` is the only place that decides. `HASH_PASSWORDS` unset or `0`
+stores plain text (the build state, per the playbook); `1` stores bcrypt. **An
+existing hash is always honoured either way**, so toggling never locks anyone out
+— only what gets *written* changes.
+
+> **Set `HASH_PASSWORDS=1` before the first real member signs up.** The directory
+> gives Global Storefront a second, much larger population — ordinary shoppers,
+> who reuse passwords everywhere. Flip it before a region goes live to the public.
+
+## Known schema quirks
+
+- `PageViews` uses **`ClientId`** (lowercase d) while every other table uses
+  `ClientID`. Do not "fix" it without migrating the rows; `ownsRow()` reads both.
+- `Orders` and `MenuItems` predate the revamp and are scoped by `ClientID`. The
+  revamp's tables use `TenantID`. Both are read.
+- Airtable's Meta API will not add options to an existing single-select. New
+  option values arrive through `{ typecast: true }` on write instead.
+
+## Scripts
+
+| Script | Does |
+|---|---|
+| `build-schema.js [--dry]` | Creates missing tables and fields. Additive and idempotent. |
+| `migrate-tenants.js [--dry] [--force] [--region slug]` | Backfills existing tenants from their tier onto the axis model. |
+| `seed-regions.js [--dry]` | Creates the regions. Holland live; the rest planned. |
+| `seed-demo-directory.js [--clean]` | Five demo businesses across different axis combinations, for pitching. |
+| `_e2e.js [--keep]` | End-to-end exercise against the live base. 64 assertions; cleans up after itself. |
