@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control Room — Global Storefront</title>
+<meta name="description" content="Every tenant, every region, every module.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* =========================================================================
+   THE CONTROL ROOM — Aaron only. Owners never see this.
+   Not the tenant dashboard: this is every tenant across every region, the
+   directory toggles, module-level billing, and app release tracking (the only
+   real overhead a standalone app adds is Aaron's, not the tenant's).
+   ========================================================================= */
+:root{
+  --navy:#0f0f1a; --surface:#1a1a2e; --surface-2:#22223a; --surface-3:#2b2b46;
+  --gold:#d4af37; --gold-lit:#e8c95f; --grey:#8892a0; --grey-dim:#5d6672;
+  --ink:#eef1f6; --green:#3ddc84; --red:#ff6b6b; --blue:#5aa9ff; --violet:#a78bfa;
+  --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+  --grad:linear-gradient(135deg,var(--gold),#c9962b 50%,var(--violet));
+  --r:13px; --ease:cubic-bezier(.25,.46,.45,.94); --t:.22s var(--ease);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--navy);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
+body::before{content:'';position:fixed;inset:-10%;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 900px 600px at 5% 0%,rgba(212,175,55,.1),transparent 55%),
+             radial-gradient(ellipse 800px 600px at 95% 30%,rgba(167,139,250,.08),transparent 55%);filter:blur(10px)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.top{position:sticky;top:0;z-index:40;background:rgba(15,15,26,.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--line)}
+.top-in{max-width:1400px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.mark{width:32px;height:32px;border-radius:9px;background:var(--grad);display:grid;place-items:center;font-weight:800;color:var(--navy);font-size:15px}
+.top h1{font-size:15.5px;font-weight:700;letter-spacing:-.02em}
+.top .sub{font-size:11px;color:var(--grey-dim);letter-spacing:.06em;text-transform:uppercase}
+.tabs{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.tab{padding:7px 14px;border-radius:99px;border:1px solid transparent;background:transparent;color:var(--grey);font:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:var(--t)}
+.tab:hover{color:var(--ink);background:rgba(255,255,255,.05)}
+.tab.on{background:rgba(212,175,55,.14);color:var(--gold-lit);border-color:rgba(212,175,55,.3)}
+
+main{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:26px 22px 80px}
+h2{font-size:clamp(1.35rem,2.6vw,1.75rem);font-weight:800;letter-spacing:-.03em;margin-bottom:5px}
+.lede{color:var(--grey);font-size:14px;margin-bottom:24px;max-width:62ch}
+
+.grid{display:grid;gap:14px;margin-bottom:22px}
+.g5{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:17px;position:relative;overflow:hidden;transition:var(--t)}
+.card::before{content:'';position:absolute;inset:0 0 auto;height:2.5px;background:var(--grad);opacity:0;transition:var(--t)}
+.card:hover::before{opacity:1}
+.card .n{font-size:clamp(1.5rem,3.4vw,2rem);font-weight:800;letter-spacing:-.035em;line-height:1}
+.card .l{font-size:12px;color:var(--grey);margin-top:5px}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:18px}
+.panel-h{padding:15px 19px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.panel-h h3{font-size:14.5px;font-weight:700;letter-spacing:-.02em}
+.panel-h p{font-size:12.5px;color:var(--grey);margin-top:2px}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;padding:11px 16px;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--grey-dim);font-weight:600;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:12px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr{transition:var(--t)}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+.biz-cell{font-weight:600;letter-spacing:-.01em}
+.biz-sub{font-size:11.5px;color:var(--grey-dim);margin-top:2px;font-weight:400}
+
+.tag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:700;padding:3px 8px;border-radius:99px;background:var(--surface-3);color:var(--grey);white-space:nowrap}
+.tag.ok{background:rgba(61,220,132,.15);color:var(--green)}
+.tag.gold{background:rgba(212,175,55,.16);color:var(--gold-lit)}
+.tag.blue{background:rgba(90,169,255,.15);color:var(--blue)}
+.tag.red{background:rgba(255,107,107,.15);color:var(--red)}
+.tag.dim{opacity:.45}
+
+.dots{display:flex;gap:4px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--surface-3)}
+.dot.on{background:var(--green)}
+.dot.gold{background:var(--gold)}
+
+select,input{padding:6px 10px;border:1px solid var(--line-2);border-radius:8px;background:var(--navy);color:var(--ink);font:inherit;font-size:12.5px;transition:var(--t)}
+select:focus,input:focus{outline:0;border-color:var(--gold)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:7px 13px;border-radius:9px;border:1px solid transparent;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:var(--t);white-space:nowrap}
+.btn-gold{background:var(--gold);color:#15130a}
+.btn-gold:hover{background:var(--gold-lit)}
+.btn-ghost{background:transparent;border-color:var(--line-2);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold-lit)}
+
+.caps{display:flex;flex-wrap:wrap;gap:4px;max-width:250px;align-items:center}
+.cap.count{background:rgba(212,175,55,.16);color:var(--gold-lit);font-weight:700}
+.cap{font-size:10px;padding:2px 7px;border-radius:5px;background:var(--surface-3);color:var(--grey)}
+
+.alert{border:1px solid rgba(212,175,55,.32);background:rgba(212,175,55,.07);border-radius:var(--r);padding:16px 19px;margin-bottom:18px}
+.alert h4{font-size:13.5px;font-weight:700;margin-bottom:5px}
+.alert p{font-size:12.5px;color:var(--grey);margin-bottom:10px}
+.alert .row{display:flex;gap:8px;flex-wrap:wrap}
+.alert .who{font-size:12.5px;padding:5px 11px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line-2)}
+
+.gate{max-width:380px;margin:12vh auto;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:32px}
+.gate h2{margin-bottom:6px}
+.gate p{color:var(--grey);font-size:13.5px;margin-bottom:20px}
+.gate label{display:block;font-size:12px;font-weight:600;color:var(--grey);margin-bottom:5px}
+.gate input{width:100%;padding:11px 14px;font-size:14px;margin-bottom:13px}
+
+.empty{padding:40px;text-align:center;color:var(--grey);font-size:13.5px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,130%);z-index:90;padding:12px 20px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line-2);font-size:13.5px;box-shadow:0 14px 40px rgba(0,0,0,.5);transition:transform .3s var(--ease);max-width:min(440px,90vw)}
+.toast.up{transform:translate(-50%,0)}
+.toast.ok{border-color:rgba(61,220,132,.4)}
+.toast.bad{border-color:rgba(255,107,107,.4)}
+.spin{width:20px;height:20px;border:2px solid var(--line-2);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite;margin:40px auto}
+@keyframes sp{to{transform:rotate(360deg)}}
+.hidden{display:none!important}
+.scroll{overflow-x:auto}
+@media(max-width:800px){ .tabs{width:100%;margin-left:0;overflow-x:auto} .caps{max-width:200px} }
+</style>
+</head>
+<body>
+
+<div id="gate" class="gate">
+  <h2>Control Room</h2>
+  <p>Global Storefront, all of it.</p>
+  <label for="gEmail">Email</label><input id="gEmail" type="email" autocomplete="username">
+  <label for="gPass">Password</label><input id="gPass" type="password" autocomplete="current-password">
+  <button class="btn btn-gold" style="width:100%;padding:11px" id="gGo">Sign in</button>
+</div>
+
+<div id="shell" class="hidden">
+  <div class="top"><div class="top-in">
+    <div class="mark">G</div>
+    <div><h1>Control Room</h1><div class="sub">Global Storefront</div></div>
+    <div class="tabs" id="tabs"></div>
+  </div></div>
+  <main id="main"><div class="spin"></div></main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API = '/api';
+const S = { token:localStorage.getItem('gs_admin_token')||null, view:'overview', data:{} };
+
+const $ = (s,r)=>(r||document).querySelector(s);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = n => (Number(n)||0).toLocaleString('en-US');
+const money = n => '$' + (Number(n)||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+function toast(m,k){ const t=$('#toast'); t.textContent=m; t.className='toast up '+(k||''); clearTimeout(t._t); t._t=setTimeout(()=>t.className='toast '+(k||''),3400); }
+
+async function api(path, opts){
+  const o = Object.assign({ headers:{} }, opts||{});
+  o.headers['Content-Type']='application/json';
+  if (S.token) o.headers['Authorization']='Bearer '+S.token;
+  if (o.body && typeof o.body!=='string') o.body=JSON.stringify(o.body);
+  const res = await fetch(API+path,o);
+  let body={}; try{ body=await res.json(); }catch(e){}
+  if (res.status===401||res.status===403){ signOut(); throw new Error('Not signed in'); }
+  if (!res.ok) throw new Error(body.error||'Request failed');
+  return body;
+}
+
+// The capabilities worth naming in a dense table: the ones that cost money.
+// The rest are a count, with the full list on hover.
+const HEADLINE = ['push_unlimited','bookings','loyalty','pay_in_app','app_surface','value_modules','monthly_reports'];
+
+const VIEWS = [
+  { k:'overview', l:'Overview' },
+  { k:'tenants',  l:'Tenants' },
+  { k:'regions',  l:'Regions' },
+  { k:'billing',  l:'Billing' },
+  { k:'releases', l:'Releases' }
+];
+
+function renderTabs(){
+  $('#tabs').innerHTML = VIEWS.map(v =>
+    `<button class="tab ${S.view===v.k?'on':''}" data-v="${v.k}">${v.l}</button>`).join('');
+  $('#tabs').querySelectorAll('.tab').forEach(b => b.onclick = () => { S.view=b.dataset.v; renderTabs(); render(); });
+}
+
+async function render(){
+  $('#main').innerHTML = '<div class="spin"></div>';
+  try {
+    const d = await api(`/admin-tenants?view=${S.view}`);
+    S.data[S.view] = d;
+    ({ overview, tenants, regions, billing, releases })[S.view](d);
+  } catch(e){
+    $('#main').innerHTML = `<h2>Couldn't load</h2><p class="lede">${esc(e.message)}</p>`;
+  }
+}
+
+/* ---------- overview ---------- */
+function overview(d){
+  const c = d.counts||{};
+  $('#main').innerHTML = `
+    <h2>Everything, at once</h2>
+    <p class="lede">Every tenant across every region, whatever surfaces they own.</p>
+
+    ${(d.hittingPushCap||[]).length ? `
+      <div class="alert">
+        <h4>${d.hittingPushCap.length} ${d.hittingPushCap.length===1?'tenant':'tenants'} hit the free push cap this month</h4>
+        <p>They wanted to reach their followers and couldn't. These are the upgrade conversations.</p>
+        <div class="row">${d.hittingPushCap.map(x=>`<span class="who">${esc(x.name)}</span>`).join('')}</div>
+      </div>` : ''}
+
+    <div class="grid g5">
+      <div class="card"><div class="n">${num(c.tenants)}</div><div class="l">Tenants</div></div>
+      <div class="card"><div class="n">${money(d.mrr)}</div><div class="l">MRR</div></div>
+      <div class="card"><div class="n">${num(c.regionsLive)}</div><div class="l">Regions live</div></div>
+      <div class="card"><div class="n">${num(c.withApp)}</div><div class="l">Apps to maintain</div></div>
+      <div class="card"><div class="n">${num(c.unassignedRegion)}</div><div class="l">No region yet</div></div>
+    </div>
+
+    <div class="grid g3">
+      <div class="card">
+        <div class="l" style="margin-bottom:11px">Surfaces</div>
+        ${bar('Website', c.withWebsite, c.tenants)}
+        ${bar('App', c.withApp, c.tenants)}
+      </div>
+      <div class="card">
+        <div class="l" style="margin-bottom:11px">Distribution</div>
+        ${bar('Paid space', c.directoryPaid, c.tenants)}
+        ${bar('Free listing', c.directoryFree, c.tenants)}
+        ${bar('Not listed', c.noDirectory, c.tenants)}
+      </div>
+      <div class="card">
+        <div class="l" style="margin-bottom:11px">Last seen</div>
+        ${(d.recentTenants||[]).slice(0,5).map(t=>`
+          <div style="display:flex;justify-content:space-between;font-size:12.5px;padding:4px 0">
+            <span>${esc(t.name)}</span>
+            <span style="color:var(--grey-dim)">${t.lastLogin?ago(t.lastLogin):'never'}</span>
+          </div>`).join('') || '<p style="font-size:12.5px;color:var(--grey)">No logins recorded.</p>'}
+      </div>
+    </div>`;
+}
+
+function bar(label, n, total){
+  const pct = total ? Math.round((n/total)*100) : 0;
+  return `<div style="margin-bottom:9px">
+    <div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span>${esc(label)}</span><strong>${num(n)}</strong></div>
+    <div style="height:5px;border-radius:99px;background:var(--surface-3);overflow:hidden"><i style="display:block;height:100%;width:${pct}%;background:var(--gold);border-radius:99px"></i></div>
+  </div>`;
+}
+
+/* ---------- tenants ---------- */
+function tenants(d){
+  const regions = d.regions||[];
+  $('#main').innerHTML = `
+    <h2>Tenants</h2>
+    <p class="lede">One account per business. Toggle a surface or a directory here — no tier change needed.</p>
+    <div class="panel"><div class="scroll"><table>
+      <thead><tr>
+        <th>Business</th><th>Region</th><th>Surfaces</th><th>Directory</th><th>Payment</th><th>Plan</th><th>Capabilities</th>
+      </tr></thead>
+      <tbody>${(d.tenants||[]).map(t => `
+        <tr data-id="${t.id}">
+          <td><div class="biz-cell">${esc(t.company||t.name)}</div><div class="biz-sub">${esc(t.email)}</div></td>
+          <td>
+            <select data-act="region" data-id="${t.id}">
+              <option value="">— none —</option>
+              ${regions.map(r=>`<option value="${r.id}" ${t.regionId===r.id?'selected':''}>${esc(r.name)}</option>`).join('')}
+            </select>
+          </td>
+          <td>
+            <div class="dots" title="space · website · app">
+              <span class="dot on"></span>
+              <span class="dot ${t.surfaces.website?'on':''}"></span>
+              <span class="dot ${t.surfaces.app?'gold':''}"></span>
+            </div>
+          </td>
+          <td>
+            <select data-act="dir" data-id="${t.id}">
+              <option value="none" ${t.directoryStatus==='none'?'selected':''}>Not listed</option>
+              <option value="free" ${t.directoryStatus==='free'?'selected':''}>Free</option>
+              <option value="paid" ${t.directoryStatus==='paid'?'selected':''}>Paid</option>
+            </select>
+          </td>
+          <td><span class="tag ${t.paymentChannel==='us'?'ok':t.paymentChannel==='theirs'?'blue':'dim'}">${esc(t.paymentChannel)}</span></td>
+          <td><span class="tag gold">${esc(t.tier)}</span><div class="biz-sub">${money(t.monthly)}/mo</div></td>
+          <td><div class="caps" title="${esc((t.caps||[]).join(', '))}">
+            <span class="cap count">${(t.caps||[]).length}</span>
+            ${(t.caps||[]).filter(c=>HEADLINE.includes(c)).slice(0,3).map(c=>`<span class="cap">${esc(c.replace(/_/g,' '))}</span>`).join('')}
+          </div></td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div></div>`;
+
+  $('#main').querySelectorAll('[data-act=dir]').forEach(sel => {
+    sel.onchange = async () => {
+      try {
+        const r = await api('/admin-tenants', { method:'POST', body:{ action:'toggle_directory', tenantId:sel.dataset.id, directoryStatus:sel.value } });
+        toast(`Now ${r.tenant.directoryStatus === 'none' ? 'not listed' : r.tenant.directoryStatus}. ${r.pushQuota.unlimited?'Unlimited push.':`${r.pushQuota.cap}/mo push.`}`, 'ok');
+        render();
+      } catch(e){ toast(e.message,'bad'); render(); }
+    };
+  });
+  $('#main').querySelectorAll('[data-act=region]').forEach(sel => {
+    sel.onchange = async () => {
+      try {
+        await api('/admin-tenants', { method:'POST', body:{ action:'set_region', tenantId:sel.dataset.id, regionId:sel.value } });
+        toast('Region set.', 'ok');
+      } catch(e){ toast(e.message,'bad'); }
+    };
+  });
+}
+
+/* ---------- regions ---------- */
+function regions(d){
+  $('#main').innerHTML = `
+    <h2>Regions</h2>
+    <p class="lede">A directory is a channel. Adding a town is a row, not a deploy.</p>
+
+    <div class="grid g3">
+      ${(d.regions||[]).map(r=>`
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:start;gap:10px;margin-bottom:9px">
+            <div>
+              <div style="font-size:16px;font-weight:700;letter-spacing:-.02em">${esc(r.name)}</div>
+              <div class="l">${esc([r.city,r.state].filter(Boolean).join(', '))}</div>
+            </div>
+            <span class="tag ${r.status==='live'?'ok':''}">${esc(r.status)}</span>
+          </div>
+          <div style="display:flex;gap:16px;margin-top:13px">
+            <div><div style="font-size:19px;font-weight:800;letter-spacing:-.03em">${num(r.live.paid)}</div><div class="l">paid</div></div>
+            <div><div style="font-size:19px;font-weight:800;letter-spacing:-.03em">${num(r.live.free)}</div><div class="l">free</div></div>
+          </div>
+          ${r.status==='live'?`<a class="btn btn-ghost" style="margin-top:14px" href="/directory.html?region=${esc(r.slug)}" target="_blank">Open</a>`:''}
+        </div>`).join('')}
+    </div>
+
+    ${(d.unassigned||[]).length?`
+      <div class="panel">
+        <div class="panel-h"><div><h3>No region yet</h3><p>These tenants can't be listed anywhere until they have one.</p></div></div>
+        <div class="scroll"><table><tbody>
+          ${d.unassigned.map(t=>`<tr><td class="biz-cell">${esc(t.name)}</td><td><span class="tag dim">${esc(t.directoryStatus)}</span></td></tr>`).join('')}
+        </tbody></table></div>
+      </div>`:''}`;
+}
+
+/* ---------- billing ---------- */
+function billing(d){
+  const s = d.summary||{};
+  $('#main').innerHTML = `
+    <h2>Billing</h2>
+    <p class="lede">What each tenant actually pays for — modules, not rungs.</p>
+
+    <div class="grid g5">
+      <div class="card"><div class="n">${money(s.mrr)}</div><div class="l">MRR</div></div>
+      <div class="card"><div class="n">${money(s.arr)}</div><div class="l">ARR</div></div>
+      <div class="card"><div class="n">${num(s.activeCount)}</div><div class="l">Active</div></div>
+      <div class="card"><div class="n">${money(s.gsRevenue)}</div><div class="l">Your ${Math.round((s.cutRate||0)*100)}% cut</div></div>
+      <div class="card"><div class="n">${money(s.pendingPayouts)}</div><div class="l">To sweep</div></div>
+    </div>
+
+    <div class="panel"><div class="scroll"><table>
+      <thead><tr><th>Business</th><th>Plan</th><th>Modules</th><th>Monthly</th><th>Their sales</th><th>Your cut</th><th>Status</th></tr></thead>
+      <tbody>${(d.billing||[]).map(b=>`
+        <tr>
+          <td class="biz-cell">${esc(b.name)}</td>
+          <td><span class="tag gold">${esc(b.tier)}</span><div class="biz-sub">${esc(b.billingCycle)}</div></td>
+          <td><div class="caps">${(b.modules||[]).map(m=>`<span class="cap">${esc(m.label)}</span>`).join('')}</div></td>
+          <td style="font-weight:700">${money(b.monthly)}</td>
+          <td>${b.gross?money(b.gross):'—'}</td>
+          <td style="color:var(--gold-lit);font-weight:600">${b.gsCut?money(b.gsCut):'—'}</td>
+          <td><span class="tag ${b.subStatus==='active'?'ok':b.subStatus==='past_due'?'red':''}">${esc(b.subStatus)}</span></td>
+        </tr>`).join('')}
+      </tbody>
+    </table></div></div>`;
+}
+
+/* ---------- releases ---------- */
+function releases(d){
+  $('#main').innerHTML = `
+    <h2>App releases</h2>
+    <p class="lede">${esc((d.summary||{}).note||'')}</p>
+    <div class="panel">
+      <div class="panel-h"><div><h3>${num((d.summary||{}).total)} ${((d.summary||{}).total===1)?'app':'apps'}</h3></div></div>
+      ${(d.apps||[]).length?`<div class="scroll"><table>
+        <thead><tr><th>Business</th><th>Bundle ID</th><th>Region</th><th>Plan</th></tr></thead>
+        <tbody>${d.apps.map(a=>`
+          <tr>
+            <td class="biz-cell">${esc(a.name)}</td>
+            <td style="font-family:ui-monospace,monospace;font-size:12px;color:var(--grey)">${esc(a.bundleId)}</td>
+            <td>${esc(a.regionName||'—')}</td>
+            <td><span class="tag gold">${esc(a.tier)}</span></td>
+          </tr>`).join('')}
+        </tbody></table></div>`
+      : `<div class="empty">No standalone apps yet. Every one you add is a listing you maintain.</div>`}
+    </div>`;
+}
+
+/* ---------- auth ---------- */
+$('#gGo').onclick = async () => {
+  const btn = $('#gGo');
+  btn.disabled = true; btn.textContent = 'One moment…';
+  try {
+    const res = await fetch(`${API}/admin-login`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ email:$('#gEmail').value.trim(), password:$('#gPass').value })
+    });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error || 'Sign-in failed');
+    S.token = d.token;
+    localStorage.setItem('gs_admin_token', d.token);
+    start();
+  } catch(e){ toast(e.message,'bad'); }
+  btn.disabled = false; btn.textContent = 'Sign in';
+};
+$('#gPass').onkeydown = e => { if (e.key === 'Enter') $('#gGo').click(); };
+
+function signOut(){
+  localStorage.removeItem('gs_admin_token');
+  S.token = null;
+  $('#shell').classList.add('hidden');
+  $('#gate').classList.remove('hidden');
+}
+
+function start(){
+  $('#gate').classList.add('hidden');
+  $('#shell').classList.remove('hidden');
+  renderTabs();
+  render();
+}
+
+function ago(iso){
+  const ms = Date.now() - new Date(iso).getTime();
+  if (isNaN(ms)) return '—';
+  const d = Math.floor(ms/86400000);
+  if (d > 30) return `${Math.floor(d/30)}mo ago`;
+  if (d >= 1) return `${d}d ago`;
+  const h = Math.floor(ms/3600000);
+  return h >= 1 ? `${h}h ago` : 'just now';
+}
+
+if (S.token) start();
+</script>
+</body>
+</html>

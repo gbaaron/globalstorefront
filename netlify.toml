@@ -35,6 +35,12 @@
 [functions."generate-social"]
   schedule = "@weekly"
 
+# Hourly push sweep: send every scheduled PushBroadcasts row that is now due.
+# The monthly cap is re-checked AT SEND TIME, so queuing cannot smuggle past it
+# and a downgrade pauses pending sends.
+[functions."send-push"]
+  schedule = "@hourly"
+
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"

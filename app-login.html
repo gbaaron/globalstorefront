@@ -208,6 +208,24 @@
         const errorEl = document.getElementById('loginError');
         const btnEl = document.getElementById('loginBtn');
 
+        // Native-app detection. The Capacitor shell loads this page with
+        // ?native=1 (see capacitor.config server.url). We persist the flag to
+        // localStorage because Capacitor's JS bridge isn't reliably injected on
+        // remote-hosted pages, so window.Capacitor alone can't be trusted.
+        try {
+            if (new URLSearchParams(location.search).get('native') === '1') {
+                localStorage.setItem('gs_is_native', '1');
+            }
+        } catch (e) {}
+
+        function isNative() {
+            return !!(
+                window.Capacitor ||
+                (window.NativeBridge && window.NativeBridge.isNative) ||
+                localStorage.getItem('gs_is_native') === '1'
+            );
+        }
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             errorEl.classList.remove('visible');
@@ -230,24 +248,34 @@
                     throw new Error(data.error || 'Invalid credentials');
                 }
 
-                // Store auth data
+                // Store auth data. `gs_biz` carries the RESOLVED CAPABILITIES,
+                // so the dashboard can build its own nav without a second call.
                 localStorage.setItem('gs_token', data.token);
-                localStorage.setItem('gs_user', JSON.stringify({
+                const biz = {
                     name: data.name,
                     company: data.company,
                     projectUrl: data.projectUrl,
-                    username: data.username
-                }));
+                    username: data.username,
+                    slug: data.slug,
+                    tier: data.tier,
+                    billingCycle: data.billingCycle,
+                    subStatus: data.subStatus,
+                    caps: data.caps || [],
+                    regionId: data.regionId,
+                    surfaces: data.surfaces || {},
+                    directoryStatus: data.directoryStatus || 'none',
+                    paymentChannel: data.paymentChannel || 'none',
+                    monetizationMode: data.monetizationMode
+                };
+                localStorage.setItem('gs_biz', JSON.stringify(biz));
+                localStorage.setItem('gs_user', JSON.stringify(biz)); // legacy readers
 
-                // Smart redirect: native app → app.html, web browser → client's site
-                const isNativeApp = !!(window.Capacitor || (window.NativeBridge && window.NativeBridge.isNative));
-                if (isNativeApp) {
-                    window.location.href = '/app.html';
-                } else if (data.projectUrl) {
-                    window.location.href = data.projectUrl;
-                } else {
-                    window.location.href = '/app.html';
-                }
+                // ONE DASHBOARD, whichever surface they signed in from.
+                // This used to bounce web logins straight to the client's own
+                // site, which made Global Storefront a doorway rather than the
+                // product. Their site is now one of several surfaces they own,
+                // reachable FROM the dashboard rather than instead of it.
+                window.location.href = '/dashboard.html';
 
             } catch (err) {
                 errorEl.textContent = err.message;
@@ -257,17 +285,9 @@
             }
         });
 
-        // If already logged in, redirect
-        if (localStorage.getItem('gs_token')) {
-            const isNativeApp = !!(window.Capacitor || (window.NativeBridge && window.NativeBridge.isNative));
-            const user = JSON.parse(localStorage.getItem('gs_user') || '{}');
-            if (isNativeApp) {
-                window.location.href = '/app.html';
-            } else if (user.projectUrl) {
-                window.location.href = user.projectUrl;
-            } else {
-                window.location.href = '/app.html';
-            }
+        // Already signed in → straight to the dashboard.
+        if (localStorage.getItem('gs_token') && localStorage.getItem('gs_biz')) {
+            window.location.href = '/dashboard.html';
         }
     </script>
 </body>

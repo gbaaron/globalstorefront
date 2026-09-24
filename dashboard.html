@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Dashboard — Global Storefront</title>
+<meta name="description" content="One account. Every surface.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#0f0f1a; --surface:#1a1a2e; --surface-2:#22223a; --surface-3:#2b2b46;
+  --gold:#d4af37; --gold-lit:#e8c95f; --gold-dim:#8a7226;
+  --grey:#8892a0; --grey-dim:#5d6672; --white:#fff; --ink:#eef1f6;
+  --green:#3ddc84; --red:#ff6b6b; --blue:#5aa9ff; --violet:#a78bfa;
+  --line:rgba(255,255,255,.08); --line-2:rgba(255,255,255,.14);
+  --grad:linear-gradient(135deg,var(--gold) 0%,#c9962b 50%,var(--violet) 100%);
+  --r:14px; --r-sm:10px;
+  --ease:cubic-bezier(.25,.46,.45,.94);
+  --t:.25s var(--ease);
+  --nav-w:236px;
+  --pattern-grid:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='80' height='80'><path d='M80 0H0v80' fill='none' stroke='%23d4af37' stroke-opacity='.05'/></svg>");
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:Inter,system-ui,sans-serif;background:var(--navy);color:var(--ink);
+  line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh;
+}
+body::before{
+  content:'';position:fixed;inset:-10%;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 900px 700px at 8% 0%,rgba(212,175,55,.13),transparent 55%),
+    radial-gradient(ellipse 800px 650px at 95% 20%,rgba(167,139,250,.10),transparent 55%),
+    radial-gradient(ellipse 700px 600px at 45% 90%,rgba(90,169,255,.07),transparent 60%);
+  filter:blur(10px);animation:drift 20s ease-in-out infinite alternate;
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:var(--pattern-grid),radial-gradient(ellipse at center,transparent 45%,rgba(0,0,0,.4) 100%);
+  background-size:80px 80px,100% 100%;
+}
+@keyframes drift{from{transform:translate3d(0,0,0) scale(1)}to{transform:translate3d(-2%,2%,0) scale(1.05)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- shell ---------- */
+.shell{position:relative;z-index:1;display:flex;min-height:100vh}
+
+.side{
+  width:var(--nav-w);flex:none;border-right:1px solid var(--line);
+  background:rgba(15,15,26,.82);backdrop-filter:blur(20px);
+  position:sticky;top:0;height:100vh;display:flex;flex-direction:column;
+}
+.brand{padding:22px 20px 18px;border-bottom:1px solid var(--line)}
+.brand-row{display:flex;align-items:center;gap:10px}
+.brand-mark{
+  width:32px;height:32px;border-radius:9px;background:var(--grad);flex:none;
+  display:grid;place-items:center;font-weight:800;font-size:15px;color:var(--navy);
+}
+.brand-name{font-size:14px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+.brand-sub{font-size:11px;color:var(--grey-dim);letter-spacing:.04em;text-transform:uppercase}
+.biz{margin-top:16px}
+.biz-name{font-size:17px;font-weight:700;letter-spacing:-.02em;word-break:break-word}
+.biz-meta{font-size:12px;color:var(--grey);margin-top:3px}
+
+.nav{padding:12px 10px;flex:1;overflow-y:auto}
+.nav-group{margin-bottom:6px}
+.nav-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--grey-dim);padding:12px 12px 6px;font-weight:600}
+.nav-btn{
+  width:100%;display:flex;align-items:center;gap:11px;padding:9px 12px;border:0;
+  background:transparent;color:var(--grey);font:inherit;font-size:13.5px;font-weight:500;
+  border-radius:var(--r-sm);cursor:pointer;text-align:left;transition:var(--t);position:relative;
+}
+.nav-btn:hover{background:rgba(255,255,255,.05);color:var(--ink)}
+.nav-btn.on{background:rgba(212,175,55,.13);color:var(--gold-lit);font-weight:600}
+.nav-btn.on::before{content:'';position:absolute;left:0;top:9px;bottom:9px;width:2.5px;border-radius:2px;background:var(--gold)}
+.nav-btn .ic{width:17px;height:17px;flex:none;opacity:.9}
+/* Default size for every inline icon. Without this an .ic outside the nav
+   (a lock in a disabled option, an icon in a button) renders at the SVG's
+   natural size, which is enormous. */
+.ic{width:16px;height:16px;flex:none;vertical-align:middle}
+.nav-btn .pip{margin-left:auto;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;background:var(--surface-3);color:var(--grey)}
+.nav-btn .pip.hot{background:rgba(255,107,107,.18);color:var(--red)}
+.nav-btn[data-locked="1"]{opacity:.45}
+.side-foot{padding:14px;border-top:1px solid var(--line)}
+
+/* ---------- main ---------- */
+.main{flex:1;min-width:0;padding:30px 34px 90px;max-width:1180px}
+.head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:26px;flex-wrap:wrap}
+h1{font-size:clamp(1.55rem,3vw,2.1rem);font-weight:800;letter-spacing:-.03em;line-height:1.15}
+.sub{color:var(--grey);font-size:14px;margin-top:5px;max-width:56ch}
+
+/* ---------- surface strip: the reframe, made visible ---------- */
+.surfaces{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:26px}
+.surf{
+  display:flex;align-items:center;gap:8px;padding:8px 13px;border-radius:99px;
+  border:1px solid var(--line-2);background:var(--surface);font-size:12.5px;font-weight:600;
+}
+.surf .dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex:none}
+.surf.off{opacity:.45;border-style:dashed;font-weight:500;color:var(--grey)}
+.surf.off .dot{background:var(--grey-dim)}
+.surf .add{color:var(--gold);font-weight:600}
+
+/* ---------- cards ---------- */
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(168px,1fr))}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px;position:relative;overflow:hidden;transition:var(--t);
+}
+.card::before{content:'';position:absolute;inset:0 0 auto;height:3px;background:var(--grad);opacity:0;transition:var(--t)}
+.card:hover::before{opacity:1}
+.card.lift:hover{transform:translateY(-2px);border-color:var(--line-2)}
+.card h3{font-size:13px;font-weight:600;color:var(--grey);letter-spacing:-.01em;margin-bottom:12px}
+.stat{font-size:clamp(1.7rem,4vw,2.3rem);font-weight:800;letter-spacing:-.035em;line-height:1}
+.stat-sub{font-size:12px;color:var(--grey);margin-top:6px}
+.delta{font-size:12px;font-weight:600;margin-top:6px}
+.delta.up{color:var(--green)}.delta.down{color:var(--red)}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.panel-h{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.panel-h h2{font-size:15px;font-weight:700;letter-spacing:-.02em}
+.panel-h p{font-size:12.5px;color:var(--grey);margin-top:2px}
+.panel-b{padding:20px}
+
+/* ---------- forms ---------- */
+label{display:block;font-size:12px;font-weight:600;color:var(--grey);margin-bottom:6px;letter-spacing:.01em}
+input,textarea,select{
+  width:100%;padding:10px 13px;border:1px solid var(--line-2);border-radius:var(--r-sm);
+  background:var(--navy);color:var(--ink);font:inherit;font-size:14px;transition:var(--t);
+}
+input:focus,textarea:focus,select:focus{outline:0;border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.13)}
+textarea{resize:vertical;min-height:88px;line-height:1.55}
+.field{margin-bottom:15px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:10px 17px;border-radius:var(--r-sm);border:1px solid transparent;
+  font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:var(--t);white-space:nowrap;
+}
+.btn-gold{background:var(--gold);color:#15130a}
+.btn-gold:hover{background:var(--gold-lit);transform:translateY(-1px)}
+.btn-gold:disabled{background:var(--surface-3);color:var(--grey-dim);cursor:not-allowed;transform:none}
+.btn-ghost{background:transparent;border-color:var(--line-2);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold-lit)}
+.btn-sm{padding:6px 11px;font-size:12px}
+.btn-danger{background:transparent;border-color:rgba(255,107,107,.35);color:var(--red)}
+.btn-danger:hover{background:rgba(255,107,107,.1)}
+
+/* ---------- surface selector ---------- */
+.picks{display:grid;gap:9px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.pick{
+  padding:13px;border:1.5px solid var(--line-2);border-radius:var(--r-sm);
+  background:var(--navy);cursor:pointer;transition:var(--t);text-align:left;color:var(--ink);font:inherit;
+}
+.pick:hover:not(:disabled){border-color:var(--gold-dim)}
+.pick.on{border-color:var(--gold);background:rgba(212,175,55,.09)}
+.pick:disabled{opacity:.4;cursor:not-allowed}
+.pick-t{font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:7px}
+.pick-n{font-size:11.5px;color:var(--grey);margin-top:4px;line-height:1.45}
+
+/* ---------- quota meter ---------- */
+.quota{border:1px solid var(--line-2);border-radius:var(--r-sm);padding:14px;background:var(--navy)}
+.quota-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:9px}
+.quota-n{font-size:20px;font-weight:800;letter-spacing:-.03em}
+.quota-l{font-size:12px;color:var(--grey)}
+.bar{height:6px;border-radius:99px;background:var(--surface-3);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:99px;background:var(--gold);transition:width .45s var(--ease)}
+.bar i.full{background:var(--red)}
+.quota.unlimited{border-color:rgba(61,220,132,.3);background:rgba(61,220,132,.05)}
+
+/* ---------- upgrade gate ---------- */
+.gate{
+  border:1px dashed var(--line-2);border-radius:var(--r);padding:30px 24px;text-align:center;
+  background:linear-gradient(180deg,rgba(212,175,55,.05),transparent);
+}
+.gate .ic{width:26px;height:26px;color:var(--gold);margin:0 auto 12px}
+.gate h3{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:7px}
+.gate p{font-size:13.5px;color:var(--grey);max-width:44ch;margin:0 auto 18px;line-height:1.6}
+
+/* ---------- lists ---------- */
+.list{display:flex;flex-direction:column}
+.item{padding:14px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;transition:var(--t)}
+.item:last-child{border-bottom:0}
+.item:hover{background:rgba(255,255,255,.02)}
+.item-main{flex:1;min-width:0}
+.item-t{font-size:14px;font-weight:600;letter-spacing:-.01em}
+.item-s{font-size:12.5px;color:var(--grey);margin-top:2px}
+.item-actions{display:flex;gap:7px;flex:none}
+
+.tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--surface-3);color:var(--grey)}
+.tag.ok{background:rgba(61,220,132,.14);color:var(--green)}
+.tag.warn{background:rgba(212,175,55,.15);color:var(--gold-lit)}
+.tag.bad{background:rgba(255,107,107,.14);color:var(--red)}
+.tag.info{background:rgba(90,169,255,.14);color:var(--blue)}
+
+.empty{padding:44px 22px;text-align:center;color:var(--grey)}
+.empty .ic{width:24px;height:24px;color:var(--grey-dim);margin:0 auto 11px}
+.empty p{font-size:13.5px;max-width:38ch;margin:0 auto}
+
+/* ---------- hours grid ---------- */
+.hours{display:flex;flex-direction:column;gap:8px}
+.hrow{display:grid;grid-template-columns:96px 1fr 1fr 78px;gap:9px;align-items:center}
+.hrow .day{font-size:13px;font-weight:600;text-transform:capitalize}
+.hrow input{padding:7px 10px;font-size:13px}
+.hrow.shut input[type=time]{opacity:.32;pointer-events:none}
+.shut-btn{font-size:11.5px;padding:6px 8px;border-radius:7px;border:1px solid var(--line-2);background:transparent;color:var(--grey);cursor:pointer;font:inherit;font-weight:600;transition:var(--t)}
+.shut-btn.on{border-color:var(--red);color:var(--red);background:rgba(255,107,107,.08)}
+
+/* ---------- chart ---------- */
+.spark{display:flex;align-items:flex-end;gap:2px;height:58px;margin-top:14px}
+.spark i{flex:1;background:var(--gold-dim);border-radius:2px 2px 0 0;min-height:2px;transition:var(--t)}
+.spark i:hover{background:var(--gold)}
+
+/* ---------- bits ---------- */
+.page{display:none}.page.on{display:block}
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,120%);z-index:90;
+  padding:12px 20px;border-radius:var(--r-sm);background:var(--surface-2);
+  border:1px solid var(--line-2);font-size:13.5px;font-weight:500;
+  box-shadow:0 14px 40px rgba(0,0,0,.5);transition:transform .32s var(--ease);max-width:min(440px,90vw);
+}
+.toast.up{transform:translate(-50%,0)}
+.toast.ok{border-color:rgba(61,220,132,.4)}
+.toast.bad{border-color:rgba(255,107,107,.4)}
+.spin{width:17px;height:17px;border:2px solid var(--line-2);border-top-color:var(--gold);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.loading{display:flex;align-items:center;gap:11px;padding:36px;justify-content:center;color:var(--grey);font-size:13.5px}
+.mob-nav{display:none}
+
+/* ---------- mobile ---------- */
+@media(max-width:860px){
+  .side{
+    position:fixed;inset:auto 0 0;width:100%;height:auto;flex-direction:row;
+    border-right:0;border-top:1px solid var(--line);z-index:60;padding:0;
+  }
+  .brand,.nav-label,.side-foot,.nav-btn .pip{display:none}
+  .nav{display:flex;padding:6px 4px calc(6px + env(safe-area-inset-bottom));overflow-x:auto;gap:2px;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav-group{margin:0;display:flex}
+  .nav-btn{flex-direction:column;gap:4px;padding:7px 12px;font-size:10.5px;min-width:64px;justify-content:center;text-align:center}
+  .nav-btn.on::before{left:12px;right:12px;top:0;bottom:auto;width:auto;height:2.5px}
+  .nav-btn .ic{width:19px;height:19px}
+  .main{padding:20px 17px 110px;max-width:100%}
+  .mob-nav{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:14px 17px;border-bottom:1px solid var(--line);
+    background:rgba(15,15,26,.9);backdrop-filter:blur(20px);position:sticky;top:0;z-index:50;
+  }
+  .row,.picks{grid-template-columns:1fr}
+  .hrow{grid-template-columns:1fr 1fr;gap:7px}
+  .hrow .day{grid-column:1/-1}
+}
+@media(min-width:861px){.mob-nav{display:none}}
+</style>
+</head>
+<body>
+
+<div class="mob-nav">
+  <div style="display:flex;align-items:center;gap:9px">
+    <div class="brand-mark" style="width:28px;height:28px;font-size:13px">G</div>
+    <div>
+      <div style="font-size:13.5px;font-weight:700" id="mobBiz">Loading</div>
+      <div style="font-size:11px;color:var(--grey-dim)" id="mobTier"></div>
+    </div>
+  </div>
+  <button class="btn btn-ghost btn-sm" onclick="signOut()">Sign out</button>
+</div>
+
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      <div class="brand-row">
+        <div class="brand-mark">G</div>
+        <div>
+          <div class="brand-name">Global Storefront</div>
+          <div class="brand-sub">Dashboard</div>
+        </div>
+      </div>
+      <div class="biz">
+        <div class="biz-name" id="bizName">Loading</div>
+        <div class="biz-meta" id="bizMeta"></div>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav"></nav>
+
+    <div class="side-foot">
+      <button class="btn btn-ghost btn-sm" style="width:100%" onclick="signOut()">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main" id="main">
+    <div class="loading"><div class="spin"></div> Loading your business…</div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================================
+   Global Storefront — the one dashboard.
+   Everything a business does happens here, whatever surfaces they own. The
+   nav is BUILT FROM THE TOKEN'S CAPABILITIES, so a tenant never sees a tab
+   for something they do not have, and never has to learn a second place to
+   log in.
+   ========================================================================= */
+
+const API = '/api';
+const LS = { token:'gs_token', biz:'gs_biz' };
+
+const S = {
+  token:null, biz:null, caps:[], page:'home',
+  data:{}, busy:{}
+};
+
+/* ---------- tiny helpers ---------- */
+const $ = (s,r) => (r||document).querySelector(s);
+const esc = (s) => String(s==null?'':s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const can = (c) => S.caps.includes(c);
+const money = (n) => '$' + (Number(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const num = (n) => (Number(n)||0).toLocaleString('en-US');
+
+function toast(msg, kind){
+  const t = $('#toast');
+  t.textContent = msg;
+  t.className = 'toast up ' + (kind||'');
+  clearTimeout(t._t);
+  t._t = setTimeout(()=>{ t.className='toast ' + (kind||''); }, 3600);
+}
+
+/* Inline SVG icons — no icon font, no emoji. */
+const ICONS = {
+  home:'M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z',
+  send:'M22 2 11 13M22 2l-7 20-4-9-9-4z',
+  file:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6',
+  cal:'M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z',
+  star:'m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8-6.2-3.3-6.2 3.3 1.2-6.8-5-4.9 6.9-1z',
+  card:'M2 7h20v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zM2 11h20M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2',
+  gift:'M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7',
+  chart:'M3 3v18h18M7 16V9M12 16V5M17 16v-4',
+  up:'M12 20V4M5 11l7-7 7 7',
+  lock:'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4',
+  help:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01',
+  box:'M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8',
+  inbox:'M22 12h-6l-2 3h-4l-2-3H2M5.4 5.6 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.4-6.4A2 2 0 0 0 16.8 4H7.2a2 2 0 0 0-1.8 1.6z'
+};
+const ic = (n,cls) => `<svg class="ic ${cls||''}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="${ICONS[n]||''}"/></svg>`;
+
+/* ---------- api ---------- */
+async function api(path, opts){
+  const o = Object.assign({ headers:{} }, opts||{});
+  o.headers['Content-Type'] = 'application/json';
+  if (S.token) o.headers['Authorization'] = 'Bearer ' + S.token;
+  if (o.body && typeof o.body !== 'string') o.body = JSON.stringify(o.body);
+
+  const res = await fetch(API + path, o);
+  let body = {};
+  try { body = await res.json(); } catch(e){ body = {}; }
+
+  if (res.status === 401){ signOut(); throw new Error('Session expired'); }
+  if (!res.ok && res.status !== 429) throw Object.assign(new Error(body.error || 'Something went wrong'), { status:res.status, body });
+  return { status:res.status, body };
+}
+
+/* =========================================================================
+   Navigation — assembled from capabilities
+   ========================================================================= */
+const PAGES = [
+  { key:'home',     label:'Home',      icon:'home',  group:'' },
+  { key:'reach',    label:'Reach',     icon:'send',  group:'Run it',  need:['push_followers','push_app'] },
+  { key:'content',  label:'Content',   icon:'file',  group:'Run it',  need:['content_hours'] },
+  { key:'bookings', label:'Bookings',  icon:'cal',   group:'Run it',  need:['bookings'], soft:true },
+  { key:'loyalty',  label:'Loyalty',   icon:'star',  group:'Run it',  need:['loyalty','rewards'], soft:true },
+  { key:'money',    label:'Money',     icon:'card',  group:'Run it',  need:['invoicing'], soft:true },
+  { key:'modules',  label:'Extras',    icon:'gift',  group:'Run it',  need:['value_modules'], soft:true },
+  { key:'insights', label:'Insights',  icon:'chart', group:'Know it' },
+  { key:'grow',     label:'Grow',      icon:'up',    group:'Know it' },
+  { key:'support',  label:'Support',   icon:'help',  group:'Know it' }
+];
+
+function visiblePages(){
+  return PAGES.filter(p => {
+    if (!p.need) return true;
+    const has = p.need.some(can);
+    // `soft` pages stay VISIBLE but locked, so the tenant can see what exists
+    // and what it would take to have it. Hiding them would mean nobody ever
+    // discovers the upgrade.
+    return has || p.soft;
+  }).map(p => Object.assign({}, p, { locked: p.need ? !p.need.some(can) : false }));
+}
+
+function renderNav(){
+  const pages = visiblePages();
+  const groups = [];
+  pages.forEach(p => {
+    let g = groups.find(x => x.name === p.group);
+    if (!g){ g = { name:p.group, items:[] }; groups.push(g); }
+    g.items.push(p);
+  });
+
+  $('#nav').innerHTML = groups.map(g => `
+    <div class="nav-group">
+      ${g.name ? `<div class="nav-label">${esc(g.name)}</div>` : ''}
+      ${g.items.map(p => `
+        <button class="nav-btn ${S.page===p.key?'on':''}" data-page="${p.key}" data-locked="${p.locked?1:0}">
+          ${ic(p.icon)}<span>${esc(p.label)}</span>
+          ${p.locked ? ic('lock','pip-ic') : (p.badge ? `<span class="pip ${p.badgeHot?'hot':''}">${p.badge}</span>` : '')}
+        </button>`).join('')}
+    </div>`).join('');
+
+  $('#nav').querySelectorAll('.nav-btn').forEach(b => {
+    b.onclick = () => go(b.dataset.page);
+  });
+}
+
+function go(page){
+  S.page = page;
+  renderNav();
+  render();
+  document.querySelector('.main').scrollTo({ top:0 });
+  window.scrollTo({ top:0, behavior:'smooth' });
+}
+
+/* =========================================================================
+   Pages
+   ========================================================================= */
+function render(){
+  const fns = { home, reach, content, bookings, loyalty, money: moneyPage, modules, insights, grow, support };
+  const fn = fns[S.page] || home;
+  $('#main').innerHTML = `<div class="loading"><div class="spin"></div> Loading…</div>`;
+  Promise.resolve(fn()).catch(err => {
+    $('#main').innerHTML = `<div class="head"><div><h1>Something went wrong</h1><p class="sub">${esc(err.message)}</p></div></div>`;
+  });
+}
+
+function head(title, sub, actions){
+  return `<div class="head">
+    <div><h1>${esc(title)}</h1>${sub?`<p class="sub">${esc(sub)}</p>`:''}</div>
+    ${actions?`<div style="display:flex;gap:9px;flex-wrap:wrap">${actions}</div>`:''}
+  </div>`;
+}
+
+/** The surface strip — what this account owns, and what it doesn't yet. */
+function surfaceStrip(){
+  const s = S.biz.surfaces || {};
+  const d = S.biz.directoryStatus || 'none';
+  const items = [
+    { on:true, label:'Space' },
+    { on:!!s.website, label: s.websiteMode === 'linked' ? 'Website (linked)' : 'Website' },
+    { on:!!s.app, label:'App' },
+    { on:d !== 'none', label: d === 'paid' ? 'Directory (paid)' : d === 'free' ? 'Directory (free)' : 'Directory' }
+  ];
+  return `<div class="surfaces">${items.map(i => `
+    <span class="surf ${i.on?'':'off'}">
+      <span class="dot"></span>${esc(i.label)}
+      ${i.on?'':`<span class="add">· add</span>`}
+    </span>`).join('')}</div>`;
+}
+
+/* ---------- HOME ---------- */
+async function home(){
+  const { body:a } = await api('/get-unified-analytics?days=30');
+  S.data.analytics = a;
+
+  const t = a.totals || {};
+  const q = (a.push && a.push.quota) || {};
+
+  const cards = [
+    { n:num(t.views), l:'Views · 30 days' },
+    { n:num(t.orders), l:'Orders' },
+    { n:money(t.revenue), l:'Revenue' },
+    { n:num(t.followers), l:'Followers' }
+  ];
+
+  $('#main').innerHTML = `
+    ${head(`Hi, ${S.biz.name || 'there'}`, 'Everything your business does, in one place.')}
+    ${surfaceStrip()}
+
+    <div class="grid g4" style="margin-bottom:16px">
+      ${cards.map(c => `<div class="card lift"><div class="stat">${c.n}</div><div class="stat-sub">${esc(c.l)}</div></div>`).join('')}
+    </div>
+
+    <div class="grid g2" style="margin-bottom:16px">
+      <div class="card">
+        <h3>Where your traffic came from</h3>
+        ${(a.surfaces||[]).length ? (a.surfaces||[]).map(s => {
+          const total = (a.surfaces||[]).reduce((x,y)=>x+y.views,0) || 1;
+          const pct = Math.round((s.views/total)*100);
+          return `<div style="margin-bottom:11px">
+            <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px">
+              <span>${esc(s.label)}</span><strong>${num(s.views)}</strong>
+            </div>
+            <div class="bar"><i style="width:${pct}%"></i></div>
+          </div>`;
+        }).join('') : `<p class="stat-sub">No visits yet.</p>`}
+      </div>
+
+      <div class="card">
+        <h3>Broadcasts this month</h3>
+        ${q.unlimited
+          ? `<div class="quota unlimited">
+               <div class="quota-top"><span class="quota-n">Unlimited</span><span class="quota-l">paid space</span></div>
+               <div class="stat-sub">${num(a.push?a.push.sentThisMonth:0)} sent this month.</div>
+             </div>`
+          : `<div class="quota">
+               <div class="quota-top">
+                 <span class="quota-n">${num(q.remaining||0)}<span style="font-size:13px;color:var(--grey);font-weight:500"> left</span></span>
+                 <span class="quota-l">of ${num(q.cap||0)} this month</span>
+               </div>
+               <div class="bar"><i class="${(q.remaining||0)===0?'full':''}" style="width:${q.cap?Math.round(((q.cap-(q.remaining||0))/q.cap)*100):0}%"></i></div>
+             </div>`}
+        <button class="btn btn-gold btn-sm" style="margin-top:13px" onclick="go('reach')">${ic('send')} Write one</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><div><h2>Quick actions</h2><p>The things owners do most.</p></div></div>
+      <div class="panel-b">
+        <div class="grid g3">
+          <button class="pick" onclick="go('content')"><div class="pick-t">${ic('file')} Update hours</div><div class="pick-n">Changes everywhere at once.</div></button>
+          <button class="pick" onclick="go('reach')"><div class="pick-t">${ic('send')} Tell your followers</div><div class="pick-n">Reach people who chose you.</div></button>
+          <button class="pick" onclick="go('insights')"><div class="pick-t">${ic('chart')} See what's working</div><div class="pick-n">Across every surface.</div></button>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ---------- REACH (push composer) ---------- */
+async function reach(){
+  const { body } = await api('/manage-push');
+  if (body.locked) return lockedPage('Reach', body.message, 'directory_listing');
+
+  S.data.push = body;
+  const q = body.quota || {};
+  const surfaces = body.surfaces || [];
+
+  $('#main').innerHTML = `
+    ${head('Reach', 'Say something to the people who follow you.')}
+
+    <div class="grid g2" style="align-items:start;margin-bottom:16px">
+      <div class="panel">
+        <div class="panel-h"><div><h2>New broadcast</h2><p>Goes out the moment you send it.</p></div></div>
+        <div class="panel-b">
+          <div class="field">
+            <label for="pTitle">Title</label>
+            <input id="pTitle" maxlength="80" placeholder="Fresh sourdough at 7am">
+          </div>
+          <div class="field">
+            <label for="pBody">Message</label>
+            <textarea id="pBody" maxlength="500" placeholder="Out of the oven and on the shelf. First come, first served."></textarea>
+          </div>
+
+          <div class="field">
+            <label>Send to</label>
+            <div class="picks" id="pSurfaces">
+              ${surfaces.map(s => `
+                <button class="pick ${s.available && s.key==='followers'?'on':''}" data-surface="${s.key}" ${s.available?'':'disabled'}>
+                  <div class="pick-t">${esc(s.label)}${s.available?'':ic('lock')}</div>
+                  <div class="pick-n">${esc(s.note)}</div>
+                </button>`).join('')}
+            </div>
+          </div>
+
+          ${body.canSchedule ? `
+            <div class="field">
+              <label for="pWhen">Schedule for later <span style="font-weight:400">(optional)</span></label>
+              <input id="pWhen" type="datetime-local">
+            </div>` : ''}
+
+          <button class="btn btn-gold" id="pSend" style="width:100%">${ic('send')} Send broadcast</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:16px">
+          <h3>This month</h3>
+          ${q.unlimited
+            ? `<div class="quota unlimited"><div class="quota-top"><span class="quota-n">Unlimited</span></div><div class="stat-sub">${esc(q.reason||'')}</div></div>`
+            : `<div class="quota">
+                 <div class="quota-top">
+                   <span class="quota-n">${num(q.remaining||0)}<span style="font-size:13px;color:var(--grey);font-weight:500"> left</span></span>
+                   <span class="quota-l">of ${num(q.cap||0)}</span>
+                 </div>
+                 <div class="bar"><i class="${(q.remaining||0)===0?'full':''}" style="width:${q.cap?Math.round((((q.used)||0)/q.cap)*100):0}%"></i></div>
+                 <div class="stat-sub" style="margin-top:10px">${esc(q.reason||'')}</div>
+               </div>
+               ${(q.remaining||0)===0 ? `
+                 <div style="margin-top:14px;padding:13px;border-radius:10px;background:rgba(212,175,55,.08);border:1px solid rgba(212,175,55,.25)">
+                   <div style="font-size:13px;font-weight:600;margin-bottom:5px">You've used this month's broadcasts</div>
+                   <p style="font-size:12.5px;color:var(--grey);margin-bottom:11px">Paid space in your directory removes the limit and adds scheduling.</p>
+                   <button class="btn btn-gold btn-sm" onclick="go('grow')">See what that costs</button>
+                 </div>` : ''}`}
+        </div>
+
+        <div class="panel">
+          <div class="panel-h"><div><h2>Sent</h2></div></div>
+          <div class="list" id="pList">
+            ${(body.data||[]).length ? (body.data||[]).slice(0,12).map(b => `
+              <div class="item">
+                <div class="item-main">
+                  <div class="item-t">${esc(b.title || '(no title)')}</div>
+                  <div class="item-s">${esc((b.body||'').slice(0,64))}${(b.body||'').length>64?'…':''}</div>
+                </div>
+                <span class="tag ${b.status==='sent'?'ok':b.status==='blocked'?'bad':b.status==='scheduled'?'info':''}">${esc(b.status)}</span>
+              </div>`).join('')
+            : `<div class="empty">${ic('send')}<p>Nothing sent yet. Your first broadcast goes to everyone who follows you.</p></div>`}
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  // surface selector
+  $('#pSurfaces').querySelectorAll('.pick').forEach(b => {
+    b.onclick = () => {
+      if (b.disabled) return;
+      $('#pSurfaces').querySelectorAll('.pick').forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+    };
+  });
+
+  $('#pSend').onclick = sendPush;
+}
+
+async function sendPush(){
+  const btn = $('#pSend');
+  const title = $('#pTitle').value.trim();
+  const msg = $('#pBody').value.trim();
+  const picked = $('#pSurfaces .pick.on');
+  const when = $('#pWhen') ? $('#pWhen').value : '';
+
+  if (!title && !msg) return toast('Write a title or a message first.', 'bad');
+  if (!picked) return toast('Choose who this goes to.', 'bad');
+
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spin"></div> Sending…';
+  try {
+    const { status, body } = await api('/manage-push', {
+      method:'POST',
+      body:{
+        action: when ? 'schedule' : 'send',
+        title, body: msg,
+        surface: picked.dataset.surface,
+        scheduledAt: when ? new Date(when).toISOString() : undefined
+      }
+    });
+
+    if (status === 429){
+      toast(body.error, 'bad');
+      reach();
+      return;
+    }
+    toast(when ? 'Scheduled.' : `Sent to ${num(body.recipients||0)} ${body.recipients===1?'person':'people'}.`, 'ok');
+    reach();
+  } catch(e){
+    toast(e.message, 'bad');
+    btn.disabled = false;
+    btn.innerHTML = 'Send broadcast';
+  }
+}
+
+/* ---------- CONTENT & HOURS ---------- */
+async function content(){
+  const { body } = await api('/manage-content?resource=all');
+  S.data.content = body;
+
+  const days = body.hours || [];
+  const reaches = (body.surfaces||[]).map(s => s.label).join(' · ');
+
+  $('#main').innerHTML = `
+    ${head('Content & hours', 'Write it once. It shows up everywhere you are.')}
+
+    <div style="margin-bottom:16px;padding:12px 16px;border-radius:10px;background:rgba(90,169,255,.07);border:1px solid rgba(90,169,255,.2);font-size:13px">
+      <strong>One edit reaches:</strong> ${esc(reaches || 'your space')}
+    </div>
+
+    <div class="panel" style="margin-bottom:16px">
+      <div class="panel-h">
+        <div><h2>Opening hours</h2><p>Used for your listing, your space, and your booking slots.</p></div>
+        <button class="btn btn-gold btn-sm" id="hSave">Save hours</button>
+      </div>
+      <div class="panel-b">
+        <div class="hours" id="hours">
+          ${days.map(d => `
+            <div class="hrow ${d.closed?'shut':''}" data-day="${d.day}">
+              <span class="day">${esc(d.day)}</span>
+              <input type="time" value="${esc(d.open||'')}" data-k="open" aria-label="${esc(d.day)} opens">
+              <input type="time" value="${esc(d.close||'')}" data-k="close" aria-label="${esc(d.day)} closes">
+              <button class="shut-btn ${d.closed?'on':''}" data-k="closed">${d.closed?'Closed':'Open'}</button>
+            </div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h">
+        <div><h2>Your content</h2><p>About, announcements, policies.</p></div>
+        <button class="btn btn-ghost btn-sm" id="cAdd">Add</button>
+      </div>
+      <div class="list" id="cList">
+        ${(body.content||[]).filter(c=>c.status!=='archived').length
+          ? (body.content||[]).filter(c=>c.status!=='archived').map(c => `
+            <div class="item">
+              <div class="item-main">
+                <div class="item-t">${esc(c.title || '(untitled)')}</div>
+                <div class="item-s">${esc((c.body||'').slice(0,90))}${(c.body||'').length>90?'…':''}</div>
+              </div>
+              <span class="tag ${c.status==='published'?'ok':''}">${esc(c.status)}</span>
+              <div class="item-actions">
+                <button class="btn btn-ghost btn-sm" onclick="togglePublish('${c.id}','${c.status}')">${c.status==='published'?'Unpublish':'Publish'}</button>
+              </div>
+            </div>`).join('')
+          : `<div class="empty">${ic('file')}<p>Nothing written yet. Start with a short "about" — it shows on every surface you have.</p></div>`}
+      </div>
+    </div>`;
+
+  $('#hours').querySelectorAll('.shut-btn').forEach(b => {
+    b.onclick = () => {
+      const row = b.closest('.hrow');
+      const shut = row.classList.toggle('shut');
+      b.classList.toggle('on', shut);
+      b.textContent = shut ? 'Closed' : 'Open';
+    };
+  });
+  $('#hSave').onclick = saveHours;
+  $('#cAdd').onclick = addContent;
+}
+
+async function saveHours(){
+  const btn = $('#hSave');
+  btn.disabled = true; btn.innerHTML = '<div class="spin"></div>';
+  const hours = Array.from($('#hours').querySelectorAll('.hrow')).map(r => ({
+    day: r.dataset.day,
+    open: r.querySelector('[data-k=open]').value,
+    close: r.querySelector('[data-k=close]').value,
+    closed: r.classList.contains('shut')
+  }));
+  try {
+    await api('/manage-content', { method:'POST', body:{ resource:'hours', action:'set', hours } });
+    toast('Hours updated everywhere.', 'ok');
+  } catch(e){ toast(e.message, 'bad'); }
+  btn.disabled = false; btn.textContent = 'Save hours';
+}
+
+async function addContent(){
+  const title = prompt('Title');
+  if (!title) return;
+  const bodyText = prompt('What does it say?') || '';
+  try {
+    await api('/manage-content', { method:'POST', body:{ resource:'content', action:'create', kind:'about', title, body:bodyText, publish:true } });
+    toast('Added.', 'ok');
+    content();
+  } catch(e){ toast(e.message, 'bad'); }
+}
+
+async function togglePublish(id, status){
+  try {
+    await api('/manage-content', { method:'POST', body:{ resource:'content', action:'publish', id, published: status !== 'published' } });
+    content();
+  } catch(e){ toast(e.message, 'bad'); }
+}
+
+/* ---------- BOOKINGS ---------- */
+async function bookings(){
+  const { body } = await api('/manage-bookings');
+  if (body.locked) return lockedPage('Bookings', body.message, 'bookings');
+
+  const data = body.data || [];
+  const now = Date.now();
+  const upcoming = data.filter(b => new Date(b.startsAt).getTime() > now && ['requested','confirmed'].includes(b.status));
+
+  $('#main').innerHTML = `
+    ${head('Bookings', 'Slots come straight from the hours you already set.')}
+    <div class="grid g3" style="margin-bottom:16px">
+      <div class="card"><div class="stat">${num(body.needsAction||0)}</div><div class="stat-sub">Waiting on you</div></div>
+      <div class="card"><div class="stat">${num(upcoming.length)}</div><div class="stat-sub">Upcoming</div></div>
+      <div class="card"><div class="stat">${num((body.counts||{}).completed||0)}</div><div class="stat-sub">Completed</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><div><h2>Requests & appointments</h2></div></div>
+      <div class="list">
+        ${data.length ? data.slice(0,40).map(b => `
+          <div class="item">
+            <div class="item-main">
+              <div class="item-t">${esc(b.customerName || b.customerEmail || 'Someone')}</div>
+              <div class="item-s">${esc(b.service||'Appointment')} · ${esc(fmtDate(b.startsAt))}</div>
+            </div>
+            <span class="tag ${b.status==='confirmed'?'ok':b.status==='requested'?'warn':b.status==='canceled'?'bad':''}">${esc(b.status)}</span>
+            ${b.status==='requested' ? `<div class="item-actions">
+              <button class="btn btn-gold btn-sm" onclick="bookingAct('${b.id}','confirm')">Confirm</button>
+              <button class="btn btn-danger btn-sm" onclick="bookingAct('${b.id}','cancel')">Decline</button>
+            </div>` : b.status==='confirmed' ? `<div class="item-actions">
+              <button class="btn btn-ghost btn-sm" onclick="bookingAct('${b.id}','complete')">Done</button>
+            </div>` : ''}
+          </div>`).join('')
+        : `<div class="empty">${ic('cal')}<p>No bookings yet. People can request a slot from your space and your listing.</p></div>`}
+      </div>
+    </div>`;
+}
+
+async function bookingAct(id, action){
+  try {
+    await api('/manage-bookings', { method:'POST', body:{ action, id } });
+    toast('Updated.', 'ok');
+    bookings();
+  } catch(e){ toast(e.message, 'bad'); }
+}
+
+/* ---------- LOYALTY ---------- */
+async function loyalty(){
+  const { body } = await api('/manage-loyalty');
+  if (body.locked) return lockedPage('Loyalty', body.message, 'loyalty');
+
+  const s = body.summary || {};
+  const members = body.members || [];
+
+  $('#main').innerHTML = `
+    ${head('Loyalty', 'Points people earn with you, and only with you.')}
+    <div class="grid g3" style="margin-bottom:16px">
+      <div class="card"><div class="stat">${num(s.membersCount)}</div><div class="stat-sub">Members</div></div>
+      <div class="card"><div class="stat">${num(s.outstanding)}</div><div class="stat-sub">Points outstanding</div></div>
+      <div class="card"><div class="stat">${num(s.totalSpent)}</div><div class="stat-sub">Points redeemed</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><div><h2>Members</h2><p>Sorted by balance.</p></div></div>
+      <div class="list">
+        ${members.length ? members.slice(0,40).map(m => `
+          <div class="item">
+            <div class="item-main">
+              <div class="item-t">${esc(m.name || m.email || 'Member')}</div>
+              <div class="item-s">${num(m.earned)} earned · ${num(m.spent)} spent</div>
+            </div>
+            <div style="font-size:19px;font-weight:800;letter-spacing:-.03em">${num(m.balance)}</div>
+          </div>`).join('')
+        : `<div class="empty">${ic('star')}<p>No members yet. Points start adding up as people order and book.</p></div>`}
+      </div>
+    </div>`;
+}
+
+/* ---------- MONEY ---------- */
+async function moneyPage(){
+  const { body } = await api('/manage-invoices');
+  if (body.locked) return lockedPage('Money', body.message, 'invoicing');
+
+  const p = body.payment || {};
+  const s = body.summary || {};
+
+  $('#main').innerHTML = `
+    ${head('Money', 'Invoices, and who takes the payment.')}
+
+    <div class="card" style="margin-bottom:16px">
+      <h3>How you get paid</h3>
+      <div style="font-size:17px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px">${esc(p.label||'Not set')}</div>
+      <p class="stat-sub" style="max-width:52ch">${esc(p.split||'')}</p>
+    </div>
+
+    <div class="grid g3" style="margin-bottom:16px">
+      <div class="card"><div class="stat">${money(s.outstanding)}</div><div class="stat-sub">Outstanding</div></div>
+      <div class="card"><div class="stat">${money(s.paid)}</div><div class="stat-sub">Paid</div></div>
+      <div class="card"><div class="stat">${num(s.overdueCount)}</div><div class="stat-sub">Overdue</div></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-h"><div><h2>Invoices</h2></div></div>
+      <div class="list">
+        ${(body.data||[]).length ? (body.data||[]).slice(0,30).map(i => `
+          <div class="item">
+            <div class="item-main">
+              <div class="item-t">#${esc(i.number)} · ${esc(i.customerName||'Customer')}</div>
+              <div class="item-s">${money(i.total)}${i.dueDate?` · due ${esc(i.dueDate)}`:''}</div>
+            </div>
+            <span class="tag ${i.status==='paid'?'ok':i.overdue?'bad':i.status==='sent'?'warn':''}">${esc(i.overdue?'overdue':i.status)}</span>
+          </div>`).join('')
+        : `<div class="empty">${ic('card')}<p>No invoices yet.</p></div>`}
+      </div>
+    </div>`;
+}
+
+/* ---------- MODULES ---------- */
+async function modules(){
+  const { body } = await api('/manage-modules?resource=events');
+  if (body.locked) return lockedPage('Extras', body.message, 'value_modules');
+
+  $('#main').innerHTML = `
+    ${head('Extras', 'Events, registries, and back-in-stock alerts.')}
+    <div class="panel">
+      <div class="panel-h"><div><h2>Events</h2><p>People sign up; you see who is coming.</p></div></div>
+      <div class="list">
+        ${(body.data||[]).length ? (body.data||[]).map(e => `
+          <div class="item">
+            <div class="item-main">
+              <div class="item-t">${esc(e.title)}</div>
+              <div class="item-s">${esc(fmtDate(e.startsAt))}${e.capacity?` · ${num(e.signupCount)}/${num(e.capacity)}`:` · ${num(e.signupCount)} signed up`}</div>
+            </div>
+            <span class="tag ${e.status==='published'?'ok':e.status==='full'?'warn':''}">${esc(e.status)}</span>
+          </div>`).join('')
+        : `<div class="empty">${ic('gift')}<p>No events yet.</p></div>`}
+      </div>
+    </div>`;
+}
+
+/* ---------- INSIGHTS ---------- */
+async function insights(){
+  const { body:a } = await api('/get-unified-analytics?days=30');
+
+  if (!a.advanced){
+    $('#main').innerHTML = head('Insights', 'How the business is doing, across everything you own.') + surfaceStrip() + `
+      <div class="grid g4" style="margin-bottom:16px">
+        <div class="card"><div class="stat">${num((a.totals||{}).views)}</div><div class="stat-sub">Views · 30 days</div></div>
+        <div class="card"><div class="stat">${num((a.totals||{}).orders)}</div><div class="stat-sub">Orders</div></div>
+        <div class="card"><div class="stat">${money((a.totals||{}).revenue)}</div><div class="stat-sub">Revenue</div></div>
+        <div class="card"><div class="stat">${num((a.totals||{}).followers)}</div><div class="stat-sub">Followers</div></div>
+      </div>
+      <div class="gate">
+        ${ic('chart')}
+        <h3>Trends and per-surface breakdowns</h3>
+        <p>${esc((a.upgrade&&a.upgrade.message)||'Available with advanced analytics.')}</p>
+        <button class="btn btn-gold" onclick="go('grow')">See options</button>
+      </div>`;
+    return;
+  }
+
+  const views = (a.series && a.series.views) || [];
+  const max = Math.max(1, ...views.map(v => v.value));
+
+  $('#main').innerHTML = `
+    ${head('Insights', 'How the business is doing, across everything you own.')}
+    ${surfaceStrip()}
+
+    <div class="grid g4" style="margin-bottom:16px">
+      <div class="card"><div class="stat">${num((a.totals||{}).views)}</div><div class="stat-sub">Views · 30 days</div></div>
+      <div class="card"><div class="stat">${money((a.totals||{}).revenue)}</div><div class="stat-sub">Revenue</div></div>
+      <div class="card"><div class="stat">${num((a.totals||{}).followers)}</div><div class="stat-sub">Followers</div>
+        ${a.growth&&a.growth.newFollowers?`<div class="delta up">+${num(a.growth.newFollowers)} this month</div>`:''}</div>
+      <div class="card"><div class="stat">${num((a.push||{}).reached)}</div><div class="stat-sub">People reached</div></div>
+    </div>
+
+    <div class="panel" style="margin-bottom:16px">
+      <div class="panel-h"><div><h2>Views, last 30 days</h2></div></div>
+      <div class="panel-b">
+        <div class="spark">${views.map(v => `<i style="height:${Math.max(3,(v.value/max)*100)}%" title="${esc(v.date)}: ${num(v.value)}"></i>`).join('')}</div>
+      </div>
+    </div>
+
+    ${a.growth && a.growth.directoryShare > 0 ? `
+      <div class="card">
+        <h3>Your directory listing</h3>
+        <div class="stat">${a.growth.directoryShare}%</div>
+        <div class="stat-sub">of your traffic came through the directory this month.</div>
+      </div>` : ''}`;
+}
+
+/* ---------- GROW ---------- */
+async function grow(){
+  const s = S.biz.surfaces || {};
+  const d = S.biz.directoryStatus || 'none';
+
+  const offers = [
+    { on:!!s.website, t:'A website', n:'Your own domain, pointed at the space you already keep up to date. Nothing to maintain twice.' },
+    { on:!!s.app, t:'Your own app', n:'Your business with its own icon on their phone. Push goes straight to them.' },
+    { on:d!=='none', t:'A directory listing', n:'Get found in your town. Free listings include two broadcasts a month.' },
+    { on:d==='paid', t:'Paid directory space', n:'Top placement, unlimited push with scheduling, bookings, loyalty and registries.' }
+  ];
+
+  $('#main').innerHTML = `
+    ${head('Grow', 'Add a surface or a module whenever you want. Nothing here is a ladder.')}
+    ${surfaceStrip()}
+
+    <div class="grid g2">
+      ${offers.map(o => `
+        <div class="card lift">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:9px">
+            <div style="font-size:16px;font-weight:700;letter-spacing:-.02em">${esc(o.t)}</div>
+            ${o.on ? `<span class="tag ok">Active</span>` : ''}
+          </div>
+          <p class="stat-sub" style="margin-bottom:${o.on?'0':'16px'}">${esc(o.n)}</p>
+          ${o.on ? '' : `<button class="btn btn-gold btn-sm" onclick="ask('${esc(o.t)}')">Ask about this</button>`}
+        </div>`).join('')}
+    </div>`;
+}
+
+function ask(what){
+  toast(`Noted — Aaron will reach out about "${what}".`, 'ok');
+}
+
+/* ---------- SUPPORT ---------- */
+async function support(){
+  $('#main').innerHTML = `
+    ${head('Support', 'You reach a person, not a queue.')}
+    <div class="panel">
+      <div class="panel-b">
+        <div class="field">
+          <label for="sMsg">What do you need?</label>
+          <textarea id="sMsg" placeholder="Tell me what's going on and I'll sort it."></textarea>
+        </div>
+        <button class="btn btn-gold" onclick="toast('Sent. You&apos;ll hear back today.','ok')">Send</button>
+      </div>
+    </div>`;
+}
+
+/* ---------- locked ---------- */
+function lockedPage(title, message, capability){
+  $('#main').innerHTML = head(title) + `
+    <div class="gate">
+      ${ic('lock')}
+      <h3>Not on this account yet</h3>
+      <p>${esc(message || 'This comes with paid directory space.')}</p>
+      <button class="btn btn-gold" onclick="go('grow')">See what it takes</button>
+    </div>`;
+}
+
+/* ---------- misc ---------- */
+function fmtDate(iso){
+  if (!iso) return 'No date';
+  const d = new Date(iso);
+  if (isNaN(d)) return String(iso);
+  return d.toLocaleString('en-US',{ month:'short', day:'numeric', hour:'numeric', minute:'2-digit' });
+}
+
+function signOut(){
+  localStorage.removeItem(LS.token);
+  localStorage.removeItem(LS.biz);
+  location.href = '/app-login.html';
+}
+
+/* ---------- boot ---------- */
+(function boot(){
+  S.token = localStorage.getItem(LS.token);
+  let biz = null;
+  try { biz = JSON.parse(localStorage.getItem(LS.biz) || 'null'); } catch(e){}
+
+  if (!S.token || !biz){
+    location.href = '/app-login.html';
+    return;
+  }
+
+  S.biz = biz;
+  S.caps = biz.caps || [];
+
+  $('#bizName').textContent = biz.company || biz.name || 'Your business';
+  $('#bizMeta').textContent = [biz.tier, biz.directoryStatus && biz.directoryStatus !== 'none' ? `${biz.directoryStatus} listing` : null]
+    .filter(Boolean).join(' · ');
+  $('#mobBiz').textContent = biz.company || biz.name || 'Your business';
+  $('#mobTier').textContent = biz.tier || '';
+
+  renderNav();
+  render();
+})();
+</script>
+</body>
+</html>
