@@ -304,7 +304,7 @@ function slugify(s) {
  * tenant id in either ClientID (legacy tables) or TenantID (revamp tables).
  */
 function ownsRow(record, tenantId) {
-    const owner = record.get('TenantID') || record.get('ClientID') || '';
+    const owner = record.get('TenantID') || record.get('ClientID') || record.get('ClientId') || '';
     return String(owner) === String(tenantId);
 }
 

@@ -173,7 +173,7 @@ const TABLES = [
             txt('RegionID', 'Seam for a future directory-wide points layer'),
             num('Delta', 0, 'Positive = earned, negative = spent'),
             txt('Reason', 'Human-readable reason'),
-            sel('Source', ['order', 'visit', 'signup', 'referral', 'manual', 'redemption', 'event'], ''),
+            sel('Source', ['order', 'visit', 'signup', 'referral', 'manual', 'redemption', 'event', 'booking'], ''),
             txt('RefID', 'Related order / booking / event record ID'),
             txt('Timestamp', 'ISO timestamp')
         ]

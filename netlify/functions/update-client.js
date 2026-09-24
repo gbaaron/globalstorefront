@@ -57,7 +57,7 @@ exports.handler = async (event) => {
         }
         if (password) {
             if (String(password).length < 6) return T.bad('Password must be at least 6 characters', 'POST');
-            fields.Password = await hashPassword(password);
+            fields.PasswordHash = await hashPassword(password);
         }
 
         // --- presentation -------------------------------------------------

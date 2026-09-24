@@ -74,7 +74,9 @@ exports.handler = async (event) => {
             Name: String(name).trim(),
             Email: String(email).trim().toLowerCase(),
             Username: String(username).trim(),
-            Password: await hashPassword(password),
+            // The Clients table has PasswordHash only — there is no `Password`
+            // field. Writing one throws "Unknown field name".
+            PasswordHash: await hashPassword(password),
             Company: company ? String(company).trim() : '',
             ProjectURL: projectUrl ? String(projectUrl).trim() : '',
             Slug: resolvedSlug,
