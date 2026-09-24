@@ -218,13 +218,15 @@
             }
         } catch (e) {}
 
-        function isNative() {
-            return !!(
-                window.Capacitor ||
-                (window.NativeBridge && window.NativeBridge.isNative) ||
-                localStorage.getItem('gs_is_native') === '1'
-            );
-        }
+        // Routing no longer branches on this: native and web both land on the
+        // one dashboard, which is the point of the reframe. The flag is still
+        // recorded because the shell genuinely tells us something true, and any
+        // page that later needs native-only behaviour can read it.
+        window.gsIsNative = () => !!(
+            window.Capacitor ||
+            (window.NativeBridge && window.NativeBridge.isNative) ||
+            localStorage.getItem('gs_is_native') === '1'
+        );
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault();

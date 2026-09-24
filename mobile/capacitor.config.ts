@@ -5,8 +5,11 @@ const config: CapacitorConfig = {
   appName: 'Global Storefront',
   webDir: 'www',
   server: {
-    // Points to the live Netlify-deployed app
-    url: 'https://globalstorefront.netlify.app/app-login.html',
+    // Points to the live Netlify-deployed app.
+    // ?native=1 is a permanent marker so the web app reliably knows it's
+    // running inside the native shell (Capacitor's JS bridge isn't reliably
+    // injected on remote-hosted pages, so we can't depend on window.Capacitor).
+    url: 'https://globalstorefront.netlify.app/app-login.html?native=1',
     cleartext: false
   },
   plugins: {

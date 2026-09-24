@@ -12,6 +12,18 @@
       "runtimeExecutable": "python3",
       "runtimeArgs": ["-m", "http.server", "8889"],
       "port": 8889
+    },
+    {
+      "name": "petrinos",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8765", "--directory", "../Petrinos Pizza"],
+      "port": 8765
+    },
+    {
+      "name": "gbfinance",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8892", "--directory", "../gb_finance_tracker/data"],
+      "port": 8892
     }
   ]
 }

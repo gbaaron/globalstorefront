@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Storefront — How It All Fits Together</title>
+<style>
+  :root{
+    --bg:#0d0f1a; --panel:#161a2e; --panel-2:#1d2340; --line:rgba(255,255,255,.08);
+    --text:#eef1f8; --muted:#9aa4bd; --gold:#d4af37; --gold-soft:rgba(212,175,55,.14);
+    --zeeland:#e08a3c; --zeeland-soft:rgba(224,138,60,.14);
+    --green:#46c18a; --green-soft:rgba(70,193,138,.14);
+    --blue:#5aa7f5; --blue-soft:rgba(90,167,245,.14);
+    --pink:#e472b8; --pink-soft:rgba(228,114,184,.14);
+    --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    background:radial-gradient(ellipse 900px 600px at 15% -5%,rgba(212,175,55,.07),transparent 60%),
+               radial-gradient(ellipse 800px 600px at 100% 10%,rgba(90,167,245,.06),transparent 55%),
+               var(--bg);
+    color:var(--text);line-height:1.55;padding:0 0 80px;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+  header.hero{padding:64px 22px 38px;text-align:center;max-width:880px;margin:0 auto}
+  .badge{display:inline-block;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--gold);border:1px solid var(--gold-soft);background:var(--gold-soft);
+    padding:6px 14px;border-radius:999px;margin-bottom:20px}
+  h1{font-size:2.5rem;line-height:1.1;font-weight:800;margin-bottom:14px;letter-spacing:-.02em}
+  h1 .accent{color:var(--gold)}
+  .lede{color:var(--muted);font-size:1.08rem;max-width:680px;margin:0 auto}
+  .tldr{max-width:780px;margin:26px auto 0;background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--radius);padding:20px 24px;text-align:left}
+  .tldr strong{color:var(--gold)}
+  .tldr p{color:var(--muted);font-size:.96rem}
+  .tldr p+p{margin-top:9px}
+
+  section{margin-top:58px}
+  .sec-head{display:flex;align-items:center;gap:14px;margin-bottom:8px}
+  .sec-num{flex:0 0 auto;width:34px;height:34px;border-radius:10px;background:var(--gold-soft);
+    color:var(--gold);font-weight:800;display:grid;place-items:center;font-size:1rem}
+  h2{font-size:1.5rem;font-weight:750;letter-spacing:-.01em}
+  .sec-sub{color:var(--muted);margin:0 0 24px 48px;font-size:.98rem}
+
+  /* generic cards */
+  .grid{display:grid;gap:18px}
+  .g2{grid-template-columns:repeat(2,1fr)}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  .g4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:860px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .card h3{font-size:1.05rem;margin-bottom:6px;display:flex;align-items:center;gap:9px}
+  .card p{color:var(--muted);font-size:.9rem}
+  .pill{font-size:.7rem;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px;font-weight:700}
+  .pill.gold{background:var(--gold-soft);color:var(--gold)}
+  .pill.green{background:var(--green-soft);color:var(--green)}
+  .pill.blue{background:var(--blue-soft);color:var(--blue)}
+  .pill.zee{background:var(--zeeland-soft);color:var(--zeeland)}
+  .pill.pink{background:var(--pink-soft);color:var(--pink)}
+
+  /* device mockups */
+  .devices{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:end}
+  @media(max-width:860px){.devices{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.devices{grid-template-columns:1fr}}
+  .device{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;text-align:center}
+  .screen{border-radius:14px;border:1px solid var(--line);background:var(--panel-2);
+    height:190px;position:relative;overflow:hidden;margin-bottom:14px;display:flex;flex-direction:column}
+  .screen .topbar{height:26px;background:#0f1322;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;gap:5px;font-size:.6rem;color:var(--muted)}
+  .screen .body{flex:1;padding:12px;display:flex;flex-direction:column;gap:7px}
+  .row{height:13px;border-radius:5px;background:#2a3252}
+  .row.s{width:55%} .row.m{width:75%} .row.l{width:90%}
+  .row.gold{background:linear-gradient(90deg,var(--gold),#b8932e)}
+  .row.zee{background:linear-gradient(90deg,var(--zeeland),#b86a26)}
+  .screen .navbar{height:30px;border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center}
+  .dot{width:14px;height:14px;border-radius:4px;background:#33406a}
+  .dot.on{background:var(--gold)}
+  .phone-frame{border-radius:22px;border:3px solid #2a3252;padding:6px;background:#0a0c16}
+  .device h4{font-size:.98rem;margin-bottom:3px}
+  .device .who{font-size:.76rem;color:var(--muted);min-height:32px}
+  .device .file{font-size:.7rem;color:var(--gold);font-family:ui-monospace,monospace;margin-top:9px;display:block}
+  .native-tag{margin-top:9px;font-size:.7rem;color:var(--green)}
+  .web-tag{margin-top:9px;font-size:.7rem;color:var(--blue)}
+
+  /* flow diagram */
+  .flow{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+  .flow-row{display:flex;align-items:stretch;gap:0;flex-wrap:wrap}
+  .node{flex:1;min-width:150px;background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:center}
+  .node .ico{font-size:1.5rem;margin-bottom:6px}
+  .node h4{font-size:.92rem;margin-bottom:3px}
+  .node p{font-size:.76rem;color:var(--muted)}
+  .arrow{flex:0 0 auto;display:grid;place-items:center;padding:0 4px;color:var(--gold);font-size:1.4rem;font-weight:800}
+  @media(max-width:760px){.arrow{width:100%;padding:8px 0;transform:rotate(90deg)}}
+
+  /* DB diagram */
+  .db-wrap{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:860px){.db-wrap{grid-template-columns:1fr}}
+  .db{border-radius:var(--radius);padding:22px;border:1px solid var(--line)}
+  .db.gs{background:linear-gradient(180deg,rgba(212,175,55,.07),transparent),var(--panel);border-color:var(--gold-soft)}
+  .db.client{background:linear-gradient(180deg,rgba(224,138,60,.07),transparent),var(--panel);border-color:var(--zeeland-soft)}
+  .db h3{display:flex;align-items:center;gap:9px;font-size:1.1rem;margin-bottom:4px}
+  .db .baseid{font-family:ui-monospace,monospace;font-size:.74rem;color:var(--muted);margin-bottom:14px}
+  .tbl{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:9px;background:var(--panel-2);
+    border:1px solid var(--line);margin-bottom:8px;font-size:.86rem}
+  .tbl .ti{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+  .tbl small{color:var(--muted);margin-left:auto;font-size:.74rem;text-align:right}
+  .gs .ti{background:var(--gold)} .client .ti{background:var(--zeeland)}
+  .db-note{margin-top:14px;font-size:.82rem;color:var(--muted);padding:12px;border-radius:10px;background:rgba(0,0,0,.18)}
+
+  /* link line between the two bases */
+  .link-callout{margin-top:18px;text-align:center;background:var(--panel);border:1px dashed var(--line);
+    border-radius:var(--radius);padding:18px 22px;font-size:.92rem;color:var(--muted)}
+  .link-callout code{background:var(--panel-2);padding:2px 7px;border-radius:6px;color:var(--gold);font-size:.85rem}
+
+  /* customer-data flow */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:860px){.split{grid-template-columns:1fr}}
+  .split .card.green{border-color:var(--green-soft);background:linear-gradient(180deg,rgba(70,193,138,.06),transparent),var(--panel)}
+  .split .card.gold{border-color:var(--gold-soft);background:linear-gradient(180deg,rgba(212,175,55,.06),transparent),var(--panel)}
+
+  /* Q&A */
+  .qa{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:6px 22px}
+  .qa details{border-bottom:1px solid var(--line);padding:16px 0}
+  .qa details:last-child{border-bottom:none}
+  .qa summary{cursor:pointer;font-weight:650;font-size:1.02rem;list-style:none;display:flex;gap:10px;align-items:flex-start}
+  .qa summary::-webkit-details-marker{display:none}
+  .qa summary::before{content:"Q";flex:0 0 auto;width:24px;height:24px;border-radius:7px;background:var(--gold-soft);color:var(--gold);display:grid;place-items:center;font-size:.8rem;font-weight:800}
+  .qa .ans{color:var(--muted);font-size:.93rem;margin:12px 0 2px 34px}
+  .qa .ans strong{color:var(--text)}
+
+  ul.clean{list-style:none;margin-top:10px}
+  ul.clean li{padding-left:22px;position:relative;font-size:.88rem;color:var(--muted);margin-bottom:6px}
+  ul.clean li::before{content:"";position:absolute;left:4px;top:8px;width:7px;height:7px;border-radius:2px;background:var(--gold)}
+  .footer{margin-top:60px;text-align:center;color:var(--muted);font-size:.82rem}
+  .legend{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-top:20px;font-size:.82rem;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .sw{width:12px;height:12px;border-radius:4px;display:inline-block}
+
+  /* ---- diagrams ---- */
+  .diagram{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px 18px 8px}
+  .diagram svg{width:100%;height:auto;display:block}
+  .cap{color:var(--muted);font-size:.84rem;text-align:center;margin:6px 0 12px}
+  .diag-legend{display:flex;gap:20px;justify-content:center;flex-wrap:wrap;margin:6px 0 14px;font-size:.8rem;color:var(--muted)}
+  .diag-legend span{display:inline-flex;align-items:center;gap:7px}
+  svg text{font-family:"Inter",-apple-system,sans-serif}
+  .map-hint{text-align:center;color:var(--muted);font-size:.8rem;margin-top:4px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <span class="badge">Architecture, made visual</span>
+  <h1>How <span class="accent">Global Storefront</span> actually fits together</h1>
+  <p class="lede">One codebase, several "front doors," and <b>two kinds of database</b>. This page shows you who sees what, and where every piece of data lives — based on the real files in this repo.</p>
+
+  <div class="tldr">
+    <p><strong>The 10-second version:</strong> There is <strong>one</strong> admin app (<code>app.html</code>). The iOS app is just that same app wrapped in a native shell. The "web" and "mobile web" versions are the <em>same</em> page in a browser — they only lose the native extras (push, vibration, badge).</p>
+    <p><strong>Customers never touch Global Storefront's site.</strong> They go straight to the individual company's own site (e.g. Zeeland Bakery). The only Global Storefront thing on that site is the chat bubble.</p>
+    <p><strong>The data is split.</strong> Global Storefront's database holds the client list + all chat/bot data. Each company (Zeeland) has its <em>own separate</em> database for its orders and products.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ============ SECTION 0: BIRD'S-EYE MAP ============ -->
+<section style="margin-top:30px">
+  <div class="sec-head"><div class="sec-num">▣</div><h2>The whole system on one map</h2></div>
+  <p class="sec-sub">Follow the moving dots — that's live data flowing. People on the left, the app/sites in the middle, the API, then the two kinds of database on the right.</p>
+
+  <div class="diagram">
+    <div class="diag-legend">
+      <span><i class="sw" style="background:var(--gold)"></i> Global Storefront pieces</span>
+      <span><i class="sw" style="background:var(--zeeland)"></i> The company (Zeeland)</span>
+      <span><i class="sw" style="background:var(--blue)"></i> You / agency</span>
+      <span><i class="sw" style="background:var(--green)"></i> Shared API layer</span>
+    </div>
+    <svg viewBox="0 0 960 560" role="img" aria-label="System map">
+      <!-- ===== wires (drawn first, under nodes) ===== -->
+      <g fill="none" stroke="#41507e" stroke-width="2">
+        <path d="M100,72 L340,72"/>
+        <path d="M100,282 L340,282"/>
+        <path d="M100,492 L340,492"/>
+        <path d="M340,282 L340,392"/>
+        <path d="M340,72 L600,282"/>
+        <path d="M340,392 L600,282"/>
+        <path d="M340,492 L600,282"/>
+        <path d="M600,282 L840,156"/>
+        <path d="M600,282 L840,424"/>
+      </g>
+      <!-- BaseID dashed link between the two databases -->
+      <path d="M840,156 L840,424" fill="none" stroke="#d4af37" stroke-width="2" stroke-dasharray="7 7" opacity=".8">
+        <animate attributeName="stroke-dashoffset" from="28" to="0" dur="1.2s" repeatCount="indefinite"/>
+      </path>
+
+      <!-- ===== animated data packets ===== -->
+      <circle r="6" fill="#e08a3c"><animateMotion dur="3s" repeatCount="indefinite" path="M100,282 L340,282"/></circle>
+      <circle r="6" fill="#d4af37"><animateMotion dur="2.6s" repeatCount="indefinite" path="M340,72 L600,282"/></circle>
+      <circle r="6" fill="#d4af37"><animateMotion dur="2.6s" begin="0.6s" repeatCount="indefinite" path="M340,392 L600,282"/></circle>
+      <circle r="6" fill="#d4af37"><animateMotion dur="2.4s" repeatCount="indefinite" path="M600,282 L840,156"/></circle>
+      <circle r="6" fill="#e08a3c"><animateMotion dur="2.4s" begin="0.5s" repeatCount="indefinite" path="M600,282 L840,424"/></circle>
+
+      <!-- ===== wire labels ===== -->
+      <text x="724" y="200" fill="#d4af37" font-size="11" font-weight="600">chat data</text>
+      <text x="712" y="372" fill="#e08a3c" font-size="11" font-weight="600">reads orders</text>
+      <text x="850" y="296" fill="#9aa4bd" font-size="10.5">Clients.BaseID</text>
+      <text x="850" y="310" fill="#9aa4bd" font-size="10.5">links them</text>
+
+      <!-- ===== nodes ===== -->
+      <!-- helper pattern: rect + emoji + title + subtitle -->
+      <!-- Store Owner -->
+      <g><rect x="20" y="40" width="160" height="64" rx="12" fill="#1d2340" stroke="#d4af37" stroke-width="1.5"/>
+        <text x="100" y="64" text-anchor="middle" font-size="20">👤</text>
+        <text x="100" y="84" text-anchor="middle" fill="#eef1f8" font-size="12.5" font-weight="700">Store Owner</text>
+        <text x="100" y="98" text-anchor="middle" fill="#9aa4bd" font-size="10">the admin</text></g>
+      <!-- Customer -->
+      <g><rect x="20" y="250" width="160" height="64" rx="12" fill="#1d2340" stroke="#e08a3c" stroke-width="1.5"/>
+        <text x="100" y="274" text-anchor="middle" font-size="20">🧑</text>
+        <text x="100" y="294" text-anchor="middle" fill="#eef1f8" font-size="12.5" font-weight="700">Customer</text>
+        <text x="100" y="308" text-anchor="middle" fill="#9aa4bd" font-size="10">a shopper</text></g>
+      <!-- Agency -->
+      <g><rect x="20" y="460" width="160" height="64" rx="12" fill="#1d2340" stroke="#5aa7f5" stroke-width="1.5"/>
+        <text x="100" y="484" text-anchor="middle" font-size="20">🧑‍💼</text>
+        <text x="100" y="504" text-anchor="middle" fill="#eef1f8" font-size="12.5" font-weight="700">You / Agency</text>
+        <text x="100" y="518" text-anchor="middle" fill="#9aa4bd" font-size="10">super-admin</text></g>
+      <!-- app.html -->
+      <g><rect x="260" y="40" width="160" height="64" rx="12" fill="#1d2340" stroke="#d4af37" stroke-width="1.5"/>
+        <text x="340" y="64" text-anchor="middle" font-size="20">📱</text>
+        <text x="340" y="84" text-anchor="middle" fill="#eef1f8" font-size="12.5" font-weight="700">iOS / Android app</text>
+        <text x="340" y="98" text-anchor="middle" fill="#9aa4bd" font-size="10">= app.html</text></g>
+      <!-- Zeeland site -->
+      <g><rect x="260" y="250" width="160" height="64" rx="12" fill="#1d2340" stroke="#e08a3c" stroke-width="1.5"/>
+        <text x="340" y="274" text-anchor="middle" font-size="20">🥐</text>
+        <text x="340" y="294" text-anchor="middle" fill="#eef1f8" font-size="12.5" font-weight="700">Zeeland's own site</text>
+        <text x="340" y="308" text-anchor="middle" fill="#9aa4bd" font-size="10">its own website</text></g>
+      <!-- Chat widget -->
+      <g><rect x="260" y="360" width="160" height="64" rx="12" fill="#1d2340" stroke="#d4af37" stroke-width="1.5"/>
+        <text x="340" y="384" text-anchor="middle" font-size="18">💬</text>
+        <text x="340" y="404" text-anchor="middle" fill="#eef1f8" font-size="12.5" font-weight="700">Chat widget</text>
+        <text x="340" y="418" text-anchor="middle" fill="#9aa4bd" font-size="10">one script tag</text></g>
+      <!-- admin.html -->
+      <g><rect x="260" y="460" width="160" height="64" rx="12" fill="#1d2340" stroke="#5aa7f5" stroke-width="1.5"/>
+        <text x="340" y="484" text-anchor="middle" font-size="18">🛠️</text>
+        <text x="340" y="504" text-anchor="middle" fill="#eef1f8" font-size="12.5" font-weight="700">admin.html</text>
+        <text x="340" y="518" text-anchor="middle" fill="#9aa4bd" font-size="10">agency dashboard</text></g>
+      <!-- Functions -->
+      <g><rect x="520" y="250" width="160" height="64" rx="12" fill="#1d2340" stroke="#46c18a" stroke-width="1.5"/>
+        <text x="600" y="274" text-anchor="middle" font-size="18">⚙️</text>
+        <text x="600" y="294" text-anchor="middle" fill="#eef1f8" font-size="12.5" font-weight="700">Netlify Functions</text>
+        <text x="600" y="308" text-anchor="middle" fill="#9aa4bd" font-size="10">the shared API</text></g>
+      <!-- GS DB -->
+      <g><rect x="760" y="124" width="170" height="64" rx="12" fill="#241f12" stroke="#d4af37" stroke-width="1.8"/>
+        <text x="845" y="148" text-anchor="middle" font-size="18">🗄️</text>
+        <text x="845" y="167" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Global Storefront DB</text>
+        <text x="845" y="181" text-anchor="middle" fill="#d4af37" font-size="10">clients + ALL chat</text></g>
+      <!-- Zeeland DB -->
+      <g><rect x="760" y="392" width="170" height="64" rx="12" fill="#2a2014" stroke="#e08a3c" stroke-width="1.8"/>
+        <text x="845" y="416" text-anchor="middle" font-size="18">🗄️</text>
+        <text x="845" y="435" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Zeeland's OWN DB</text>
+        <text x="845" y="449" text-anchor="middle" fill="#e08a3c" font-size="10">orders + products</text></g>
+    </svg>
+    <p class="cap">Each company has its own database (right, orange). Everything chat/bot-related pools into the one shared Global Storefront database (right, gold).</p>
+  </div>
+</section>
+
+<!-- ============ SECTION 1: THE SURFACES ============ -->
+<section>
+  <div class="sec-head"><div class="sec-num">1</div><h2>The four "front doors"</h2></div>
+  <p class="sec-sub">Every screen in this system is one of these four things. Color tells you who it's for.</p>
+
+  <div class="devices">
+    <!-- iOS app -->
+    <div class="device">
+      <div class="phone-frame">
+        <div class="screen">
+          <div class="topbar">●  Global Storefront</div>
+          <div class="body">
+            <div class="row gold m"></div>
+            <div class="row l"></div><div class="row m"></div><div class="row s"></div>
+            <div class="row l"></div>
+          </div>
+          <div class="navbar"><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        </div>
+      </div>
+      <h4>iOS / Android App</h4>
+      <div class="who"><span class="pill gold">Store owner (admin)</span></div>
+      <div class="native-tag">✓ Push · Haptics · Badge</div>
+      <span class="file">Capacitor → app.html</span>
+    </div>
+
+    <!-- mobile web admin -->
+    <div class="device">
+      <div class="phone-frame">
+        <div class="screen">
+          <div class="topbar">🔒 …netlify.app/app.html</div>
+          <div class="body">
+            <div class="row gold m"></div>
+            <div class="row l"></div><div class="row m"></div><div class="row s"></div>
+            <div class="row l"></div>
+          </div>
+          <div class="navbar"><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        </div>
+      </div>
+      <h4>Admin in mobile web</h4>
+      <div class="who"><span class="pill gold">Store owner (admin)</span></div>
+      <div class="web-tag">✗ No push/haptics (stubbed)</div>
+      <span class="file">app.html (same file)</span>
+    </div>
+
+    <!-- desktop web admin -->
+    <div class="device">
+      <div class="screen" style="height:190px">
+        <div class="topbar">🔒 …netlify.app/admin.html</div>
+        <div class="body">
+          <div class="row gold s"></div>
+          <div class="row l"></div><div class="row l"></div><div class="row m"></div><div class="row l"></div>
+        </div>
+      </div>
+      <h4>Agency dashboard</h4>
+      <div class="who"><span class="pill blue">You / Aaron (super-admin)</span></div>
+      <div class="web-tag">Desktop browser</div>
+      <span class="file">admin.html</span>
+    </div>
+
+    <!-- customer -->
+    <div class="device">
+      <div class="phone-frame">
+        <div class="screen">
+          <div class="topbar">🔒 zeeland-bakery.com</div>
+          <div class="body">
+            <div class="row zee m"></div>
+            <div class="row l"></div><div class="row m"></div><div class="row l"></div>
+            <div style="margin-top:auto;align-self:flex-end;width:26px;height:26px;border-radius:50%;background:var(--zeeland)"></div>
+          </div>
+        </div>
+      </div>
+      <h4>The company's own site</h4>
+      <div class="who"><span class="pill zee">Customer / shopper</span></div>
+      <div class="web-tag">+ chat bubble from GS</div>
+      <span class="file">Zeeland's own site</span>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span><i class="sw" style="background:var(--gold)"></i> Store owner (admin)</span>
+    <span><i class="sw" style="background:var(--blue)"></i> You / agency super-admin</span>
+    <span><i class="sw" style="background:var(--zeeland)"></i> Customer / shopper</span>
+  </div>
+</section>
+
+<!-- ============ SECTION 2: ADMIN — iOS vs web vs mobile web ============ -->
+<section>
+  <div class="sec-head"><div class="sec-num">2</div><h2>iOS app vs. web vs. mobile web — for the admin</h2></div>
+  <p class="sec-sub">This is the part that feels like three things. It's really <b>one thing in three wrappers.</b></p>
+
+  <div class="card" style="margin-bottom:18px">
+    <h3>🧩 It's the exact same <code style="color:var(--gold)">app.html</code> every time</h3>
+    <p>The store-owner's admin app — Home, Inbox, Orders, Analytics, Settings — lives in a single file, <code style="color:var(--gold)">app.html</code>. Nothing about that file changes between platforms. What changes is the <em>shell</em> around it.</p>
+  </div>
+
+  <div class="grid g3">
+    <div class="card" style="border-color:var(--green-soft)">
+      <h3><span class="pill green">Native</span> iOS / Android app</h3>
+      <p>Capacitor wraps <code>app.html</code> in a real native app and points it at the live URL. A second file, <code>native-bridge.js</code>, switches ON the native powers:</p>
+      <ul class="clean">
+        <li>Push notifications (new customer message → buzzes your phone)</li>
+        <li>Haptics (vibration on new message)</li>
+        <li>App-icon badge (unread count)</li>
+        <li>Native status bar / splash screen</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:var(--blue-soft)">
+      <h3><span class="pill blue">Browser</span> Mobile web admin</h3>
+      <p>Open <code>app.html</code> in your phone's browser and you get the <strong>identical</strong> dashboard — same tabs, same data.</p>
+      <ul class="clean">
+        <li><code>native-bridge.js</code> sees it isn't inside the app, so push / haptics / badge become harmless "do-nothing" stubs</li>
+        <li>Everything else works exactly the same</li>
+        <li>This is the fallback when someone hasn't installed the app</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:var(--blue-soft)">
+      <h3><span class="pill blue">Browser</span> Desktop web admin</h3>
+      <p>Same <code>app.html</code> again, just on a bigger screen. The layout is responsive, so it stretches out.</p>
+      <ul class="clean">
+        <li>Good for managing orders at a laptop</li>
+        <li>Still no phone-only features (push/buzz/badge)</li>
+        <li>No separate "desktop build" exists — it's the same page</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="diagram" style="margin-top:18px">
+    <p class="cap" style="margin-top:0;font-weight:600;color:var(--text)">The one branching rule: where does logging in actually send you?</p>
+    <svg viewBox="0 0 720 320" role="img" aria-label="Login decision flowchart">
+      <g fill="none" stroke="#41507e" stroke-width="2">
+        <path d="M180,80 L240,80"/>                          <!-- start -> d1 -->
+        <path d="M360,80 L420,80 L420,55 L470,55"/>          <!-- d1 yes -> app -->
+        <path d="M300,128 L300,180"/>                        <!-- d1 no -> d2 -->
+        <path d="M360,210 L470,210"/>                        <!-- d2 yes -> store site -->
+        <path d="M240,210 L120,210 L120,128"/>              <!-- d2 no -> back to app box (fallback) -->
+      </g>
+
+      <!-- Start -->
+      <rect x="30" y="56" width="150" height="48" rx="10" fill="#1d2340" stroke="#9aa4bd"/>
+      <text x="105" y="78" text-anchor="middle" font-size="13" fill="#eef1f8" font-weight="700">Owner logs in</text>
+      <text x="105" y="94" text-anchor="middle" font-size="10" fill="#9aa4bd">app-login.html</text>
+
+      <!-- Diamond 1 -->
+      <polygon points="300,32 372,80 300,128 228,80" fill="#1d2340" stroke="#d4af37" stroke-width="1.6"/>
+      <text x="300" y="76" text-anchor="middle" font-size="11.5" fill="#eef1f8" font-weight="700">Inside the</text>
+      <text x="300" y="91" text-anchor="middle" font-size="11.5" fill="#eef1f8" font-weight="700">native app?</text>
+
+      <!-- Diamond 2 -->
+      <polygon points="300,162 372,210 300,258 228,210" fill="#1d2340" stroke="#5aa7f5" stroke-width="1.6"/>
+      <text x="300" y="206" text-anchor="middle" font-size="11.5" fill="#eef1f8" font-weight="700">Have a store</text>
+      <text x="300" y="221" text-anchor="middle" font-size="11.5" fill="#eef1f8" font-weight="700">site set?</text>
+
+      <!-- App box (result, top right) -->
+      <rect x="470" y="31" width="220" height="48" rx="10" fill="#152b20" stroke="#46c18a" stroke-width="1.6"/>
+      <text x="580" y="52" text-anchor="middle" font-size="12.5" fill="#eef1f8" font-weight="700">→ Admin dashboard</text>
+      <text x="580" y="69" text-anchor="middle" font-size="11" fill="#46c18a">app.html</text>
+
+      <!-- Store site box (result, bottom right) -->
+      <rect x="470" y="186" width="220" height="48" rx="10" fill="#2a2014" stroke="#e08a3c" stroke-width="1.6"/>
+      <text x="580" y="207" text-anchor="middle" font-size="12.5" fill="#eef1f8" font-weight="700">→ Their own store site</text>
+      <text x="580" y="224" text-anchor="middle" font-size="11" fill="#e08a3c">their ProjectURL</text>
+
+      <!-- branch labels -->
+      <text x="392" y="46" font-size="11" fill="#46c18a" font-weight="700">YES</text>
+      <text x="312" y="155" font-size="11" fill="#9aa4bd" font-weight="700">NO</text>
+      <text x="392" y="202" font-size="11" fill="#e08a3c" font-weight="700">YES</text>
+      <text x="150" y="200" font-size="11" fill="#9aa4bd" font-weight="700">NO → app.html</text>
+    </svg>
+    <p class="cap">The native app is the "manage my store" door. A plain browser login is the "go look at my store" door.</p>
+  </div>
+
+  <div class="card" style="margin-top:18px;border-color:var(--blue-soft)">
+    <h3>🛠️ One more admin surface: the agency dashboard (<code style="color:var(--gold)">admin.html</code>)</h3>
+    <p>Don't confuse this with the owner app. <strong>admin.html</strong> is <em>your</em> control panel (the agency / Aaron). It's where you add clients, fill in each store's <b>Bot Knowledge</b>, and run the <b>Test Bot</b>. Store owners never see it. It's a desktop-web tool, not part of the iOS app.</p>
+  </div>
+</section>
+
+<!-- ============ SECTION 3: CUSTOMER FLOW ============ -->
+<section>
+  <div class="sec-head"><div class="sec-num">3</div><h2>What about the customer (the shopper)?</h2></div>
+  <p class="sec-sub">Your instinct was right: <b>there is no Global Storefront "user version."</b> They go straight to the company.</p>
+
+  <div class="diagram">
+    <p class="cap" style="margin-top:0;font-weight:600;color:var(--text)">A customer question travels left → right (watch the dot)</p>
+    <svg viewBox="0 0 960 210" role="img" aria-label="Chat escalation pipeline">
+      <!-- track -->
+      <path d="M95,80 L865,80" fill="none" stroke="#41507e" stroke-width="3"/>
+      <!-- moving packets -->
+      <circle r="7" fill="#d4af37"><animateMotion dur="5s" repeatCount="indefinite" path="M95,80 L865,80"/></circle>
+      <circle r="7" fill="#e08a3c"><animateMotion dur="5s" begin="2.5s" repeatCount="indefinite" path="M95,80 L865,80"/></circle>
+
+      <!-- stations -->
+      <g>
+        <circle cx="95" cy="80" r="26" fill="#1d2340" stroke="#e08a3c" stroke-width="2"/>
+        <text x="95" y="88" text-anchor="middle" font-size="22">🧑</text>
+        <text x="95" y="135" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Customer asks</text>
+        <text x="95" y="152" text-anchor="middle" fill="#9aa4bd" font-size="10">"gluten-free?"</text>
+      </g>
+      <g>
+        <circle cx="288" cy="80" r="26" fill="#1d2340" stroke="#d4af37" stroke-width="2"/>
+        <text x="288" y="88" text-anchor="middle" font-size="22">🤖</text>
+        <text x="288" y="135" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Bot checks its</text>
+        <text x="288" y="152" text-anchor="middle" fill="#9aa4bd" font-size="10">knowledge base</text>
+      </g>
+      <g>
+        <circle cx="480" cy="80" r="26" fill="#1d2340" stroke="#d4af37" stroke-width="2"/>
+        <text x="480" y="88" text-anchor="middle" font-size="22">↗️</text>
+        <text x="480" y="135" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Can't answer →</text>
+        <text x="480" y="152" text-anchor="middle" fill="#9aa4bd" font-size="10">escalate.js</text>
+      </g>
+      <g>
+        <circle cx="672" cy="80" r="26" fill="#1d2340" stroke="#46c18a" stroke-width="2"/>
+        <text x="672" y="88" text-anchor="middle" font-size="22">🔔</text>
+        <text x="672" y="135" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Push to owner's</text>
+        <text x="672" y="152" text-anchor="middle" fill="#9aa4bd" font-size="10">phone</text>
+      </g>
+      <g>
+        <circle cx="865" cy="80" r="26" fill="#1d2340" stroke="#46c18a" stroke-width="2"/>
+        <text x="865" y="88" text-anchor="middle" font-size="22">✅</text>
+        <text x="865" y="135" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Owner replies →</text>
+        <text x="865" y="152" text-anchor="middle" fill="#9aa4bd" font-size="10">back to customer</text>
+      </g>
+    </svg>
+    <p class="cap">The bot handles the easy 80%. Only the questions it can't answer buzz the owner's phone.</p>
+  </div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card">
+      <h3>📱 Is there a mobile vs. desktop customer version?</h3>
+      <p>No separate versions. The customer just sees <b>the company's website</b>, which is responsive on its own. The chat widget is also responsive — same single widget on phone and desktop. There's no "Global Storefront app" for shoppers to download.</p>
+    </div>
+    <div class="card">
+      <h3>🏪 So where does Global Storefront live, for a customer?</h3>
+      <p>Effectively <b>invisible</b>. It quietly powers the chat bubble and routes messages to the owner. The shopper experiences "Zeeland Bakery," not "Global Storefront." The Global Storefront branded site (<code>index.html</code>) is a <em>sales/login</em> page for owners — customers don't go there.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECTION 4: DATABASE ============ -->
+<section>
+  <div class="sec-head"><div class="sec-num">4</div><h2>The database — is it all one big database?</h2></div>
+  <p class="sec-sub">No. This is the key thing to nail down: it's a <b>split / federated</b> setup. There are <b>two kinds</b> of database.</p>
+
+  <div class="db-wrap">
+    <div class="db gs">
+      <h3>🟡 The Global Storefront base</h3>
+      <div class="baseid">Airtable base: appFruyJCRi9Fj6qX</div>
+      <div class="tbl"><span class="ti"></span> AdminUsers <small>your logins</small></div>
+      <div class="tbl"><span class="ti"></span> Clients <small>the list of every business + which base is theirs</small></div>
+      <div class="tbl"><span class="ti"></span> Conversations <small>chat threads</small></div>
+      <div class="tbl"><span class="ti"></span> Messages <small>every chat message</small></div>
+      <div class="tbl"><span class="ti"></span> BotKnowledgeBase <small>what each bot knows</small></div>
+      <div class="tbl"><span class="ti"></span> BotConversations <small>bot logs / costs</small></div>
+      <div class="tbl"><span class="ti"></span> DeviceTokens <small>push-notification targets</small></div>
+      <div class="tbl"><span class="ti"></span> PageViews <small>traffic tracking</small></div>
+      <div class="db-note">This is the <b>shared hub</b>. It holds the directory of all businesses and <b>everything chat/bot related, for all of them, together.</b></div>
+    </div>
+
+    <div class="db client">
+      <h3>🟠 Zeeland Bakery's <em>own</em> base</h3>
+      <div class="baseid">Airtable base: app08rmSRFifqnt4j</div>
+      <div class="tbl"><span class="ti"></span> Orders <small>their sales</small></div>
+      <div class="tbl"><span class="ti"></span> Products / MenuItems <small>their catalog</small></div>
+      <div class="tbl"><span class="ti"></span> Appointments <small>if a service business</small></div>
+      <div class="db-note">Every client gets <b>their own separate base</b>. Sushi GoGo has a different one, the barbershop another, etc. Their orders &amp; products live <b>only here</b> — not in the Global Storefront base.</div>
+    </div>
+  </div>
+
+  <div class="link-callout">
+    <b style="color:var(--text)">How the two connect:</b> Each row in the Global Storefront <b>Clients</b> table has a <code>BaseID</code> field pointing at that company's own base.
+    When the owner opens the <b>Orders</b> tab, <code>get-tenant-admin.js</code> reads their <code>BaseID</code> and reaches into <em>Zeeland's</em> base to fetch orders. One function, but it routes to the right company's database every time.
+  </div>
+
+  <div class="diagram" style="margin-top:18px">
+    <p class="cap" style="margin-top:0;font-weight:600;color:var(--text)">One app, one API — but every business keeps its own separate database</p>
+    <svg viewBox="0 0 960 340" role="img" aria-label="Multi-tenant fan-out">
+      <!-- wires from router to each tenant DB -->
+      <g fill="none" stroke="#41507e" stroke-width="2">
+        <path d="M470,170 L700,55"/>
+        <path d="M470,170 L700,130"/>
+        <path d="M470,170 L700,205"/>
+        <path d="M470,170 L700,280"/>
+        <path d="M250,170 L310,170"/>
+      </g>
+      <!-- packets fanning out -->
+      <circle r="5.5" fill="#e08a3c"><animateMotion dur="2.4s" repeatCount="indefinite" path="M470,170 L700,55"/></circle>
+      <circle r="5.5" fill="#5aa7f5"><animateMotion dur="2.4s" begin="0.4s" repeatCount="indefinite" path="M470,170 L700,130"/></circle>
+      <circle r="5.5" fill="#e472b8"><animateMotion dur="2.4s" begin="0.8s" repeatCount="indefinite" path="M470,170 L700,205"/></circle>
+      <circle r="5.5" fill="#9aa4bd"><animateMotion dur="2.4s" begin="1.2s" repeatCount="indefinite" path="M470,170 L700,280"/></circle>
+
+      <!-- app node -->
+      <rect x="30" y="140" width="180" height="60" rx="12" fill="#241f12" stroke="#d4af37" stroke-width="1.8"/>
+      <text x="120" y="166" text-anchor="middle" font-size="20">📱</text>
+      <text x="120" y="186" text-anchor="middle" fill="#eef1f8" font-size="12.5" font-weight="700">One app binary</text>
+      <text x="120" y="200" text-anchor="middle" fill="#d4af37" font-size="10">app.html</text>
+
+      <!-- router node -->
+      <rect x="310" y="138" width="160" height="64" rx="12" fill="#152b20" stroke="#46c18a" stroke-width="1.8"/>
+      <text x="390" y="162" text-anchor="middle" font-size="18">⚙️</text>
+      <text x="390" y="181" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">API + BaseID</text>
+      <text x="390" y="195" text-anchor="middle" fill="#46c18a" font-size="10">routes by tenant</text>
+
+      <!-- tenant DBs -->
+      <g><rect x="700" y="28" width="220" height="54" rx="11" fill="#2a2014" stroke="#e08a3c" stroke-width="1.6"/>
+        <text x="724" y="60" font-size="18">🗄️</text>
+        <text x="752" y="50" fill="#eef1f8" font-size="12.5" font-weight="700">Zeeland Bakery DB</text>
+        <text x="752" y="66" fill="#9aa4bd" font-size="10">app08rmSRFifqnt4j</text></g>
+      <g><rect x="700" y="103" width="220" height="54" rx="11" fill="#13233a" stroke="#5aa7f5" stroke-width="1.6"/>
+        <text x="724" y="135" font-size="18">🗄️</text>
+        <text x="752" y="125" fill="#eef1f8" font-size="12.5" font-weight="700">Sushi GoGo DB</text>
+        <text x="752" y="141" fill="#9aa4bd" font-size="10">its own base</text></g>
+      <g><rect x="700" y="178" width="220" height="54" rx="11" fill="#2a1428" stroke="#e472b8" stroke-width="1.6"/>
+        <text x="724" y="210" font-size="18">🗄️</text>
+        <text x="752" y="200" fill="#eef1f8" font-size="12.5" font-weight="700">Barbershop DB</text>
+        <text x="752" y="216" fill="#9aa4bd" font-size="10">its own base</text></g>
+      <g><rect x="700" y="253" width="220" height="54" rx="11" fill="#1d2340" stroke="#9aa4bd" stroke-width="1.4" stroke-dasharray="6 5"/>
+        <text x="724" y="285" font-size="18">➕</text>
+        <text x="752" y="275" fill="#eef1f8" font-size="12.5" font-weight="700">…every new client</text>
+        <text x="752" y="291" fill="#9aa4bd" font-size="10">gets its own base too</text></g>
+    </svg>
+    <p class="cap">Add a client → they get their own database. The app never gets rebuilt; the API just routes to the right one.</p>
+  </div>
+</section>
+
+<!-- ============ SECTION 5: WHERE DOES CUSTOMER DATA GO ============ -->
+<section>
+  <div class="sec-head"><div class="sec-num">5</div><h2>So does Zeeland's customer data end up in the Global Storefront database?</h2></div>
+  <p class="sec-sub">Partly — and this is the subtle bit. It depends on <b>what kind</b> of data.</p>
+
+  <div class="diagram" style="margin-bottom:18px">
+    <p class="cap" style="margin-top:0;font-weight:600;color:var(--text)">Same shopper, two different actions, two different destinations</p>
+    <svg viewBox="0 0 960 320" role="img" aria-label="Customer data journey">
+      <!-- ORDER path (green, top) -->
+      <g fill="none" stroke="#46c18a" stroke-width="2.5" opacity=".55">
+        <path d="M205,160 L205,80 L420,80"/>
+        <path d="M580,80 L760,80"/>
+      </g>
+      <!-- CHAT path (gold, bottom) -->
+      <g fill="none" stroke="#d4af37" stroke-width="2.5" opacity=".55">
+        <path d="M205,160 L205,240 L420,240"/>
+        <path d="M580,240 L760,240"/>
+      </g>
+      <!-- packets -->
+      <circle r="7" fill="#46c18a"><animateMotion dur="3.2s" repeatCount="indefinite" path="M205,160 L205,80 L420,80"/></circle>
+      <circle r="7" fill="#46c18a"><animateMotion dur="2.6s" begin="1.6s" repeatCount="indefinite" path="M580,80 L760,80"/></circle>
+      <circle r="7" fill="#d4af37"><animateMotion dur="3.2s" repeatCount="indefinite" path="M205,160 L205,240 L420,240"/></circle>
+      <circle r="7" fill="#d4af37"><animateMotion dur="2.6s" begin="1.6s" repeatCount="indefinite" path="M580,240 L760,240"/></circle>
+
+      <!-- Customer -->
+      <rect x="40" y="130" width="160" height="60" rx="12" fill="#1d2340" stroke="#e08a3c" stroke-width="1.6"/>
+      <text x="120" y="156" text-anchor="middle" font-size="20">🧑</text>
+      <text x="120" y="176" text-anchor="middle" fill="#eef1f8" font-size="12.5" font-weight="700">Customer</text>
+
+      <!-- order action label -->
+      <text x="300" y="62" text-anchor="middle" fill="#46c18a" font-size="12.5" font-weight="800">places an ORDER 🛒</text>
+      <!-- chat action label -->
+      <text x="300" y="290" text-anchor="middle" fill="#d4af37" font-size="12.5" font-weight="800">sends a CHAT message 💬</text>
+
+      <!-- middle nodes -->
+      <rect x="420" y="55" width="160" height="50" rx="11" fill="#152b20" stroke="#46c18a" stroke-width="1.5"/>
+      <text x="500" y="85" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Zeeland's site</text>
+
+      <rect x="420" y="215" width="160" height="50" rx="11" fill="#241f12" stroke="#d4af37" stroke-width="1.5"/>
+      <text x="500" y="237" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Chat widget</text>
+      <text x="500" y="253" text-anchor="middle" fill="#9aa4bd" font-size="9.5">+ Functions</text>
+
+      <!-- destinations -->
+      <rect x="760" y="50" width="180" height="60" rx="12" fill="#2a2014" stroke="#e08a3c" stroke-width="1.8"/>
+      <text x="785" y="86" font-size="18">🗄️</text>
+      <text x="812" y="76" fill="#eef1f8" font-size="12.5" font-weight="700">Zeeland's OWN DB</text>
+      <text x="812" y="92" fill="#e08a3c" font-size="10">stays private</text>
+
+      <rect x="760" y="210" width="180" height="60" rx="12" fill="#241f12" stroke="#d4af37" stroke-width="1.8"/>
+      <text x="785" y="246" font-size="18">🗄️</text>
+      <text x="812" y="236" fill="#eef1f8" font-size="12.5" font-weight="700">Global Storefront DB</text>
+      <text x="812" y="252" fill="#d4af37" font-size="10">shared hub (tagged)</text>
+    </svg>
+    <p class="cap">An <b style="color:var(--green)">order</b> goes to Zeeland's own database. A <b style="color:var(--gold)">chat message</b> goes to the shared Global Storefront database.</p>
+  </div>
+
+  <div class="split">
+    <div class="card green">
+      <h3><span class="pill green">Stays with Zeeland</span> Business / transaction data</h3>
+      <ul class="clean">
+        <li><b>Orders</b> a customer places → Zeeland's own base</li>
+        <li><b>Products / menu items</b> → Zeeland's own base</li>
+        <li><b>Appointments</b> → Zeeland's own base</li>
+      </ul>
+      <p style="margin-top:12px">This never lands in the Global Storefront database. Global Storefront only <em>reads</em> it on demand to show the owner their numbers.</p>
+    </div>
+    <div class="card gold">
+      <h3><span class="pill gold">Goes to Global Storefront</span> Chat / bot data</h3>
+      <ul class="clean">
+        <li><b>Conversations</b> a shopper has with the bot</li>
+        <li><b>Messages</b>, including the customer's name/email if they give it</li>
+        <li><b>Bot logs</b> of what was asked &amp; answered</li>
+      </ul>
+      <p style="margin-top:12px">All of this is written into the <em>shared</em> Global Storefront base, tagged with a <code>TenantID</code> so each business only sees its own threads.</p>
+    </div>
+  </div>
+
+  <div class="link-callout" style="margin-top:18px">
+    <b style="color:var(--text)">Plain-English summary:</b> A shopper's <b>order</b> goes to Zeeland's database. A shopper's <b>chat message</b> goes to Global Storefront's database. The bot data of every business is pooled in the one shared hub (separated by tenant tag), while the money/inventory data stays private in each business's own base.
+  </div>
+</section>
+
+<!-- ============ SECTION 6: INTEGRATION ============ -->
+<section>
+  <div class="sec-head"><div class="sec-num">6</div><h2>Making the app + each site work together</h2></div>
+  <p class="sec-sub">Good news: the code is wired correctly end-to-end. Whether a <em>specific</em> client connects comes down to <b>one ID lining up</b> and a few config values.</p>
+
+  <div class="diagram">
+    <p class="cap" style="margin-top:0;font-weight:600;color:var(--text)">One identifier threads through everything — the client's record ID</p>
+    <svg viewBox="0 0 960 240" role="img" aria-label="The shared tenant ID threading through the system">
+      <!-- shared wire -->
+      <path d="M40,185 H920" fill="none" stroke="#d4af37" stroke-width="3"/>
+      <!-- stems -->
+      <g stroke="#d4af37" stroke-width="2" opacity=".55">
+        <path d="M95,136 V185"/><path d="M285,136 V185"/><path d="M475,136 V185"/>
+        <path d="M665,136 V185"/><path d="M855,136 V185"/>
+      </g>
+      <!-- travelling pill carrying the ID -->
+      <g>
+        <rect x="-48" y="-13" width="96" height="26" rx="13" fill="#d4af37"/>
+        <text x="0" y="5" text-anchor="middle" font-size="12" font-weight="800" fill="#0d0f1a">recABC123</text>
+        <animateMotion dur="6s" repeatCount="indefinite" path="M40,185 H920"/>
+      </g>
+
+      <!-- nodes -->
+      <g><rect x="15" y="40" width="160" height="96" rx="12" fill="#1d2340" stroke="#e08a3c" stroke-width="1.5"/>
+        <text x="95" y="74" text-anchor="middle" font-size="20">🌐</text>
+        <text x="95" y="98" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">On the client site</text>
+        <text x="95" y="120" text-anchor="middle" fill="#d4af37" font-size="11" font-family="ui-monospace,monospace">data-tenant</text></g>
+      <g><rect x="205" y="40" width="160" height="96" rx="12" fill="#1d2340" stroke="#46c18a" stroke-width="1.5"/>
+        <text x="285" y="74" text-anchor="middle" font-size="20">⚙️</text>
+        <text x="285" y="98" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Bot &amp; escalate</text>
+        <text x="285" y="120" text-anchor="middle" fill="#d4af37" font-size="11" font-family="ui-monospace,monospace">tenantId</text></g>
+      <g><rect x="395" y="40" width="160" height="96" rx="12" fill="#1d2340" stroke="#d4af37" stroke-width="1.5"/>
+        <text x="475" y="74" text-anchor="middle" font-size="20">🗄️</text>
+        <text x="475" y="98" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Conversation row</text>
+        <text x="475" y="120" text-anchor="middle" fill="#d4af37" font-size="11" font-family="ui-monospace,monospace">TenantID</text></g>
+      <g><rect x="585" y="40" width="160" height="96" rx="12" fill="#1d2340" stroke="#d4af37" stroke-width="1.5"/>
+        <text x="665" y="74" text-anchor="middle" font-size="20">📱</text>
+        <text x="665" y="98" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">App login (JWT)</text>
+        <text x="665" y="120" text-anchor="middle" fill="#d4af37" font-size="11" font-family="ui-monospace,monospace">userId</text></g>
+      <g><rect x="775" y="40" width="160" height="96" rx="12" fill="#1d2340" stroke="#46c18a" stroke-width="1.5"/>
+        <text x="855" y="74" text-anchor="middle" font-size="20">🔔</text>
+        <text x="855" y="98" text-anchor="middle" fill="#eef1f8" font-size="12" font-weight="700">Push token</text>
+        <text x="855" y="120" text-anchor="middle" fill="#d4af37" font-size="11" font-family="ui-monospace,monospace">ClientID</text></g>
+    </svg>
+    <p class="cap">All five are the <b>same</b> client record ID. You only ever set the first one by hand (<code>data-tenant</code>) — the code fills in the rest.</p>
+  </div>
+
+  <div class="grid g2" style="margin-top:18px">
+    <div class="card" style="border-color:var(--zeeland-soft)">
+      <h3>✅ Per client — set these when onboarding</h3>
+      <ul class="clean">
+        <li><b>Widget <code>data-tenant</code></b> = that client's Airtable <em>Clients</em> record ID (the single most important match)</li>
+        <li><b>Widget <code>src</code></b> points at the Global Storefront deployment (never self-hosted on the client domain)</li>
+        <li><b><code>Clients.BaseID</code></b> filled in → or the Orders/Products tabs come back empty</li>
+        <li><b><code>Clients.SiteType</code></b> set (product / restaurant / service) → controls which tables the app reads</li>
+        <li><b>KB rows</b> in <code>BotKnowledgeBase</code> tagged with the same record ID</li>
+        <li><b>Their own base</b> uses the expected tables/fields: <code>Orders</code>(OrderDate, Status, Total), <code>Products</code>/<code>MenuItems</code>, <code>Appointments</code>(Date)</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color:var(--blue-soft)">
+      <h3>🔑 Platform — set once</h3>
+      <ul class="clean">
+        <li><b><code>AIRTABLE_API_KEY</code></b> — must have access to the GS base <em>and every client base</em></li>
+        <li><b><code>OPENAI_API_KEY</code></b> — powers the helper bot</li>
+        <li><b><code>FIREBASE_SERVICE_ACCOUNT</code></b> — the JSON the push code actually uses <span class="pill pink">docs say SERVER_KEY ⚠</span></li>
+        <li><b><code>JWT_SECRET</code></b> — signs owner login tokens</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="link-callout" style="margin-top:18px;text-align:left">
+    <b style="color:var(--text)">⚠️ Watch-outs I found in the code (won't crash — they fail <em>quietly</em>):</b>
+    <ul class="clean" style="margin-top:10px">
+      <li>If <code>FIREBASE_SERVICE_ACCOUNT</code> is missing, escalations are still saved but the owner gets <b>no push</b> — they only see the message next time they open the app</li>
+      <li>If a new client's base isn't shared with the Airtable token, their <b>Orders tab is just empty</b> (no error shown)</li>
+      <li>If <code>data-tenant</code> is wrong/missing, the bot returns "tenant not found" and <b>nothing escalates</b></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ SECTION 7: Q&A ============ -->
+<section>
+  <div class="sec-head"><div class="sec-num">7</div><h2>Your exact questions, answered</h2></div>
+  <div class="qa">
+    <details open>
+      <summary>What's the difference between the iOS app and the web / mobile web version for admins?</summary>
+      <div class="ans">Almost none in terms of <strong>screens</strong> — they all run the same <code>app.html</code>. The difference is <strong>powers</strong>: the iOS/Android app adds push notifications, vibration, and an unread badge via the native shell. The web and mobile-web versions are the same dashboard minus those phone-only features.</div>
+    </details>
+    <details>
+      <summary>Is there a user (customer) version of the site, or do they go straight to the company?</summary>
+      <div class="ans">They go <strong>straight to the company</strong> (e.g. Zeeland Bakery's own website). There is no Global Storefront customer app or customer login. Global Storefront's only presence for a shopper is the chat bubble injected onto the company's site.</div>
+    </details>
+    <details>
+      <summary>Is there a separate mobile-web vs. regular-web version for customers?</summary>
+      <div class="ans">No. The company's website is responsive by itself, and the chat widget is responsive too. Same single experience whether on a phone or a laptop.</div>
+    </details>
+    <details>
+      <summary>Is all the data in one database for Global Storefront, regardless of the business?</summary>
+      <div class="ans">No. The Global Storefront base holds the <strong>client directory + all chat/bot data</strong> for everyone. But each business has its <strong>own separate database</strong> for its orders, products, and appointments. Two layers, linked by a <code>BaseID</code>.</div>
+    </details>
+    <details>
+      <summary>Does user data for other companies (e.g. Zeeland) go to the Global Storefront database?</summary>
+      <div class="ans"><strong>Chat data does; business data doesn't.</strong> When a shopper talks to the bot, that conversation (and any name/email they share) is stored in the Global Storefront base. But when that same shopper places an <em>order</em>, it goes into Zeeland's own base — Global Storefront never stores it.</div>
+    </details>
+  </div>
+</section>
+
+<div class="footer">
+  Built from the actual files in this repo — <code>app.html</code>, <code>admin.html</code>, <code>native-bridge.js</code>, <code>app-login.html</code>, <code>widget/helper-bot.js</code>, <code>netlify/functions/*</code>, and <code>AIRTABLE_SCHEMA.md</code>.<br>
+  Global Storefront · architecture overview · generated 2026-06-14
+</div>
+
+</div>
+</body>
+</html>
