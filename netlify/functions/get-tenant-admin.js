@@ -1,6 +1,7 @@
 const Airtable = require('airtable');
 const jwt = require('jsonwebtoken');
 const { tierIncludes, normalizeTier } = require('./lib/tiers');
+const { can, capsFromToken, resolveCapabilities } = require('./lib/capabilities');
 
 const headers = {
     'Access-Control-Allow-Origin': '*',
@@ -150,7 +151,8 @@ exports.handler = async (event) => {
 
             case 'analytics': {
                 const tier = normalizeTier(decoded.tier);
-                const advanced = tierIncludes(tier, 'advanced_analytics');
+                const caps = capsFromToken(decoded);
+                const advanced = can(caps, 'advanced_analytics');
 
                 const analytics = {
                     tier,

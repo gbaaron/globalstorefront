@@ -1,5 +1,6 @@
 const Airtable = require('airtable');
 const { tierIncludes, normalizeTier } = require('./lib/tiers');
+const { can, capsFromToken, resolveCapabilities } = require('./lib/capabilities');
 
 // Scheduled (weekly) — see netlify.toml [functions."generate-social"] schedule.
 // For each Concierge client (tier includes 'social_posts'), emit a small batch of
@@ -91,7 +92,8 @@ async function runGenerate() {
 
     for (const client of clients) {
         const tier = normalizeTier(client.get('Tier'));
-        if (!tierIncludes(tier, 'social_posts')) { skipped++; continue; }
+        const caps = resolveCapabilities(client);
+        if (!can(caps, 'social_posts')) { skipped++; continue; }
 
         const company = client.get('Company') || client.get('Name') || '';
 

@@ -1,6 +1,7 @@
 const Airtable = require('airtable');
 const jwt = require('jsonwebtoken');
 const { tierIncludes, normalizeTier } = require('./lib/tiers');
+const { can, capsFromToken, resolveCapabilities } = require('./lib/capabilities');
 const { buildReportPDF } = require('./lib/report-pdf');
 
 // Client-facing reports endpoint for the owner app.
@@ -43,7 +44,8 @@ exports.handler = async (event) => {
     }
 
     const tier = normalizeTier(decoded.tier);
-    if (!tierIncludes(tier, 'monthly_reports')) {
+    const caps = capsFromToken(decoded);
+    if (!can(caps, 'monthly_reports')) {
         return {
             statusCode: 200,
             headers,

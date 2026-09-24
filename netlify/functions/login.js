@@ -1,104 +1,111 @@
-const Airtable = require('airtable');
 const jwt = require('jsonwebtoken');
+const T = require('./lib/tenants');
+const { resolveCapabilities, describeTenant } = require('./lib/capabilities');
+const { checkPassword, shouldMigrate, hashPassword } = require('./lib/password');
 
-const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Content-Type': 'application/json'
-};
+/**
+ * POST /api/login — tenant (business owner) login.
+ *
+ * Issues a token carrying the tenant's RESOLVED CAPABILITIES, not just a tier.
+ * Every downstream gate reads `caps` off the token, so no function needs a
+ * second fetch to know what this business may do.
+ *
+ * Accepts either a username or an email address.
+ */
 
 exports.handler = async (event) => {
-    if (event.httpMethod === 'OPTIONS') {
-        return { statusCode: 200, headers, body: '' };
-    }
-    if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
-    }
+    const guard = T.guardMethod(event, ['POST']);
+    if (guard) return guard;
 
     try {
-        const { username, password } = JSON.parse(event.body);
+        const { username, password } = T.parseBody(event);
 
         if (!username || !password) {
-            return {
-                statusCode: 400,
-                headers,
-                body: JSON.stringify({ error: 'Username and password are required' })
-            };
+            return T.bad('Username and password are required', 'POST');
         }
 
-        const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+        const base = T.getBase();
 
-        // Accept either a username or email address
-        const isEmail = username.includes('@');
-        const sanitized = username.replace(/'/g, "\\'");
+        // Accept either a username or an email address.
+        const isEmail = String(username).includes('@');
         const filterFormula = isEmail
-            ? `{Email} = '${sanitized.toLowerCase()}'`
-            : `{Username} = '${sanitized}'`;
+            ? `LOWER({Email}) = '${T.esc(String(username).toLowerCase())}'`
+            : `{Username} = '${T.esc(username)}'`;
 
-        const records = await base('Clients').select({
+        const records = await base(T.TABLES.TENANTS).select({
             filterByFormula: filterFormula,
             maxRecords: 1
         }).firstPage();
 
         if (records.length === 0) {
-            return {
-                statusCode: 401,
-                headers,
-                body: JSON.stringify({ error: 'Invalid username or password' })
-            };
+            return T.json(401, { error: 'Invalid username or password' }, 'POST');
         }
 
-        const client = records[0];
+        const record = records[0];
+        const stored = record.get('Password') || record.get('PasswordHash') || '';
 
-        const stored = client.get('Password') || client.get('PasswordHash') || '';
-        if (password !== stored) {
-            return {
-                statusCode: 401,
-                headers,
-                body: JSON.stringify({ error: 'Invalid username or password' })
-            };
+        const valid = await checkPassword(password, stored);
+        if (!valid) {
+            return T.json(401, { error: 'Invalid username or password' }, 'POST');
         }
 
-        const tier = client.get('Tier') || 'Essentials';
-        const billingCycle = client.get('BillingCycle') || 'annual';
-        const baseId = client.get('BaseID') || '';
+        // Upgrade a plain-text row to a digest ONLY once HASH_PASSWORDS is on.
+        if (shouldMigrate(stored)) {
+            try {
+                await base(T.TABLES.TENANTS).update(record.id, {
+                    PasswordHash: await hashPassword(password)
+                }, { typecast: true });
+            } catch (e) {
+                console.error('Password migration failed (non-blocking):', e.message);
+            }
+        }
+
+        const tenant = T.hydrateTenant(record);
+        const described = describeTenant(record);
 
         const token = jwt.sign(
             {
-                userId: client.id,
-                email: client.get('Email'),
+                userId: record.id,
+                email: tenant.email,
                 role: 'client',
-                tier,
-                billingCycle,
-                baseId
+                tier: tenant.tier,
+                billingCycle: tenant.billingCycle,
+                baseId: tenant.baseId,
+                // the reframe — resolved once, read everywhere
+                caps: tenant.caps,
+                regionId: tenant.regionId,
+                subStatus: tenant.subStatus
             },
-            process.env.JWT_SECRET || 'globalstorefront-secret-change-in-production',
+            T.JWT_SECRET(),
             { expiresIn: '7d' }
         );
 
-        return {
-            statusCode: 200,
-            headers,
-            body: JSON.stringify({
-                token,
-                name: client.get('Name'),
-                company: client.get('Company'),
-                projectUrl: client.get('ProjectURL'),
-                username: client.get('Username') || '',
-                tier,
-                billingCycle,
-                subStatus: client.get('SubStatus') || 'active',
-                baseId
-            })
-        };
+        try {
+            await base(T.TABLES.TENANTS).update(record.id, { LastLogin: T.nowISO() }, { typecast: true });
+        } catch (e) { /* LastLogin is optional — never block a login on it */ }
+
+        return T.ok({
+            token,
+            name: tenant.name,
+            company: tenant.company,
+            projectUrl: tenant.projectUrl,
+            username: tenant.username,
+            slug: tenant.slug,
+            tier: tenant.tier,
+            billingCycle: tenant.billingCycle,
+            subStatus: tenant.subStatus,
+            baseId: tenant.baseId,
+            // What this business owns and where it is listed — drives the
+            // dashboard shell without a second round trip.
+            caps: tenant.caps,
+            regionId: tenant.regionId,
+            surfaces: described.surfaces,
+            directoryStatus: described.directoryStatus,
+            paymentChannel: described.paymentChannel,
+            monetizationMode: described.monetizationMode
+        }, 'POST');
 
     } catch (error) {
-        console.error('Login error:', error);
-        return {
-            statusCode: 500,
-            headers,
-            body: JSON.stringify({ error: 'Server error. Please try again.' })
-        };
+        return T.serverError(error, 'POST');
     }
 };

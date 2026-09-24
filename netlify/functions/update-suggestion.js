@@ -1,6 +1,7 @@
 const Airtable = require('airtable');
 const jwt = require('jsonwebtoken');
 const { tierIncludes, normalizeTier, round2 } = require('./lib/tiers');
+const { can, capsFromToken, resolveCapabilities } = require('./lib/capabilities');
 
 // Client-facing Smart Suggestions action endpoint for the owner app.
 //   POST /api/update-suggestion  { id, action }
@@ -131,7 +132,8 @@ exports.handler = async (event) => {
     }
 
     const tier = normalizeTier(decoded.tier);
-    if (!tierIncludes(tier, 'smart_suggestions')) {
+    const caps = capsFromToken(decoded);
+    if (!can(caps, 'smart_suggestions')) {
         return { statusCode: 403, headers, body: JSON.stringify({ error: 'Smart Suggestions are a Growth feature.' }) };
     }
 

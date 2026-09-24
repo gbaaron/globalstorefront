@@ -1,6 +1,7 @@
 const Airtable = require('airtable');
 const jwt = require('jsonwebtoken');
 const { tierIncludes, normalizeTier } = require('./lib/tiers');
+const { can, capsFromToken, resolveCapabilities } = require('./lib/capabilities');
 
 // Client-facing Smart Suggestions list for the owner app.
 //   GET /api/get-suggestions             → this client's suggestions (newest first)
@@ -50,7 +51,8 @@ exports.handler = async (event) => {
     }
 
     const tier = normalizeTier(decoded.tier);
-    if (!tierIncludes(tier, 'smart_suggestions')) {
+    const caps = capsFromToken(decoded);
+    if (!can(caps, 'smart_suggestions')) {
         return {
             statusCode: 200,
             headers,

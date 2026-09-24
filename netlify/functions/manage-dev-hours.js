@@ -1,6 +1,7 @@
 const Airtable = require('airtable');
 const jwt = require('jsonwebtoken');
 const { tierIncludes, normalizeTier, round2, DEV_HOUR_OVERAGE_RATE } = require('./lib/tiers');
+const { can, capsFromToken, resolveCapabilities } = require('./lib/capabilities');
 
 // Client-facing dev-hours tracker for the owner app.
 //
@@ -75,7 +76,8 @@ exports.handler = async (event) => {
     }
 
     const tier = normalizeTier(decoded.tier);
-    if (!tierIncludes(tier, 'dev_hours')) {
+    const caps = capsFromToken(decoded);
+    if (!can(caps, 'dev_hours')) {
         if (event.httpMethod === 'GET') {
             return {
                 statusCode: 200,

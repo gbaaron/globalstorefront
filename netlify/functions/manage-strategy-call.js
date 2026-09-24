@@ -1,6 +1,7 @@
 const Airtable = require('airtable');
 const jwt = require('jsonwebtoken');
 const { tierIncludes, normalizeTier } = require('./lib/tiers');
+const { can, capsFromToken, resolveCapabilities } = require('./lib/capabilities');
 
 // Client-facing quarterly strategy-call management for the owner app.
 //
@@ -63,7 +64,8 @@ exports.handler = async (event) => {
     }
 
     const tier = normalizeTier(decoded.tier);
-    if (!tierIncludes(tier, 'strategy_calls')) {
+    const caps = capsFromToken(decoded);
+    if (!can(caps, 'strategy_calls')) {
         if (event.httpMethod === 'GET') {
             return {
                 statusCode: 200,

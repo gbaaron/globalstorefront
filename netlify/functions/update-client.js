@@ -1,109 +1,160 @@
-const Airtable = require('airtable');
-const jwt = require('jsonwebtoken');
+const T = require('./lib/tenants');
 const { normalizeTier, normalizeCycle } = require('./lib/tiers');
+const C = require('./lib/capabilities');
+const { hashPassword } = require('./lib/password');
+
+/**
+ * POST /api/update-client — Aaron edits a TENANT (admin only).
+ *
+ * This is where the two axes are actually operated: toggle a tenant into a
+ * directory, hand them an app, switch their payment channel, or grant/revoke a
+ * single capability by hand — without touching their tier.
+ *
+ * Returns the freshly resolved capability set so the admin grid can re-render
+ * from the response rather than refetching.
+ */
 
 exports.handler = async (event) => {
-    if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, body: 'Method Not Allowed' };
-    }
+    const guard = T.guardMethod(event, ['POST']);
+    if (guard) return guard;
+
+    const admin = T.adminContext(event);
+    if (!admin) return T.forbidden('Admin access required', 'POST');
 
     try {
-        const token = event.headers.authorization?.replace('Bearer ', '');
+        const body = T.parseBody(event);
+        const {
+            clientId, name, email, username, password, company, projectUrl, baseId,
+            tier, billingCycle, subStatus,
+            // axes
+            regionId, hasWebsite, websiteMode, hasApp, directoryStatus,
+            paymentChannel, monetizationMode, posSystem,
+            // capability overrides
+            capabilities, grant, revoke,
+            // directory presentation
+            slug, address, phone, websiteUrl, tagline, brandColor, logoUrl,
+            siteType, botPersona, botVoice, pushEnabled
+        } = body;
 
-        if (!token) {
-            return {
-                statusCode: 401,
-                body: JSON.stringify({ error: 'No authorization token' })
-            };
-        }
+        if (!clientId) return T.bad('Client ID is required', 'POST');
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'globalstorefront-secret-change-in-production');
-
-        if (decoded.role !== 'admin') {
-            return {
-                statusCode: 403,
-                body: JSON.stringify({ error: 'Admin access required' })
-            };
-        }
-
-        const { clientId, name, email, username, password, company, projectUrl, tier, billingCycle } = JSON.parse(event.body);
-
-        if (!clientId) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({ error: 'Client ID is required' })
-            };
-        }
-
-        const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
-
+        const base = T.getBase();
         const fields = {};
-        if (name) fields.Name = name.trim();
-        if (username) fields.Username = username.trim();
-        if (email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                return {
-                    statusCode: 400,
-                    body: JSON.stringify({ error: 'Invalid email format' })
-                };
-            }
 
-            const existing = await base('Clients').select({
-                filterByFormula: `AND({Email} = '${email.replace(/'/g, "\\'")}', RECORD_ID() != '${clientId}')`,
+        // --- identity ---------------------------------------------------
+        if (name) fields.Name = String(name).trim();
+        if (username) fields.Username = String(username).trim();
+        if (email) {
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                return T.bad('Invalid email format', 'POST');
+            }
+            const existing = await base(T.TABLES.TENANTS).select({
+                filterByFormula: `AND(LOWER({Email}) = '${T.esc(String(email).toLowerCase())}', RECORD_ID() != '${T.esc(clientId)}')`,
                 maxRecords: 1
             }).firstPage();
-
-            if (existing.length > 0) {
-                return {
-                    statusCode: 400,
-                    body: JSON.stringify({ error: 'A client with this email already exists' })
-                };
-            }
-
-            fields.Email = email.trim().toLowerCase();
+            if (existing.length > 0) return T.bad('A client with this email already exists', 'POST');
+            fields.Email = String(email).trim().toLowerCase();
         }
         if (password) {
-            if (password.length < 6) {
-                return {
-                    statusCode: 400,
-                    body: JSON.stringify({ error: 'Password must be at least 6 characters' })
-                };
-            }
-            fields.Password = password;
+            if (String(password).length < 6) return T.bad('Password must be at least 6 characters', 'POST');
+            fields.Password = await hashPassword(password);
         }
-        if (company !== undefined) fields.Company = company.trim();
-        if (projectUrl) fields.ProjectURL = projectUrl.trim();
+
+        // --- presentation -------------------------------------------------
+        if (company !== undefined) fields.Company = String(company).trim();
+        if (projectUrl !== undefined) fields.ProjectURL = String(projectUrl).trim();
+        if (baseId !== undefined) fields.BaseID = String(baseId).trim();
+        if (slug !== undefined) fields.Slug = T.slugify(slug);
+        if (address !== undefined) fields.Address = String(address).trim();
+        if (phone !== undefined) fields.Phone = String(phone).trim();
+        if (websiteUrl !== undefined) fields.WebsiteURL = String(websiteUrl).trim();
+        if (tagline !== undefined) fields.Tagline = String(tagline).trim();
+        if (brandColor !== undefined) fields.BrandColor = String(brandColor).trim();
+        if (logoUrl !== undefined) fields.LogoURL = String(logoUrl).trim();
+        if (siteType !== undefined) fields.SiteType = String(siteType).trim();
+        if (botPersona !== undefined) fields.BotPersona = String(botPersona).trim();
+        if (botVoice !== undefined) fields.BotVoice = String(botVoice).trim();
+        if (pushEnabled !== undefined) fields.PushEnabled = C.toBool(pushEnabled);
+
+        // --- billing preset -------------------------------------------------
         if (tier) fields.Tier = normalizeTier(tier);
         if (billingCycle) fields.BillingCycle = normalizeCycle(billingCycle);
+        if (subStatus) fields.SubStatus = String(subStatus).trim();
 
-        if (Object.keys(fields).length === 0) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({ error: 'No fields to update' })
-            };
+        // --- Axis 1: surfaces -------------------------------------------------
+        if (hasWebsite !== undefined) fields.HasWebsite = C.toBool(hasWebsite);
+        if (websiteMode !== undefined) fields.WebsiteMode = C.normalizeWebsiteMode(websiteMode);
+        if (hasApp !== undefined) fields.HasApp = C.toBool(hasApp);
+
+        // --- Axis 2: distribution ---------------------------------------------
+        if (directoryStatus !== undefined) fields.DirectoryStatus = C.normalizeDirectoryStatus(directoryStatus);
+        if (regionId !== undefined) fields.RegionID = regionId ? String(regionId).trim() : '';
+
+        // --- payment ----------------------------------------------------------
+        if (paymentChannel !== undefined) fields.PaymentChannel = C.normalizePaymentChannel(paymentChannel);
+        if (monetizationMode !== undefined) fields.MonetizationMode = C.normalizeMonetizationMode(monetizationMode);
+        if (posSystem !== undefined) fields.POSSystem = String(posSystem).trim();
+
+        // --- capability overrides ---------------------------------------------
+        // `capabilities` replaces the override list wholesale; `grant`/`revoke`
+        // edit it incrementally so the admin UI can flip one switch at a time.
+        if (capabilities !== undefined) {
+            fields.Capabilities = Array.isArray(capabilities) ? JSON.stringify(capabilities) : String(capabilities || '');
+        } else if (grant || revoke) {
+            let current;
+            try {
+                current = await base(T.TABLES.TENANTS).find(clientId);
+            } catch (e) {
+                return T.notFound('Client not found', 'POST');
+            }
+            const { grants, revokes } = C.parseOverrides(current.get('Capabilities'));
+            const g = new Set(grants);
+            const r = new Set(revokes);
+
+            for (const cap of toArray(grant)) { g.add(cap); r.delete(cap); }
+            for (const cap of toArray(revoke)) { r.add(cap); g.delete(cap); }
+
+            const merged = Array.from(g).concat(Array.from(r).map(c => `-${c}`));
+            fields.Capabilities = JSON.stringify(merged);
         }
 
-        await base('Clients').update([
-            { id: clientId, fields }
-        ]);
+        if (Object.keys(fields).length === 0) {
+            return T.bad('No fields to update', 'POST');
+        }
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ success: true })
-        };
+        const updated = await base(T.TABLES.TENANTS).update(
+            [{ id: clientId, fields }],
+            { typecast: true }
+        );
+        const tenant = T.hydrateTenant(updated[0]);
+
+        return T.ok({
+            success: true,
+            client: {
+                id: tenant.id,
+                name: tenant.name,
+                company: tenant.company,
+                email: tenant.email,
+                slug: tenant.slug,
+                tier: tenant.tier,
+                regionId: tenant.regionId,
+                surfaces: tenant.surfaces,
+                directoryStatus: tenant.directoryStatus,
+                paymentChannel: tenant.paymentChannel,
+                monetizationMode: tenant.monetizationMode,
+                caps: tenant.caps
+            }
+        }, 'POST');
 
     } catch (error) {
         if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-            return {
-                statusCode: 401,
-                body: JSON.stringify({ error: 'Invalid or expired token' })
-            };
+            return T.json(401, { error: 'Invalid or expired token' }, 'POST');
         }
-        console.error('Update client error:', error);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to update client' })
-        };
+        return T.serverError(error, 'POST');
     }
 };
+
+function toArray(v) {
+    if (!v) return [];
+    return (Array.isArray(v) ? v : [v]).map(x => String(x).trim()).filter(Boolean);
+}

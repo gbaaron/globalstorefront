@@ -1,145 +1,154 @@
-const Airtable = require('airtable');
-const jwt = require('jsonwebtoken');
+const T = require('./lib/tenants');
 const { normalizeTier, normalizeCycle } = require('./lib/tiers');
+const C = require('./lib/capabilities');
+const { hashPassword } = require('./lib/password');
+
+/**
+ * POST /api/create-client — Aaron creates a new TENANT (admin only).
+ *
+ * A tenant is seeded from a tier PRESET, then free to diverge on either axis.
+ * The caller may override any axis field directly, so "Essentials business with
+ * paid directory space and no website" is a first-class thing to create.
+ */
 
 exports.handler = async (event) => {
-    if (event.httpMethod !== 'POST') {
-        return { statusCode: 405, body: 'Method Not Allowed' };
-    }
+    const guard = T.guardMethod(event, ['POST']);
+    if (guard) return guard;
+
+    const admin = T.adminContext(event);
+    if (!admin) return T.forbidden('Admin access required', 'POST');
 
     try {
-        const token = event.headers.authorization?.replace('Bearer ', '');
+        const body = T.parseBody(event);
+        const {
+            name, email, username, password, company, projectUrl, baseId,
+            tier, billingCycle,
+            // axis overrides
+            regionId, hasWebsite, websiteMode, hasApp, directoryStatus,
+            paymentChannel, monetizationMode, posSystem, capabilities,
+            // directory presentation
+            slug, address, phone, websiteUrl, tagline, brandColor, logoUrl
+        } = body;
 
-        if (!token) {
-            return {
-                statusCode: 401,
-                body: JSON.stringify({ error: 'No authorization token' })
-            };
+        if (!name || !email || !username || !password) {
+            return T.bad('Name, email, username and password are required', 'POST');
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            return T.bad('Invalid email format', 'POST');
+        }
+        if (String(password).length < 6) {
+            return T.bad('Password must be at least 6 characters', 'POST');
         }
 
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'globalstorefront-secret-change-in-production');
+        const base = T.getBase();
 
-        if (decoded.role !== 'admin') {
-            return {
-                statusCode: 403,
-                body: JSON.stringify({ error: 'Admin access required' })
-            };
-        }
-
-        const { name, email, username, password, company, projectUrl, baseId, tier, billingCycle } = JSON.parse(event.body);
-
-        if (!name || !email || !username || !password || !projectUrl) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({ error: 'Name, email, username, password, and project URL are required' })
-            };
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({ error: 'Invalid email format' })
-            };
-        }
-
-        if (password.length < 6) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({ error: 'Password must be at least 6 characters' })
-            };
-        }
-
-        const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
-
-        const existing = await base('Clients').select({
-            filterByFormula: `{Email} = '${email.replace(/'/g, "\\'")}'`,
+        const existing = await base(T.TABLES.TENANTS).select({
+            filterByFormula: `LOWER({Email}) = '${T.esc(String(email).toLowerCase())}'`,
             maxRecords: 1
         }).firstPage();
-
         if (existing.length > 0) {
-            return {
-                statusCode: 400,
-                body: JSON.stringify({ error: 'A client with this email already exists' })
-            };
+            return T.bad('A client with this email already exists', 'POST');
         }
 
         const resolvedTier = normalizeTier(tier);
         const resolvedCycle = normalizeCycle(billingCycle);
         const now = new Date();
         const nextBilling = new Date(now);
-        if (resolvedCycle === 'annual') {
-            nextBilling.setFullYear(nextBilling.getFullYear() + 1);
-        } else {
-            nextBilling.setMonth(nextBilling.getMonth() + 1);
-        }
+        if (resolvedCycle === 'annual') nextBilling.setFullYear(nextBilling.getFullYear() + 1);
+        else nextBilling.setMonth(nextBilling.getMonth() + 1);
 
-        const fields = {
-            Name: name.trim(),
-            Email: email.trim().toLowerCase(),
-            Username: username.trim(),
-            Password: password,
-            Company: company ? company.trim() : '',
-            ProjectURL: projectUrl.trim(),
+        // Seed the axes from the tier preset, then apply any explicit overrides.
+        const preset = C.presetForTier(resolvedTier);
+        const axes = {
+            HasWebsite: hasWebsite !== undefined ? C.toBool(hasWebsite) : preset.HasWebsite,
+            WebsiteMode: websiteMode !== undefined ? C.normalizeWebsiteMode(websiteMode) : preset.WebsiteMode,
+            HasApp: hasApp !== undefined ? C.toBool(hasApp) : preset.HasApp,
+            DirectoryStatus: directoryStatus !== undefined ? C.normalizeDirectoryStatus(directoryStatus) : preset.DirectoryStatus,
+            PaymentChannel: paymentChannel !== undefined ? C.normalizePaymentChannel(paymentChannel) : preset.PaymentChannel,
+            MonetizationMode: monetizationMode !== undefined ? C.normalizeMonetizationMode(monetizationMode) : preset.MonetizationMode
+        };
+
+        const resolvedSlug = T.slugify(slug || company || name);
+
+        const fields = Object.assign({
+            Name: String(name).trim(),
+            Email: String(email).trim().toLowerCase(),
+            Username: String(username).trim(),
+            Password: await hashPassword(password),
+            Company: company ? String(company).trim() : '',
+            ProjectURL: projectUrl ? String(projectUrl).trim() : '',
+            Slug: resolvedSlug,
             CreatedAt: now.toISOString(),
             Tier: resolvedTier,
             BillingCycle: resolvedCycle,
             SubStatus: 'active',
             SubStartDate: now.toISOString().split('T')[0],
             NextBillingDate: nextBilling.toISOString().split('T')[0]
-        };
-        if (baseId) fields.BaseID = baseId.trim();
+        }, axes);
 
-        const newRecord = await base('Clients').create([{ fields }]);
+        if (baseId) fields.BaseID = String(baseId).trim();
+        if (regionId) fields.RegionID = String(regionId).trim();
+        if (posSystem) fields.POSSystem = String(posSystem).trim();
+        if (address) fields.Address = String(address).trim();
+        if (phone) fields.Phone = String(phone).trim();
+        if (websiteUrl) fields.WebsiteURL = String(websiteUrl).trim();
+        if (tagline) fields.Tagline = String(tagline).trim();
+        if (brandColor) fields.BrandColor = String(brandColor).trim();
+        if (logoUrl) fields.LogoURL = String(logoUrl).trim();
+        if (capabilities) {
+            fields.Capabilities = Array.isArray(capabilities)
+                ? JSON.stringify(capabilities)
+                : String(capabilities);
+        }
 
-        // Sync admin user to the client's own Airtable base (non-blocking)
+        const created = await base(T.TABLES.TENANTS).create([{ fields }], { typecast: true });
+        const tenant = T.hydrateTenant(created[0]);
+
+        // Credential sync into the tenant's own base, if they have one.
+        // Non-blocking: a PAT without access to their base must not fail signup.
         if (baseId) {
             try {
-                const clientBase = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(baseId.trim());
+                const clientBase = T.getBase(String(baseId).trim());
                 await clientBase('Users').create([{
                     fields: {
-                        Name: name.trim(),
-                        Email: email.trim().toLowerCase(),
-                        PasswordHash: password,
+                        Name: String(name).trim(),
+                        Email: String(email).trim().toLowerCase(),
+                        PasswordHash: await hashPassword(password),
                         IsAdmin: true,
-                        MemberSince: new Date().toISOString().split('T')[0]
+                        MemberSince: T.todayISO()
                     }
-                }]);
+                }], { typecast: true });
             } catch (syncError) {
                 console.error('Admin user sync failed (non-blocking):', syncError.message);
             }
         }
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify({
-                success: true,
-                client: {
-                    id: newRecord[0].id,
-                    name: newRecord[0].get('Name'),
-                    email: newRecord[0].get('Email'),
-                    username: newRecord[0].get('Username'),
-                    company: newRecord[0].get('Company'),
-                    projectUrl: newRecord[0].get('ProjectURL'),
-                    createdAt: newRecord[0].get('CreatedAt'),
-                    tier: newRecord[0].get('Tier'),
-                    billingCycle: newRecord[0].get('BillingCycle'),
-                    subStatus: newRecord[0].get('SubStatus')
-                }
-            })
-        };
+        return T.ok({
+            success: true,
+            client: {
+                id: tenant.id,
+                name: tenant.name,
+                email: tenant.email,
+                username: tenant.username,
+                company: tenant.company,
+                projectUrl: tenant.projectUrl,
+                slug: tenant.slug,
+                tier: tenant.tier,
+                billingCycle: tenant.billingCycle,
+                subStatus: tenant.subStatus,
+                regionId: tenant.regionId,
+                surfaces: tenant.surfaces,
+                directoryStatus: tenant.directoryStatus,
+                paymentChannel: tenant.paymentChannel,
+                monetizationMode: tenant.monetizationMode,
+                caps: tenant.caps
+            }
+        }, 'POST');
 
     } catch (error) {
         if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
-            return {
-                statusCode: 401,
-                body: JSON.stringify({ error: 'Invalid or expired token' })
-            };
+            return T.json(401, { error: 'Invalid or expired token' }, 'POST');
         }
-        console.error('Create client error:', error);
-        return {
-            statusCode: 500,
-            body: JSON.stringify({ error: 'Failed to create client' })
-        };
+        return T.serverError(error, 'POST');
     }
 };

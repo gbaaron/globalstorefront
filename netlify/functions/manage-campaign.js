@@ -1,6 +1,7 @@
 const Airtable = require('airtable');
 const jwt = require('jsonwebtoken');
 const { tierIncludes, normalizeTier } = require('./lib/tiers');
+const { can, capsFromToken, resolveCapabilities } = require('./lib/capabilities');
 const { sendCampaign } = require('./lib/campaign-send');
 
 // Client-facing email marketing management for the owner app. Management lives
@@ -62,7 +63,8 @@ exports.handler = async (event) => {
     }
 
     const tier = normalizeTier(decoded.tier);
-    if (!tierIncludes(tier, 'email_marketing')) {
+    const caps = capsFromToken(decoded);
+    if (!can(caps, 'email_marketing')) {
         // List endpoint returns a soft lock so the app can show an upgrade gate.
         if (event.httpMethod === 'GET') {
             return {

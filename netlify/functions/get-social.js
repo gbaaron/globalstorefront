@@ -1,6 +1,7 @@
 const Airtable = require('airtable');
 const jwt = require('jsonwebtoken');
 const { tierIncludes, normalizeTier } = require('./lib/tiers');
+const { can, capsFromToken, resolveCapabilities } = require('./lib/capabilities');
 
 // Client-facing social-post suggestions list for the owner app.
 //   GET /api/get-social               → this client's suggested posts (newest first)
@@ -55,7 +56,8 @@ exports.handler = async (event) => {
     }
 
     const tier = normalizeTier(decoded.tier);
-    if (!tierIncludes(tier, 'social_posts')) {
+    const caps = capsFromToken(decoded);
+    if (!can(caps, 'social_posts')) {
         return {
             statusCode: 200,
             headers,

@@ -1,5 +1,6 @@
 const Airtable = require('airtable');
 const { tierIncludes, normalizeTier, round2 } = require('./lib/tiers');
+const { can, capsFromToken, resolveCapabilities } = require('./lib/capabilities');
 
 // Scheduled (monthly) — see netlify.toml [functions."generate-reports"] schedule.
 // For each Growth+ client (tier includes 'monthly_reports'), computes the prior
@@ -47,7 +48,8 @@ async function runGenerate() {
 
     for (const client of clients) {
         const tier = normalizeTier(client.get('Tier'));
-        if (!tierIncludes(tier, 'monthly_reports')) { skipped++; continue; }
+        const caps = resolveCapabilities(client);
+        if (!can(caps, 'monthly_reports')) { skipped++; continue; }
         if (haveFor.has(client.id)) { skipped++; continue; }
 
         const tenantBaseId = client.get('BaseID');

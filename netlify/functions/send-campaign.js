@@ -1,5 +1,6 @@
 const Airtable = require('airtable');
 const { tierIncludes, normalizeTier } = require('./lib/tiers');
+const { can, capsFromToken, resolveCapabilities } = require('./lib/capabilities');
 const { sendCampaign } = require('./lib/campaign-send');
 
 // Scheduled (daily) — see netlify.toml [functions."send-campaign"] schedule.
@@ -51,7 +52,8 @@ async function runSend() {
         if (!client) { skipped++; continue; }
 
         const tier = normalizeTier(client.get('Tier'));
-        if (!tierIncludes(tier, 'email_marketing')) { skipped++; continue; }
+        const caps = resolveCapabilities(client);
+        if (!can(caps, 'email_marketing')) { skipped++; continue; }
 
         try {
             const result = await sendCampaign(base, campaign, client);
