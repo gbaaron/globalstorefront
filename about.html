@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Aaron | Global Storefront</title>
     <meta name="description" content="Meet Aaron, the person behind Global Storefront. Personally involved in every project from first idea to launch. No faceless agency, no templates.">
+    <!-- Link preview. The whole pitch is that people don't trust a bare URL
+         sent over text, so the preview card has to look like something. -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Global Storefront">
+    <meta property="og:title" content="About Aaron — Global Storefront">
+    <meta property="og:description" content="No faceless agency, no templates. The person who builds it is the person who answers your email.">
+    <meta property="og:image" content="https://globalstorefront.netlify.app/assets/og-image.jpg">
+    <meta property="og:image:width" content="1920">
+    <meta property="og:image:height" content="1080">
+    <meta property="og:url" content="https://globalstorefront.netlify.app/about.html">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="About Aaron — Global Storefront">
+    <meta name="twitter:description" content="No faceless agency, no templates. The person who builds it is the person who answers your email.">
+    <meta name="twitter:image" content="https://globalstorefront.netlify.app/assets/og-image.jpg">
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#127978;</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -143,6 +157,28 @@
         .site-footer a { color: var(--color-text-muted); text-decoration: none; margin: 0 0.6rem; }
         .site-footer a:hover { color: var(--color-accent); }
         .site-footer .tagline { font-family: var(--font-display); font-style: italic; color: var(--color-text-muted); margin-bottom: 0.75rem; }
+
+        /* Real screens. The page claims previews use real pages and real
+           flows — so it should show them rather than ask to be believed. */
+        .proof { margin: 1.75rem 0 0.5rem; }
+        .proof-grid {
+            display: grid; gap: 0.9rem;
+            grid-template-columns: 1.5fr 1fr;
+            align-items: start;
+        }
+        .proof figure { margin: 0; }
+        .proof img {
+            display: block; width: 100%; height: auto;
+            border-radius: 12px; border: 1px solid var(--color-border, #2a2a4a);
+            box-shadow: 0 16px 44px rgba(0,0,0,.45);
+        }
+        .proof figcaption {
+            font-size: 0.72rem; color: var(--color-text-muted); margin-top: 0.5rem;
+        }
+        .proof-side { display: grid; gap: 0.9rem; }
+        @media (max-width: 760px) {
+            .proof-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -203,6 +239,24 @@
     <section class="section">
         <h2>What I <em>actually</em> build</h2>
         <p>This isn't a pretty homepage with nothing behind it. Here's the real work that goes into every shop I take on:</p>
+        <div class="proof">
+            <div class="proof-grid">
+                <figure>
+                    <img src="assets/product/space-bakery.jpg" alt="A bakery storefront: hours, today's menu, and an order button." width="1440" height="900" loading="lazy" decoding="async">
+                    <figcaption>A shop's storefront &mdash; hours, menu and ordering.</figcaption>
+                </figure>
+                <div class="proof-side">
+                    <figure>
+                        <img src="assets/product/dashboard-home.jpg" alt="The owner dashboard showing views, orders, revenue and followers." width="1440" height="900" loading="lazy" decoding="async">
+                        <figcaption>What the owner sees.</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="assets/product/directory-holland.jpg" alt="Shop Holland: a local directory of businesses with hours and follow buttons." width="1440" height="900" loading="lazy" decoding="async">
+                        <figcaption>The local directory.</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </div>
         <div class="build-list">
             <div class="build-item">
                 <div class="bi-ico"><svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg></div>
