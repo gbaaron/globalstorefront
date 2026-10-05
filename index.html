@@ -130,7 +130,7 @@
             .nav-links li:not(.nav-keep) { display: none; }
         }
 
-        /* WORK WALL — real screens from real builds, behind the hero */
+        /* WALL — our own product screens, behind the hero */
         .hero-wrap { overflow: hidden; }
         .artwall { position: absolute; inset: 0; overflow: hidden; z-index: 0; pointer-events: none; }
         .artwall__rows {
@@ -146,14 +146,15 @@
         .artwall__track--a { animation: rollA 110s linear infinite; }
         .artwall__track--b { animation: rollB 132s linear infinite; }
         .artwall img {
-            width: 132px;
-            aspect-ratio: 390 / 844;
+            width: 300px;
+            aspect-ratio: 16 / 10;
             object-fit: cover;
             object-position: top center;
             border-radius: 10px;
             display: block;
-            filter: grayscale(0.35) contrast(1.05) brightness(0.7);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            /* The dashboards are dark-themed already, so they are lifted, not dimmed. */
+            filter: contrast(1.1) brightness(1.25);
+            border: 1px solid rgba(212, 175, 55, 0.22);
         }
         @keyframes rollA { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         @keyframes rollB { from { transform: translateX(-50%); } to { transform: translateX(0); } }
@@ -473,12 +474,13 @@
         </div>
     </nav>
 
-    <!-- HERO over a wall of real screens from real builds (filled by JS from BUILDS) -->
+    <!-- HERO over a wall of our own product screens (filled by JS from WALL) -->
     <div class="hero-wrap">
         <div class="artwall" aria-hidden="true">
             <div class="artwall__rows">
                 <div class="artwall__track artwall__track--a" id="wallA"></div>
                 <div class="artwall__track artwall__track--b" id="wallB"></div>
+                <div class="artwall__track artwall__track--a" id="wallC"></div>
             </div>
         </div>
         <section class="hero">
@@ -602,24 +604,19 @@
         {"key": "harvest", "name": "Harvest Stand", "where": "Food pantry · Zeeland, MI", "spec": true, "url": "https://harvest-stand.netlify.app/showcase.html", "screens": [0, 1, 2, 3, 4], "line": "What the pantry needs this week, giving, and volunteer shifts that fill themselves."}
     ];
 
-    // The hero wall. Each track is the list twice so the -50% roll loops
-    // without a seam; the second row starts halfway through the deck.
-    (function () {
-        const shots = [];
-        BUILDS.forEach(b => { for (let i = 0; i < b.screens.length; i++) shots.push('assets/work/wall/' + b.key + '_' + b.screens[i] + '.webp'); });
-        if (!shots.length) return;
-        // Interleave so one build's screens are not all side by side.
-        const mixed = shots.map((s, i) => [s, (i * 7) % shots.length]).sort((a, b) => a[1] - b[1]).map(x => x[0]);
-        const half = Math.floor(mixed.length / 2);
-        const fill = (id, list) => {
-            let deck = list;
-            while (deck.length < 24) deck = deck.concat(list);
-            document.getElementById(id).innerHTML = deck.concat(deck)
-                .map(src => '<img src="' + src + '" alt="" decoding="async">').join('');
-        };
-        fill('wallA', mixed);
-        fill('wallB', mixed.slice(half).concat(mixed.slice(0, half)));
-    })();
+    // The hero wall: Global Storefront's own product screens only. Client
+    // builds stay off it until those businesses are partners. Each track is
+    // the list twice so the -50% roll loops without a seam, and each row
+    // starts at a different point in the deck.
+    const WALL = ['dashboard-home', 'directory-holland', 'dashboard-loyalty', 'space-bakery',
+                  'dashboard-bookings', 'dashboard-reach', 'dashboard-insights'];
+    ['wallA', 'wallB', 'wallC'].forEach((id, row) => {
+        const start = (row * 3) % WALL.length;
+        let deck = WALL.slice(start).concat(WALL.slice(0, start));
+        while (deck.length < 14) deck = deck.concat(deck);
+        document.getElementById(id).innerHTML = deck.concat(deck)
+            .map(n => '<img src="assets/product/' + n + '.jpg" alt="" decoding="async">').join('');
+    });
 
     // The builds grid. Off until these are partners — see the note on #builds.
     const SHOW_BUILDS = false;
