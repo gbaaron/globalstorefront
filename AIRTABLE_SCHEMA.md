@@ -457,3 +457,20 @@ existing hash is always honoured either way**, so toggling never locks anyone ou
 | `seed-regions.js [--dry]` | Creates the regions. Holland live; the rest planned. |
 | `seed-demo-directory.js [--clean]` | Five demo businesses across different axis combinations, for pitching. |
 | `_e2e.js [--keep]` | End-to-end exercise against the live base. 64 assertions; cleans up after itself. |
+
+
+## Client logins, the master login, and the portal contract
+
+How logins work across Global Storefront, Global Media and every client app is written
+once, in the playbook: `Websites Stuff/CLAUDE.md` **Section 31**. The parts that live in
+this base:
+
+- **A client row** is added with `node scripts/add-client.js <username> <password> <email> "<Company>" <showcaseUrl>`.
+  The login is copied from the owner row in the client app's `scripts/accounts.js`, never
+  invented, and is written as plain text whatever `HASH_PASSWORDS` is set to.
+- **`ProjectURL`** decides where the home-page login lands: set → that URL (the client's
+  showcase page); empty → `/dashboard.html`.
+- **The master row** is the Clients row for `globallyballinspam@gmail.com`, with
+  `ProjectURL = /master.html`. `get-previews.js` lists every other row with an absolute
+  `ProjectURL`; `admin-login.js` accepts the same credentials. `MASTER_EMAILS` (env,
+  comma-separated) overrides who counts as master.
