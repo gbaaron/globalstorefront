@@ -466,7 +466,6 @@
                 </div>
             </a>
             <ul class="nav-links">
-                <li><a href="#builds">Work</a></li>
                 <li><a href="#owner">Your Dashboard</a></li>
                 <li class="nav-keep"><a href="about.html">About</a></li>
                 <li class="nav-keep"><a href="#clientLogin" class="nav-cta">Client Login</a></li>
@@ -488,8 +487,8 @@
                 <h1>Your shop isn't a template.<br><em>Your site shouldn't be either.</em></h1>
                 <p class="subtitle">Ordering, booking and rewards for bakeries, caf&eacute;s, shops and clubs. Written from a blank file, every time.</p>
                 <div class="hero-actions">
-                    <a href="#builds" class="hero-btn hero-btn--solid">See the work</a>
-                    <a href="mailto:aarendsen@theglobalstorefront.com" class="hero-btn hero-btn--ghost">Start a project</a>
+                    <a href="mailto:aarendsen@theglobalstorefront.com" class="hero-btn hero-btn--solid">Start a project</a>
+                    <a href="#owner" class="hero-btn hero-btn--ghost">See your dashboard</a>
                 </div>
             </div>
         </section>
@@ -528,8 +527,10 @@
         <p>Order ahead, book a chair, earn a free loaf &mdash; under your own name, on a site built around how your counter actually runs.</p>
     </section>
 
-    <!-- BUILDS (cards rendered by JS from BUILDS) -->
-    <section class="section" id="builds">
+    <!-- BUILDS (cards rendered by JS from BUILDS).
+         HIDDEN for now: none of these businesses are partners yet. Remove the
+         `hidden` attribute and set SHOW_BUILDS to true below to bring it back. -->
+    <section class="section" id="builds" hidden>
         <div class="section-label">Recent Builds</div>
         <h2>The work, <em>not a description of it</em></h2>
         <p class="section-desc">Every screen below is live right now. Tap one to open it.</p>
@@ -620,8 +621,9 @@
         fill('wallB', mixed.slice(half).concat(mixed.slice(0, half)));
     })();
 
-    // The builds grid.
-    document.getElementById('buildsGrid').innerHTML = BUILDS.map(b =>
+    // The builds grid. Off until these are partners — see the note on #builds.
+    const SHOW_BUILDS = false;
+    if (SHOW_BUILDS) document.getElementById('buildsGrid').innerHTML = BUILDS.map(b =>
         '<a class="build-card reveal" href="' + b.url + '" target="_blank" rel="noopener">' +
             '<div class="build-shot">' + (b.spec ? '<span class="chip">Spec concept</span>' : '') + '<div class="build-phone">' +
                 '<img src="assets/work/feature/' + b.key + '.webp" alt="' + b.name + ' on a phone" loading="lazy" decoding="async">' +
