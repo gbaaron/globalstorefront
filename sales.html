@@ -1,1165 +1,611 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="scroll-behavior: smooth;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales Portal — Global Media</title>
+    <meta name="robots" content="noindex">
+    <title>Sales Guide | Global Storefront</title>
+    <link rel="icon" type="image/png" href="logo-removebg-preview.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@1,600;1,700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0a0a;
-            --surface: #111111;
-            --surface2: #1a1a1a;
-            --border: #222222;
-            --text: #e5e5e5;
-            --muted: #666666;
-            --accent: #22c55e;
-            --accent-dim: rgba(34, 197, 94, 0.1);
-            --accent-border: rgba(34, 197, 94, 0.3);
-            --red: #ef4444;
-            --red-dim: rgba(239, 68, 68, 0.1);
-            --orange: #f97316;
-            --orange-dim: rgba(249, 115, 22, 0.1);
-            --blue: #3b82f6;
-            --blue-dim: rgba(59, 130, 246, 0.1);
-            --yellow: #eab308;
-            --yellow-dim: rgba(234, 179, 8, 0.1);
-            --radius: 12px;
-            --max: 860px;
+            --bg: #0f0f1a;
+            --card: #1a1a2e;
+            --card-soft: #151527;
+            --accent: #d4af37;
+            --accent-light: #e6c65c;
+            --accent-glow: rgba(212, 175, 55, 0.14);
+            --text: #ffffff;
+            --muted: #8892a0;
+            --label: #b9c0cc;
+            --border: #2a2a45;
+            --border-soft: #1f1f36;
+            --say: #7fd4a3;
+            --say-bg: rgba(72, 187, 120, 0.08);
+            --dont: #f08a8a;
+            --dont-bg: rgba(239, 68, 68, 0.08);
+            --grad: linear-gradient(135deg, #e6c65c 0%, #d4af37 50%, #b8962e 100%);
+            --display: 'Playfair Display', Georgia, serif;
+            --gutter: 1.25rem;
+            --side: 220px;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            font-size: 15px;
-            line-height: 1.7;
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { background: var(--bg); }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--text); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+        body::before {
+            content: ''; position: fixed; inset: -10%; z-index: 0; pointer-events: none; filter: blur(10px);
+            background:
+                radial-gradient(ellipse 900px 700px at 10% 0%, rgba(212, 175, 55, 0.09), transparent 55%),
+                radial-gradient(ellipse 800px 650px at 95% 30%, rgba(70, 90, 190, 0.11), transparent 55%);
         }
+        a { color: var(--accent); }
+        em.d { font-family: var(--display); font-style: italic; font-weight: 700; color: var(--accent); }
 
         /* TOP BAR */
         .topbar {
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            padding: 1rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: sticky; top: 0; z-index: 20;
+            display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+            padding: 0.6rem var(--gutter);
+            background: rgba(15, 15, 26, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-soft);
         }
-        .topbar-logo { font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
-        .topbar-logo span { color: var(--accent); }
-        .topbar-badge {
-            font-size: 0.7rem;
-            background: var(--accent-dim);
-            color: var(--accent);
-            border: 1px solid var(--accent-border);
-            border-radius: 20px;
-            padding: 0.2rem 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-        }
-        .logout-btn {
-            font-size: 0.8rem;
-            color: var(--muted);
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            transition: color 0.2s, background 0.2s;
-        }
-        .logout-btn:hover { color: var(--text); background: var(--surface2); }
+        .brand { display: flex; align-items: center; gap: 0.6rem; font-weight: 700; font-size: 0.95rem; white-space: nowrap; }
+        .brand img { width: 32px; height: 32px; object-fit: contain; }
+        .brand span { color: var(--muted); font-weight: 500; }
+        .topbar-right { display: flex; align-items: center; gap: 0.75rem; }
+        .internal { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(212, 175, 55, 0.35); border-radius: 999px; padding: 0.25rem 0.6rem; white-space: nowrap; }
+        .logout-btn { background: none; border: 1px solid var(--border); color: var(--label); border-radius: 8px; padding: 0.4rem 0.8rem; font: inherit; font-size: 0.8rem; cursor: pointer; white-space: nowrap; }
+        .logout-btn:hover { color: var(--text); border-color: var(--accent); }
+        .progress { position: absolute; left: 0; bottom: -1px; height: 2px; width: 0; background: var(--grad); }
 
-        /* PROGRESS BAR */
-        .progress-bar { height: 2px; background: var(--border); position: sticky; top: 57px; z-index: 99; }
-        .progress-fill { height: 100%; background: var(--accent); width: 0%; transition: width 0.1s; }
-
-        /* MAIN */
-        .page { max-width: var(--max); margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+        /* SHELL: a contents rail down the left, the guide on the right */
+        .shell { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 0 var(--gutter); display: grid; grid-template-columns: var(--side) minmax(0, 1fr); gap: 3rem; }
+        .side { position: sticky; top: 64px; align-self: start; padding: 2.5rem 0; max-height: calc(100vh - 64px); overflow-y: auto; }
+        .side h6 { font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.75rem; }
+        .side a { display: flex; align-items: center; gap: 0.6rem; padding: 0.42rem 0.7rem; border-radius: 8px; color: var(--label); text-decoration: none; font-size: 0.88rem; font-weight: 500; border-left: 2px solid transparent; }
+        .side a svg { width: 15px; height: 15px; flex: 0 0 auto; opacity: 0.7; }
+        .side a:hover { color: var(--text); }
+        .side a.is-on { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+        .side a.is-on svg { opacity: 1; }
+        main { min-width: 0; padding-bottom: 5rem; }
 
         /* HERO */
-        .portal-hero {
-            text-align: center;
-            padding: 3rem 0 2.5rem;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 3rem;
-        }
-        .portal-hero .access-badge {
-            display: inline-block;
-            background: var(--accent-dim);
-            color: var(--accent);
-            border: 1px solid var(--accent-border);
-            border-radius: 8px;
-            padding: 0.4rem 1rem;
-            font-size: 0.82rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-        }
-        .portal-hero h1 {
-            font-size: 2.4rem;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            margin-bottom: 0.75rem;
-            line-height: 1.2;
-        }
-        .portal-hero h1 span { color: var(--accent); }
-        .portal-hero p { color: var(--muted); font-size: 1rem; max-width: 560px; margin: 0 auto; }
+        .hero { padding: 3.5rem 0 2.5rem; }
+        .hero h1 { font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.08; }
+        .hero p { color: var(--label); font-size: 1.05rem; margin-top: 0.9rem; max-width: 520px; }
 
-        /* NAV PILLS */
-        .section-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 3rem; justify-content: center; }
-        .nav-pill {
-            font-size: 0.8rem;
-            padding: 0.4rem 0.9rem;
-            border-radius: 20px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--muted);
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.15s;
-            font-weight: 500;
-        }
-        .nav-pill:hover { border-color: var(--accent-border); color: var(--accent); background: var(--accent-dim); }
-
-        /* SECTION */
-        .portal-section { margin-bottom: 3.5rem; }
-        .section-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.25rem; }
-        .section-icon {
-            width: 36px; height: 36px; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.1rem; flex-shrink: 0;
-        }
-        .icon-green { background: var(--accent-dim); }
-        .icon-blue { background: var(--blue-dim); }
-        .icon-orange { background: var(--orange-dim); }
-        .icon-red { background: var(--red-dim); }
-        .icon-yellow { background: var(--yellow-dim); }
-        .section-header h2 { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
-        .section-intro { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.25rem; }
+        /* SECTIONS — separated by space and a number, not by boxes */
+        section { padding: 2.75rem 0; scroll-margin-top: 72px; border-top: 1px solid var(--border-soft); }
+        .sec-head { display: flex; align-items: baseline; gap: 0.9rem; margin-bottom: 1rem; }
+        .sec-num { font-family: var(--display); font-style: italic; font-weight: 700; color: var(--accent); font-size: 1.5rem; line-height: 1; }
+        h2 { font-size: clamp(1.35rem, 3vw, 1.7rem); font-weight: 800; letter-spacing: -0.025em; line-height: 1.2; }
+        .intro { color: var(--label); max-width: 620px; margin-bottom: 1.5rem; }
+        .rule { background: var(--accent-glow); border-left: 3px solid var(--accent); border-radius: 0 10px 10px 0; padding: 0.9rem 1.1rem; font-size: 0.93rem; color: var(--text); margin-top: 1.5rem; }
+        .rule b { color: var(--accent-light); }
 
         /* COMMISSION */
-        .commission-card {
-            background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.02));
-            border: 1px solid var(--accent-border);
-            border-radius: var(--radius);
-            padding: 2rem;
-            text-align: center;
-            margin-bottom: 1.25rem;
-        }
-        .commission-pct { font-size: 5rem; font-weight: 900; color: var(--accent); line-height: 1; margin-bottom: 0.25rem; }
-        .commission-label { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.75rem; }
-        .commission-calc { display: flex; align-items: flex-end; gap: 0.75rem; max-width: 340px; margin: 0 auto; flex-wrap: wrap; justify-content: center; }
-        .calc-group { display: flex; flex-direction: column; gap: 0.3rem; }
-        .calc-label { font-size: 0.75rem; color: var(--muted); text-align: center; }
-        .calc-input {
-            background: var(--surface2); border: 1px solid var(--border);
-            border-radius: 8px; padding: 0.6rem 1rem; color: var(--text);
-            font-size: 1rem; width: 150px; text-align: center;
-        }
-        .calc-input:focus { outline: none; border-color: var(--accent); }
-        .calc-equals { color: var(--muted); font-size: 1.5rem; margin-bottom: 0.5rem; }
-        .calc-result { font-size: 1.6rem; font-weight: 800; color: var(--accent); }
-        .commission-note { margin-top: 1.25rem; font-size: 0.78rem; color: var(--muted); }
+        .commission { display: grid; grid-template-columns: auto 1fr; gap: 2.5rem; align-items: center; }
+        .pct { font-size: clamp(4rem, 12vw, 6.5rem); font-weight: 800; letter-spacing: -0.05em; line-height: 0.9; background: var(--grad); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .pct-note { color: var(--label); font-size: 0.95rem; margin-top: 0.6rem; }
+        .calc { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.25rem 1.4rem; display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: end; }
+        .calc label { display: block; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.4rem; }
+        .calc input { width: 100%; background: #0c0c16; border: 1.5px solid var(--border); border-radius: 10px; color: var(--text); font: inherit; font-size: 1.05rem; padding: 0.7rem 0.85rem; }
+        .calc input:focus { outline: none; border-color: var(--accent); }
+        .calc-eq { color: var(--muted); font-size: 1.3rem; padding-bottom: 0.6rem; }
+        .calc-result { font-size: 1.7rem; font-weight: 800; color: var(--accent); line-height: 1.5; }
 
-        /* CARDS */
-        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; }
-
-        /* HIGHLIGHT BOXES */
-        .highlight-box { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.1rem 1.4rem; margin-bottom: 1rem; }
-        .highlight-box.green { border-color: var(--accent-border); background: var(--accent-dim); }
-        .highlight-box.orange { border-color: rgba(249,115,22,0.3); background: var(--orange-dim); }
-        .highlight-box.blue { border-color: rgba(59,130,246,0.3); background: var(--blue-dim); }
-        .highlight-box p { font-size: 0.9rem; color: var(--text); }
-        .highlight-box strong { color: var(--accent); }
-        .highlight-box.orange strong { color: var(--orange); }
-        .highlight-box.blue strong { color: var(--blue); }
+        /* PRODUCT — the real dashboard, then what it does */
+        .shot { border-radius: 14px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5); margin: 0 -1.5rem 0 0; }
+        .shot img { display: block; width: 100%; height: auto; }
+        .shot-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 0.75rem; }
+        .shot-row figure { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+        .shot-row img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top left; }
+        .shot-row figcaption, .cap { font-size: 0.75rem; color: var(--muted); padding: 0.45rem 0.65rem; background: var(--card-soft); }
+        .does { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2.5rem; margin-top: 1.75rem; }
+        .does div { padding: 0.8rem 0; border-top: 1px solid var(--border-soft); font-size: 0.93rem; color: var(--label); }
+        .does b { display: block; color: var(--text); font-weight: 700; }
 
         /* MISSION */
-        .mission-statement {
-            background: linear-gradient(135deg, rgba(239,68,68,0.07), rgba(239,68,68,0.02));
-            border: 1px solid rgba(239,68,68,0.25);
-            border-radius: var(--radius);
-            padding: 1.75rem;
-            margin-bottom: 1.25rem;
-        }
-        .mission-statement p {
-            font-size: 1.15rem;
-            line-height: 1.7;
-            color: var(--text);
-            font-weight: 500;
-        }
-        .mission-statement p span { color: var(--accent); font-weight: 700; }
-        .chain-vs {
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            gap: 1rem;
-            align-items: center;
-            margin-bottom: 1.25rem;
-        }
-        .chain-col {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 1rem 1.25rem;
-        }
-        .chain-col h4 { font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
-        .chain-col.them h4 { color: var(--red); }
-        .chain-col.us h4 { color: var(--accent); }
-        .chain-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
-        .chain-col li { font-size: 0.82rem; color: #b0b0b0; display: flex; align-items: flex-start; gap: 0.4rem; line-height: 1.4; }
-        .chain-col.them li::before { content: "✗"; color: var(--red); font-size: 0.75rem; margin-top: 2px; flex-shrink: 0; }
-        .chain-col.us li::before { content: "✓"; color: var(--accent); font-size: 0.75rem; margin-top: 2px; flex-shrink: 0; }
-        .chain-vs-divider { text-align: center; font-weight: 800; font-size: 1rem; color: var(--muted); }
-        .use-this-angle {
-            background: var(--accent-dim);
-            border: 1px solid var(--accent-border);
-            border-radius: var(--radius);
-            padding: 1.25rem 1.5rem;
-            margin-bottom: 1rem;
-        }
-        .use-this-angle .angle-label {
-            font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-            letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.6rem;
-        }
-        .use-this-angle p { font-size: 0.9rem; color: var(--text); line-height: 1.65; }
-        @media (max-width: 560px) {
-            .chain-vs { grid-template-columns: 1fr; }
-            .chain-vs-divider { display: none; }
-        }
+        .big { font-size: clamp(1.15rem, 2.4vw, 1.4rem); font-weight: 700; letter-spacing: -0.015em; line-height: 1.4; max-width: 640px; }
+        .versus { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin-top: 1.75rem; }
+        .versus h4 { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; }
+        .versus .ours h4 { color: var(--accent); }
+        .versus li { list-style: none; padding: 0.5rem 0; border-top: 1px solid var(--border-soft); font-size: 0.92rem; color: var(--label); }
+        .versus .ours li { color: var(--text); }
 
-        /* FEATURE GRID */
-        .feature-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
-        .feature-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
-        .feature-item h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.35rem; }
-        .feature-item h4 .fi { margin-right: 0.35rem; }
-        .feature-item p { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
-
-        /* TARGET GRID */
-        .target-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
-        .target-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem; }
-        .target-card .t-icon { font-size: 1.8rem; margin-bottom: 0.4rem; display: block; }
-        .target-card h4 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem; }
-        .target-card p { font-size: 0.8rem; color: var(--muted); line-height: 1.45; }
-        .pitch-angle { margin-top: 0.6rem; font-size: 0.75rem; font-weight: 600; color: var(--accent); background: var(--accent-dim); border-radius: 6px; padding: 0.3rem 0.6rem; display: inline-block; }
+        /* TARGETS — rows, so the angle lines up down the right */
+        .targets { border-top: 1px solid var(--border-soft); }
+        .target { display: grid; grid-template-columns: 11rem 1fr auto; gap: 1.25rem; align-items: center; padding: 0.95rem 0; border-bottom: 1px solid var(--border-soft); }
+        .target b { font-weight: 700; display: flex; align-items: center; gap: 0.6rem; }
+        .target b svg { width: 18px; height: 18px; color: var(--accent); flex: 0 0 auto; }
+        .target p { font-size: 0.9rem; color: var(--label); }
+        .angle { font-size: 0.8rem; font-weight: 600; color: var(--accent-light); background: var(--accent-glow); border-radius: 8px; padding: 0.35rem 0.7rem; white-space: nowrap; }
 
         /* STEPS */
-        .step-list { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
-        .step-item { display: flex; gap: 1rem; align-items: flex-start; }
-        .step-num {
-            width: 32px; height: 32px; border-radius: 50%;
-            background: var(--accent-dim); border: 1px solid var(--accent-border);
-            color: var(--accent); font-weight: 700; font-size: 0.85rem;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
-        }
-        .step-content h3 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.3rem; }
-        .step-content p { color: #a0a0a0; font-size: 0.9rem; }
+        .steps { counter-reset: s; }
+        .step { display: grid; grid-template-columns: 2.4rem 1fr; gap: 1rem; padding: 0.9rem 0; }
+        .step::before { counter-increment: s; content: counter(s); width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 2px solid var(--accent); color: var(--accent); font-family: var(--display); font-style: italic; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+        .step h3 { font-size: 1rem; font-weight: 700; }
+        .step p { font-size: 0.92rem; color: var(--label); }
 
-        /* SAY BLOCKS */
-        .say-block { border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 0.75rem; border-left: 3px solid; }
-        .say-block.do { background: var(--accent-dim); border-color: var(--accent); }
-        .say-block.dont { background: var(--red-dim); border-color: var(--red); }
-        .say-label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
-        .say-block.do .say-label { color: var(--accent); }
-        .say-block.dont .say-label { color: var(--red); }
-        .say-block p { color: var(--text); font-size: 0.9rem; font-style: italic; }
+        /* SAY / DON'T */
+        h5 { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 2rem 0 0.75rem; }
+        .say, .dont { border-radius: 0 12px 12px 0; padding: 0.85rem 1.1rem; margin-bottom: 0.6rem; border-left: 3px solid var(--say); background: var(--say-bg); }
+        .dont { border-left-color: var(--dont); background: var(--dont-bg); }
+        .say small, .dont small { display: block; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--say); margin-bottom: 0.3rem; }
+        .dont small { color: var(--dont); }
+        .say p, .dont p { font-size: 0.95rem; }
+        .say p { font-style: italic; }
 
-        /* DEMO STEPS */
-        .demo-steps { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; }
-        .demo-step { display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
-        .demo-step:last-child { border-bottom: none; padding-bottom: 0; }
-        .demo-step-num {
-            font-size: 0.7rem; font-weight: 700; color: var(--accent);
-            background: var(--accent-dim); width: 22px; height: 22px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
-        }
-        .demo-step p { font-size: 0.88rem; color: #b0b0b0; }
-        .demo-step strong { color: var(--text); }
+        /* DEMO — the phone they will actually be holding */
+        .demo { display: grid; grid-template-columns: 1fr 210px; gap: 2.5rem; align-items: start; }
+        .phone { border-radius: 26px; padding: 6px; background: linear-gradient(160deg, #34344a 0%, #191928 55%, #0e0e18 100%); box-shadow: 0 22px 50px rgba(0, 0, 0, 0.6); position: sticky; top: 90px; }
+        .phone img { display: block; width: 100%; aspect-ratio: 402 / 820; object-fit: cover; object-position: top; border-radius: 20px; }
 
         /* ACCORDION */
-        .accordion-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 0.6rem; overflow: hidden; }
-        .accordion-header { padding: 1rem 1.25rem; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 1rem; transition: background 0.15s; user-select: none; }
-        .accordion-header:hover { background: var(--surface2); }
-        .accordion-header.open { background: var(--surface2); }
-        .accordion-q { font-weight: 600; font-size: 0.95rem; flex: 1; }
-        .accordion-meta { display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0; }
-        .accordion-tag { font-size: 0.68rem; padding: 0.2rem 0.55rem; border-radius: 20px; font-weight: 600; }
-        .tag-objection { background: var(--red-dim); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
-        .tag-question { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(59,130,246,0.2); }
-        .accordion-chevron { color: var(--muted); transition: transform 0.2s; }
-        .accordion-header.open .accordion-chevron { transform: rotate(180deg); }
-        .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
-        .accordion-body.open { max-height: 700px; }
-        .accordion-inner { padding: 1rem 1.25rem 1.25rem; border-top: 1px solid var(--border); }
-        .accordion-inner .context { font-size: 0.88rem; color: #909090; margin-bottom: 0.75rem; }
-        .response-label { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.4rem; margin-top: 0.5rem; }
-        .response { background: var(--accent-dim); border: 1px solid var(--accent-border); border-radius: 8px; padding: 0.85rem 1rem; color: var(--text); font-size: 0.9rem; font-style: italic; line-height: 1.65; }
-        .tip { background: var(--yellow-dim); border: 1px solid rgba(234,179,8,0.25); border-radius: 8px; padding: 0.6rem 0.9rem; margin-top: 0.75rem; font-size: 0.82rem; color: #d4a800; }
-        .tip::before { content: "💡 "; }
+        .acc { border-top: 1px solid var(--border-soft); }
+        .acc-item { border-bottom: 1px solid var(--border-soft); }
+        .accordion-header { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 0; background: none; border: 0; color: var(--text); font: inherit; font-size: 1rem; font-weight: 600; text-align: left; cursor: pointer; }
+        .accordion-header:hover { color: var(--accent-light); }
+        .accordion-header svg { width: 18px; height: 18px; flex: 0 0 auto; color: var(--muted); transition: transform 0.25s ease; }
+        .accordion-header.open svg { transform: rotate(180deg); color: var(--accent); }
+        .accordion-body { display: none; padding: 0 0 1.25rem; }
+        .accordion-body.open { display: block; }
+        .accordion-body > p { font-size: 0.92rem; color: var(--label); margin-bottom: 0.75rem; }
+        .tip { font-size: 0.88rem; color: var(--label); margin-top: 0.75rem; padding-left: 1.1rem; border-left: 2px solid var(--border); }
+        .tip b { color: var(--text); }
 
         /* CHECKLIST */
-        .checklist-group-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); margin: 1.25rem 0 0.6rem; }
-        .checklist-group-label:first-child { margin-top: 0; }
-        .checklist { display: flex; flex-direction: column; gap: 0.45rem; }
-        .check-item { display: flex; align-items: flex-start; gap: 0.75rem; padding: 0.75rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: border-color 0.15s, background 0.15s; user-select: none; }
-        .check-item:hover { border-color: rgba(255,255,255,0.1); }
-        .check-item.checked { background: var(--accent-dim); border-color: var(--accent-border); }
-        .check-box { width: 20px; height: 20px; border: 2px solid var(--border); border-radius: 5px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 1px; transition: all 0.15s; }
+        .check-group { font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 1.5rem 0 0.4rem; }
+        .check-item { display: flex; gap: 0.8rem; align-items: flex-start; padding: 0.6rem 0; border-bottom: 1px solid var(--border-soft); cursor: pointer; font-size: 0.94rem; color: var(--label); }
+        .check-box { width: 20px; height: 20px; flex: 0 0 auto; border: 2px solid var(--border); border-radius: 6px; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease, border-color 0.15s ease; }
+        .check-box svg { width: 13px; height: 13px; color: #14110a; opacity: 0; }
+        .check-item.checked { color: var(--muted); text-decoration: line-through; }
         .check-item.checked .check-box { background: var(--accent); border-color: var(--accent); }
-        .check-text { font-size: 0.88rem; color: var(--text); line-height: 1.5; }
-        .check-item.checked .check-text { text-decoration: line-through; color: var(--muted); }
-        .checklist-reset { margin-top: 1rem; font-size: 0.8rem; color: var(--muted); background: none; border: 1px solid var(--border); border-radius: 6px; padding: 0.4rem 0.9rem; cursor: pointer; transition: color 0.2s; }
-        .checklist-reset:hover { color: var(--text); }
+        .check-item.checked .check-box svg { opacity: 1; }
+        .reset { margin-top: 1rem; background: none; border: 1px solid var(--border); color: var(--label); border-radius: 8px; padding: 0.45rem 0.9rem; font: inherit; font-size: 0.82rem; cursor: pointer; }
 
-        /* AFTER VISIT */
-        .after-item { display: flex; gap: 0.85rem; align-items: flex-start; padding: 0.9rem 0; border-bottom: 1px solid var(--border); }
-        .after-item:last-child { border-bottom: none; padding-bottom: 0; }
-        .after-num { font-size: 0.72rem; font-weight: 700; color: var(--blue); background: var(--blue-dim); width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
-        .after-item p { font-size: 0.9rem; color: #b0b0b0; }
-        .after-item strong { color: var(--text); }
+        /* 30-SECOND PITCH */
+        .pitch { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 1.75rem; position: relative; overflow: hidden; }
+        .pitch::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--grad); }
+        .pitch p { font-size: 1.08rem; line-height: 1.7; font-style: italic; }
+        .copy-btn { margin-top: 1.25rem; background: var(--grad); color: #14110a; border: 0; border-radius: 10px; padding: 0.7rem 1.2rem; font: inherit; font-weight: 700; font-size: 0.88rem; cursor: pointer; }
 
-        /* QUICK PITCH */
-        .pitch-box { background: var(--surface); border: 1px solid var(--accent-border); border-radius: var(--radius); padding: 1.5rem; }
-        .pitch-box h4 { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
-        .pitch-box p { font-size: 0.95rem; color: var(--text); font-style: italic; line-height: 1.8; }
-        .copy-btn { margin-top: 0.75rem; font-size: 0.78rem; padding: 0.35rem 0.8rem; background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); cursor: pointer; transition: all 0.15s; }
-        .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+        .back-top { position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 15; width: 42px; height: 42px; border-radius: 50%; background: var(--card); border: 1px solid var(--border); color: var(--label); display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+        .back-top.visible { opacity: 1; pointer-events: auto; }
+        .back-top svg { width: 18px; height: 18px; }
 
-        /* DIVIDER */
-        hr.sep { border: none; border-top: 1px solid var(--border); margin: 2.5rem 0; }
-
-        /* BACK TO TOP */
-        .back-top { position: fixed; bottom: 1.5rem; right: 1.5rem; width: 40px; height: 40px; background: var(--surface); border: 1px solid var(--border); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; opacity: 0; transition: opacity 0.2s, background 0.2s; z-index: 50; }
-        .back-top.visible { opacity: 1; }
-        .back-top:hover { background: var(--surface2); }
-
-        /* RESPONSIVE */
-        @media (max-width: 600px) {
-            .portal-hero h1 { font-size: 1.75rem; }
-            .commission-pct { font-size: 3.5rem; }
-            .commission-calc { flex-direction: column; align-items: center; }
-            .calc-equals { transform: rotate(90deg); }
+        /* PHONE WIDTH: the contents rail becomes one scrolling row under the bar */
+        @media (max-width: 860px) {
+            .shell { grid-template-columns: minmax(0, 1fr); gap: 0; }
+            .side { position: sticky; top: 53px; z-index: 10; padding: 0; max-height: none; margin: 0 calc(var(--gutter) * -1); background: rgba(15, 15, 26, 0.92); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-soft); }
+            .side h6 { display: none; }
+            .side nav { display: flex; gap: 0.4rem; overflow-x: auto; scrollbar-width: none; padding: 0.55rem var(--gutter); }
+            .side nav::-webkit-scrollbar { display: none; }
+            .side a { flex: 0 0 auto; white-space: nowrap; border-left: 0; border-radius: 999px; padding: 0.38rem 0.85rem; background: var(--card); }
+            .side a svg { display: none; }
+            section { scroll-margin-top: 112px; }
+            .hero { padding: 2.25rem 0 1.5rem; }
+            .commission, .versus, .does, .demo { grid-template-columns: 1fr; gap: 1.5rem; }
+            .does { gap: 0; }
+            .shot { margin-right: 0; }
+            .target { grid-template-columns: 1fr; gap: 0.35rem; }
+            .angle { justify-self: start; white-space: normal; }
+            .phone { position: static; max-width: 210px; margin: 0 auto; }
+            .internal { display: none; }
+            .brand { min-width: 0; }
+            .brand span { display: none; }
+        }
+        @media (max-width: 480px) {
+            .calc { grid-template-columns: 1fr; }
+            .calc-eq { display: none; }
+            .shot-row { grid-template-columns: 1fr 1fr; }
+            .shot-row figure:last-child { display: none; }
         }
     </style>
 </head>
 <body>
 
 <header class="topbar">
-    <div class="topbar-logo">Global <span>Media</span> — Sales Portal</div>
-    <div class="topbar-badge">Internal Only</div>
-    <button class="logout-btn" onclick="logout()">Sign Out</button>
-</header>
-<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-
-<div class="page">
-
-    <!-- HERO -->
-    <div class="portal-hero" id="top">
-        <div class="access-badge">🔒 Authorized Sales Team Access</div>
-        <h1>Your Complete Guide<br>to <span>Closing Deals</span></h1>
-        <p>Read this once. Know this cold. Walk into any local business with confidence and come out with a booked call.</p>
+    <div class="brand">
+        <img src="logo-removebg-preview.png" alt="">
+        Global Storefront <span>&mdash; Sales Guide</span>
     </div>
+    <div class="topbar-right">
+        <span class="internal">Internal only</span>
+        <button class="logout-btn" onclick="logout()">Sign out</button>
+    </div>
+    <div class="progress" id="progressFill"></div>
+</header>
 
-    <!-- NAV -->
-    <nav class="section-nav">
-        <a href="#commission" class="nav-pill">💰 Commission</a>
-        <a href="#product" class="nav-pill">📦 The Product</a>
-        <a href="#mission" class="nav-pill">🏪 The Mission</a>
-        <a href="#targets" class="nav-pill">🎯 Who to Target</a>
-        <a href="#pitch" class="nav-pill">🗣️ The Pitch</a>
-        <a href="#demo" class="nav-pill">🖥️ The Demo</a>
-        <a href="#qa" class="nav-pill">❓ Q&amp;A</a>
-        <a href="#objections" class="nav-pill">🛡️ Objections</a>
-        <a href="#checklist" class="nav-pill">✅ Checklist</a>
-        <a href="#after" class="nav-pill">📞 After the Visit</a>
-        <a href="#quickpitch" class="nav-pill">⚡ Quick Pitch</a>
-    </nav>
+<div class="shell">
 
-    <!-- ================================================ -->
-    <!-- COMMISSION -->
-    <!-- ================================================ -->
-    <section class="portal-section" id="commission">
-        <div class="section-header">
-            <div class="section-icon icon-green">💰</div>
-            <h2>Your Commission</h2>
+    <aside class="side">
+        <h6>In this guide</h6>
+        <nav id="sideNav">
+            <a href="#commission"><i data-lucide="percent"></i>Commission</a>
+            <a href="#product"><i data-lucide="layout-dashboard"></i>What we sell</a>
+            <a href="#mission"><i data-lucide="flag"></i>The mission</a>
+            <a href="#targets"><i data-lucide="target"></i>Who to target</a>
+            <a href="#pitch"><i data-lucide="message-circle"></i>The pitch</a>
+            <a href="#demo"><i data-lucide="smartphone"></i>The demo</a>
+            <a href="#qa"><i data-lucide="help-circle"></i>Questions</a>
+            <a href="#objections"><i data-lucide="shield"></i>Objections</a>
+            <a href="#checklist"><i data-lucide="check-square"></i>Checklist</a>
+            <a href="#after"><i data-lucide="phone"></i>After the visit</a>
+            <a href="#quickpitch"><i data-lucide="zap"></i>30 seconds</a>
+        </nav>
+    </aside>
+
+    <main>
+        <div class="hero">
+            <h1>Open the door.<br><em class="d">Aaron closes it.</em></h1>
+            <p>Read it once, know it cold. Your job is a booked 15-minute call, not a sale.</p>
         </div>
 
-        <div class="commission-card">
-            <div class="commission-pct">10%</div>
-            <div class="commission-label">of the total project price — for every site you close</div>
-            <div class="commission-calc">
-                <div class="calc-group">
-                    <div class="calc-label">Enter site price</div>
-                    <input type="number" class="calc-input" id="priceInput" placeholder="e.g. 2500" oninput="calcCommission()">
+        <!-- COMMISSION -->
+        <section id="commission">
+            <div class="sec-head"><span class="sec-num">01</span><h2>Your commission</h2></div>
+            <div class="commission">
+                <div>
+                    <div class="pct">10%</div>
+                    <div class="pct-note">of the project price, on every site you close.</div>
                 </div>
-                <div class="calc-equals">=</div>
-                <div class="calc-group">
-                    <div class="calc-label">Your commission</div>
-                    <div class="calc-result" id="calcResult">$—</div>
-                </div>
-            </div>
-            <div class="commission-note">Paid by Aaron once the client completes payment. Ask Aaron for current project pricing before each visit.</div>
-        </div>
-
-        <div class="highlight-box orange">
-            <p><strong>Important:</strong> Your job is NOT to quote a price. Your job is to get them curious and book a discovery call. Aaron handles pricing and closing. You just need to open the door — and you earn 10% when it closes.</p>
-        </div>
-    </section>
-
-    <hr class="sep">
-
-    <!-- ================================================ -->
-    <!-- THE PRODUCT -->
-    <!-- ================================================ -->
-    <section class="portal-section" id="product">
-        <div class="section-header">
-            <div class="section-icon icon-blue">📦</div>
-            <h2>What We Sell — In Plain English</h2>
-        </div>
-
-        <div class="highlight-box green" style="margin-bottom:1.25rem;">
-            <p><strong>The one-liner:</strong> We build fully custom websites for local businesses — written from scratch, not from a template — with real tools built in like online ordering, admin dashboards, and business analytics.</p>
-        </div>
-
-        <p class="section-intro">You don't need to understand the technical side. You just need to know what it does and why it matters to a business owner.</p>
-
-        <div class="feature-grid">
-            <div class="feature-item">
-                <h4><span class="fi">🖥️</span> Custom Admin Dashboard</h4>
-                <p>The owner logs into their own dashboard to manage orders, update menus or products, see daily summaries. No outside apps. No monthly plugin fees.</p>
-            </div>
-            <div class="feature-item">
-                <h4><span class="fi">🛒</span> Online Ordering</h4>
-                <p>Customers order directly from the business's own website. Zero commission to DoorDash, Grubhub, or anyone else. Every dollar from the order stays with them.</p>
-            </div>
-            <div class="feature-item">
-                <h4><span class="fi">📦</span> Inventory Management</h4>
-                <p>Track stock in real time. Get low-stock alerts. The website knows what's available before a customer tries to order something that's sold out.</p>
-            </div>
-            <div class="feature-item">
-                <h4><span class="fi">📊</span> Business Analytics</h4>
-                <p>Daily sales summaries, order trends, top-selling items — visible right in their dashboard. No separate Google Analytics account needed.</p>
-            </div>
-            <div class="feature-item">
-                <h4><span class="fi">⚡</span> Actually Fast</h4>
-                <p>No bloated page builders. Clean code = fast site. Not like a Wix site that takes 6 seconds to load on a phone. That alone loses customers.</p>
-            </div>
-            <div class="feature-item">
-                <h4><span class="fi">🔐</span> Full Ownership</h4>
-                <p>The business owns the code. No monthly platform fees that creep up every year. No "Powered by Wix" in the footer. Their brand, nothing else.</p>
-            </div>
-        </div>
-
-        <div class="highlight-box">
-            <p><strong style="color:var(--text)">vs. Wix / Squarespace / Shopify:</strong> <span style="color:#a0a0a0">Template builders charge monthly forever, take a cut of every order, limit what you can build, and own the code — not the business owner. We build something completely custom, one-time cost, that the business owns and controls forever.</span></p>
-        </div>
-    </section>
-
-    <hr class="sep">
-
-    <!-- ================================================ -->
-    <!-- THE MISSION -->
-    <!-- ================================================ -->
-    <section class="portal-section" id="mission">
-        <div class="section-header">
-            <div class="section-icon icon-red">🏪</div>
-            <h2>The Mission — Your Real Angle</h2>
-        </div>
-
-        <div class="mission-statement">
-            <p>Starbucks has a custom app with mobile ordering, loyalty rewards, and location-based promotions. McDonald's has kiosks, a full online ordering system, and a digital team of hundreds. Every major chain has poured millions into their online presence — and it's working. Local businesses are trying to compete with a Wix template and a Facebook page. <span>That's not a fair fight. We're here to even it out.</span></p>
-        </div>
-
-        <div class="chain-vs">
-            <div class="chain-col them">
-                <h4>Big Chains Have</h4>
-                <ul>
-                    <li>Custom mobile apps with loyalty rewards</li>
-                    <li>Online ordering built into their own platform</li>
-                    <li>Real-time inventory across locations</li>
-                    <li>Customer data they actually own and use</li>
-                    <li>Analytics showing exactly what's selling</li>
-                    <li>Digital teams dedicated to their web presence</li>
-                </ul>
-            </div>
-            <div class="chain-vs-divider">vs.</div>
-            <div class="chain-col us">
-                <h4>Now Local Businesses Can Too</h4>
-                <ul>
-                    <li>Custom ordering system on their own site</li>
-                    <li>Built-in loyalty and rewards if they want it</li>
-                    <li>Live inventory that updates in real time</li>
-                    <li>Full customer data — owned by them, not a platform</li>
-                    <li>Dashboard showing daily sales and trends</li>
-                    <li>A professional web presence that actually works</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="use-this-angle">
-            <div class="angle-label">🎯 How to use this in your pitch</div>
-            <p>This isn't just a sales angle — it's the actual reason this company exists. Aaron genuinely cares about local businesses surviving against the chains. When you tell a business owner "we built this specifically so local places can have the same tools the big guys have," it lands differently than any product pitch. They feel it. Use it — and mean it.</p>
-        </div>
-
-        <div class="say-block do" style="margin-top:0.25rem;">
-            <div class="say-label">✓ Lead with the mission</div>
-            <p>"Honestly — the whole reason we started doing this is because we hate watching local spots lose business to chains that have a $10 million app budget. We build the same kind of tools for local businesses so they can actually compete."</p>
-        </div>
-        <div class="say-block do">
-            <div class="say-label">✓ When they seem hesitant about cost</div>
-            <p>"I know it's an investment. But Starbucks has a custom app, online ordering, and a loyalty program. You're competing with that every single day. A custom site is how you start fighting back on the same turf they're winning on."</p>
-        </div>
-    </section>
-
-    <hr class="sep">
-
-    <!-- ================================================ -->
-    <!-- WHO TO TARGET -->
-    <!-- ================================================ -->
-    <section class="portal-section" id="targets">
-        <div class="section-header">
-            <div class="section-icon icon-orange">🎯</div>
-            <h2>Who to Target</h2>
-        </div>
-
-        <p class="section-intro">Best leads are local businesses with an existing website that looks like a template or isn't doing much for them. The more obviously generic their site looks, the easier the conversation.</p>
-
-        <div class="target-grid">
-            <div class="target-card">
-                <span class="t-icon">🍕</span>
-                <h4>Restaurants &amp; Cafes</h4>
-                <p>Often paying 15–30% commission to DoorDash or Grubhub on every order. A custom ordering system can pay for itself in weeks.</p>
-                <span class="pitch-angle">Angle: "Stop paying DoorDash"</span>
-            </div>
-            <div class="target-card">
-                <span class="t-icon">🥐</span>
-                <h4>Bakeries</h4>
-                <p>Usually taking pre-orders by phone, text, or Instagram DM. No real system. A custom site with pre-order built in is a no-brainer for them.</p>
-                <span class="pitch-angle">Angle: "Automate your pre-orders"</span>
-            </div>
-            <div class="target-card">
-                <span class="t-icon">💈</span>
-                <h4>Salons &amp; Barbershops</h4>
-                <p>Often paying monthly for Vagaro or Square for booking — tools that could be built right into their own site with no recurring cost.</p>
-                <span class="pitch-angle">Angle: "Own your booking system"</span>
-            </div>
-            <div class="target-card">
-                <span class="t-icon">👗</span>
-                <h4>Boutiques &amp; Retail</h4>
-                <p>On Shopify paying 2.9% transaction fees plus monthly fees for a storefront template that looks like every other Shopify store.</p>
-                <span class="pitch-angle">Angle: "Keep more of every sale"</span>
-            </div>
-            <div class="target-card">
-                <span class="t-icon">🧹</span>
-                <h4>Service Businesses</h4>
-                <p>Landscapers, cleaners, contractors — usually have an outdated or nonexistent website. No quote form, no booking, no reviews integrated.</p>
-                <span class="pitch-angle">Angle: "Get leads while you sleep"</span>
-            </div>
-            <div class="target-card">
-                <span class="t-icon">🍱</span>
-                <h4>Food Trucks &amp; Catering</h4>
-                <p>Usually just a Facebook page. Hard for customers to find menus, check schedules, place catering orders, or book them for events.</p>
-                <span class="pitch-angle">Angle: "Make it easy to hire you"</span>
-            </div>
-        </div>
-
-        <div class="highlight-box orange">
-            <p><strong>Quick gut check before a visit:</strong> Pull up their website on your phone. Does it load slow? Does it say "Powered by Wix" or "Create your own free website" anywhere? Does it look like a template? Does it do anything useful? That's your opening.</p>
-        </div>
-    </section>
-
-    <hr class="sep">
-
-    <!-- ================================================ -->
-    <!-- THE PITCH -->
-    <!-- ================================================ -->
-    <section class="portal-section" id="pitch">
-        <div class="section-header">
-            <div class="section-icon icon-green">🗣️</div>
-            <h2>The Pitch — Step by Step</h2>
-        </div>
-
-        <p class="section-intro">You are NOT closing a sale in person. You are opening a door. Your only goal is to get them curious enough to take a 15-minute call with Aaron. That's the whole job.</p>
-
-        <div class="step-list">
-            <div class="step-item">
-                <div class="step-num">1</div>
-                <div class="step-content">
-                    <h3>Start with a question, not a pitch</h3>
-                    <p>Don't open with "I sell websites." Open by being curious about their business. People talk to people who are interested in them.</p>
-                </div>
-            </div>
-            <div class="step-item">
-                <div class="step-num">2</div>
-                <div class="step-content">
-                    <h3>Find the pain — then stop talking</h3>
-                    <p>Ask about their current site and then listen. "What's your biggest frustration with it?" is worth more than any pitch. The moment they name a problem, you have your angle.</p>
-                </div>
-            </div>
-            <div class="step-item">
-                <div class="step-num">3</div>
-                <div class="step-content">
-                    <h3>Plant the seed — one or two sentences max</h3>
-                    <p>Tie what you do directly to the problem they just named. Don't explain everything. Just enough to make them ask "really, how does that work?"</p>
-                </div>
-            </div>
-            <div class="step-item">
-                <div class="step-num">4</div>
-                <div class="step-content">
-                    <h3>Show the demo — on your phone, right now</h3>
-                    <p>Pull up the demo portal. A real working site beats any description. Let them tap through it. This is your strongest tool — use it every time.</p>
-                </div>
-            </div>
-            <div class="step-item">
-                <div class="step-num">5</div>
-                <div class="step-content">
-                    <h3>Ask what they'd want</h3>
-                    <p>"If we built something like this for you, what features would matter most?" Gets them picturing it as their own — not just watching a demo.</p>
-                </div>
-            </div>
-            <div class="step-item">
-                <div class="step-num">6</div>
-                <div class="step-content">
-                    <h3>Ask for the intro call — and be specific</h3>
-                    <p>"Can I set up a quick 15-minute call with my team? They'll show you exactly what it would look like for your business — no commitment, just a look." Get their number or email. That's the close.</p>
-                </div>
-            </div>
-        </div>
-
-        <p style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--muted);margin-bottom:0.75rem;">Example lines — use these or make them your own:</p>
-
-        <div class="say-block do">
-            <div class="say-label">✓ Opening line</div>
-            <p>"Hey — I work with a web development company. Can I ask, are you pretty happy with your current website or is it kind of just... there?"</p>
-        </div>
-        <div class="say-block do">
-            <div class="say-label">✓ The mission angle — use this when the conversation gets real</div>
-            <p>"Honestly, the whole reason we do this is because we think local businesses deserve the same tools the big chains have. Starbucks has a custom app and a full online ordering system. You're competing with that. We built what we build so places like yours can fight back."</p>
-        </div>
-        <div class="say-block do">
-            <div class="say-label">✓ For restaurants or food businesses</div>
-            <p>"Are you on DoorDash or Grubhub? We've built ordering systems for restaurants that let them take orders right on their own site and keep 100% of it. I can show you what that looks like in about 2 minutes."</p>
-        </div>
-        <div class="say-block do">
-            <div class="say-label">✓ For any business with a bad or old site</div>
-            <p>"We build websites from scratch — not templates — so they're actually built around how your business works, not a generic layout. Want to see an example real quick?"</p>
-        </div>
-        <div class="say-block do">
-            <div class="say-label">✓ Going for the call</div>
-            <p>"Can I get you on a quick call with the team? They'll actually build out a preview of what your site could look like — free, no obligation, just so you can see it."</p>
-        </div>
-        <div class="say-block dont">
-            <div class="say-label">✗ Don't say this</div>
-            <p>"We use custom code and serverless architecture with a Netlify backend and Airtable as the database."</p>
-        </div>
-        <div class="say-block dont">
-            <div class="say-label">✗ Don't do this</div>
-            <p>Don't name a price. That's Aaron's conversation. If they ask, redirect: "It depends on what features you need — the call is literally just to get you an exact number."</p>
-        </div>
-    </section>
-
-    <hr class="sep">
-
-    <!-- ================================================ -->
-    <!-- THE DEMO -->
-    <!-- ================================================ -->
-    <section class="portal-section" id="demo">
-        <div class="section-header">
-            <div class="section-icon icon-blue">🖥️</div>
-            <h2>Using the Demo Portal</h2>
-        </div>
-
-        <p class="section-intro">The demo is your best tool. A business owner can picture themselves in a real working site way more easily than they can imagine one from a description. Always show it.</p>
-
-        <div class="demo-steps">
-            <div class="demo-step">
-                <div class="demo-step-num">1</div>
-                <p><strong>Bookmark this right now:</strong> globalstorefront.netlify.app — open it on your phone before every visit and make sure it loads.</p>
-            </div>
-            <div class="demo-step">
-                <div class="demo-step-num">2</div>
-                <p><strong>Before the visit, text Aaron</strong> and ask which demo account to use. He'll match you with the one most relevant to that type of business. You'll get a username and password.</p>
-            </div>
-            <div class="demo-step">
-                <div class="demo-step-num">3</div>
-                <p>Log in using the credentials Aaron gave you. You'll be redirected straight to a <strong>live demo site</strong> built for that type of client.</p>
-            </div>
-            <div class="demo-step">
-                <div class="demo-step-num">4</div>
-                <p>Show them the homepage first. Point out: <strong>custom design, no template feel, their specific industry.</strong> "This was built just for them — yours would be built just for you."</p>
-            </div>
-            <div class="demo-step">
-                <div class="demo-step-num">5</div>
-                <p>If relevant, show the ordering or booking flow. "This is how a customer places an order — it goes straight to the owner's dashboard in real time. No app, no third party."</p>
-            </div>
-            <div class="demo-step">
-                <div class="demo-step-num">6</div>
-                <p>Point out the little things: <strong>no "Powered by" in the footer</strong>, how fast it loads, how clean it looks on mobile. These details resonate.</p>
-            </div>
-        </div>
-
-        <div class="highlight-box blue" style="margin-top:1rem;">
-            <p><strong>Pro tip:</strong> Hand them the phone and let them scroll. When someone physically interacts with the demo, it becomes real for them. Don't just show it — let them hold it.</p>
-        </div>
-    </section>
-
-    <hr class="sep">
-
-    <!-- ================================================ -->
-    <!-- Q&A -->
-    <!-- ================================================ -->
-    <section class="portal-section" id="qa">
-        <div class="section-header">
-            <div class="section-icon icon-yellow">❓</div>
-            <h2>Common Questions — and How to Answer Them</h2>
-        </div>
-
-        <p class="section-intro">Tap any question to see how to handle it. You don't need to have every answer — "that's a great one for the call with the team" is a completely valid response.</p>
-
-        <div id="qaAccordion">
-
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">How much does it cost?</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-question">Question</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <div class="calc">
+                    <div>
+                        <label for="priceInput">Site price</label>
+                        <input type="number" id="priceInput" placeholder="e.g. 2500" oninput="calcCommission()" inputmode="numeric">
                     </div>
-                </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <p class="context">Most common question. Don't guess. Don't give a range. Redirect to the call where Aaron can give a real number based on their specific needs.</p>
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"It really depends on what features you need — a simple site versus one with ordering, a loyalty program, and a full admin dashboard are totally different projects. The team will give you an exact quote after a 15-minute call. What I can tell you is it's a one-time build, not a monthly fee that goes up every year."</div>
-                        <div class="tip">If they push hard: "Most custom projects run in the low-to-mid thousands. But let Aaron give you the real number — he's done enough of these that it's a 10-minute conversation."</div>
+                    <div class="calc-eq">=</div>
+                    <div>
+                        <label>You earn</label>
+                        <div class="calc-result" id="calcResult">$&mdash;</div>
                     </div>
                 </div>
             </div>
+            <div class="rule"><b>Never quote a price.</b> Aaron prices and closes. You get paid when the client's payment clears &mdash; he confirms by text.</div>
+        </section>
 
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">How long does it take to build?</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-question">Question</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </div>
-                </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"Usually about a week — sometimes less depending on the project. You also get a private preview link while it's being built, so you can see it in real time and give feedback before anything goes live."</div>
-                        <div class="tip">Speed is a real differentiator. Most agencies take weeks or months. We move fast. Lead with this — it removes one of the biggest hesitations before it even comes up.</div>
-                    </div>
-                </div>
+        <!-- PRODUCT -->
+        <section id="product">
+            <div class="sec-head"><span class="sec-num">02</span><h2>What we sell</h2></div>
+            <p class="intro">Custom websites for local businesses, written from scratch, with the tools built in. This is the owner's side of one:</p>
+
+            <figure class="shot">
+                <img src="assets/product/dashboard-home.jpg" alt="The owner dashboard: today's sales, orders and bookings" loading="lazy">
+            </figure>
+            <div class="shot-row">
+                <figure><img src="assets/product/dashboard-bookings.jpg" alt="" loading="lazy"><figcaption>Bookings</figcaption></figure>
+                <figure><img src="assets/product/dashboard-loyalty.jpg" alt="" loading="lazy"><figcaption>Loyalty</figcaption></figure>
+                <figure><img src="assets/product/dashboard-insights.jpg" alt="" loading="lazy"><figcaption>Insights</figcaption></figure>
             </div>
 
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">Can I update it myself?</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-question">Question</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </div>
+            <div class="does">
+                <div><b>Online ordering</b>Customers order from the shop's own site.</div>
+                <div><b>Owner dashboard</b>Orders, menus and prices, changed by the owner.</div>
+                <div><b>Inventory</b>Live stock and low-stock alerts. Sold out means sold out.</div>
+                <div><b>Analytics</b>Daily sales and top sellers, in the dashboard.</div>
+                <div><b>Fast</b>Clean code. Loads quickly on a phone.</div>
+                <div><b>Their name on it</b>No &ldquo;Powered by&rdquo; badge. Their brand, their customers.</div>
+            </div>
+            <div class="rule"><b>Against Wix, Squarespace, Shopify:</b> templates limit what a shop can do and look like everyone else's. Ours is built around how that shop actually runs.</div>
+        </section>
+
+        <!-- MISSION -->
+        <section id="mission">
+            <div class="sec-head"><span class="sec-num">03</span><h2>The mission</h2></div>
+            <p class="big">Starbucks has an app, mobile ordering and a rewards program. The bakery down the street has a Wix template and a Facebook page. <em class="d">We even that out.</em></p>
+            <div class="versus">
+                <div>
+                    <h4>Big chains have</h4>
+                    <ul>
+                        <li>Their own ordering platform</li>
+                        <li>Loyalty and rewards</li>
+                        <li>Real-time inventory</li>
+                        <li>Customer data they own</li>
+                        <li>A digital team</li>
+                    </ul>
                 </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"For day-to-day stuff — yes. Things like updating your inventory, changing prices, managing orders — all of that is built into your dashboard and you handle it yourself. Upfront, you can also tell us what you want to be able to change easily, and we'll make sure it's all in your dashboard. For deeper changes to the actual site structure or design, that goes through us."</div>
-                        <div class="tip">Be upfront: they don't own the code — Global Media does. But framing is everything. The real value is that upfront you can build the dashboard to be as flexible as they need, which minimizes the need to come back to us for anything routine.</div>
-                    </div>
+                <div class="ours">
+                    <h4>Now a local shop can too</h4>
+                    <ul>
+                        <li>Ordering on their own site</li>
+                        <li>Loyalty built in</li>
+                        <li>Live inventory</li>
+                        <li>Their own customer list</li>
+                        <li>Us</li>
+                    </ul>
                 </div>
             </div>
+            <div class="rule"><b>This is why the company exists.</b> Say it and mean it &mdash; it lands harder than any feature.</div>
+        </section>
 
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">What if I need changes later?</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-question">Question</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </div>
-                </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"Anything structural goes through us — it's $25 per half hour or $40 per hour. The team is always available. If you have a few things you want changed, it saves you money to consolidate them into one session rather than spreading them out."</div>
-                        <div class="tip">The key sell here is upfront planning. If you know how they run their business, you can build the dashboard to handle 90% of what they'd ever need to change themselves. Push the discovery call — that's where Aaron figures out what to make dynamic so they rarely need to pay for changes.</div>
-                    </div>
-                </div>
+        <!-- TARGETS -->
+        <section id="targets">
+            <div class="sec-head"><span class="sec-num">04</span><h2>Who to target</h2></div>
+            <p class="intro">Local businesses whose site looks like a template or does nothing for them.</p>
+            <div class="targets">
+                <div class="target"><b><i data-lucide="utensils"></i>Restaurants &amp; caf&eacute;s</b><p>Paying a delivery app 15&ndash;30% on every order.</p><span class="angle">&ldquo;Take orders on your own site&rdquo;</span></div>
+                <div class="target"><b><i data-lucide="croissant"></i>Bakeries</b><p>Pre-orders by phone, text and Instagram DM.</p><span class="angle">&ldquo;Automate your pre-orders&rdquo;</span></div>
+                <div class="target"><b><i data-lucide="scissors"></i>Salons &amp; barbers</b><p>Renting a booking tool like Vagaro or Square.</p><span class="angle">&ldquo;Booking under your own name&rdquo;</span></div>
+                <div class="target"><b><i data-lucide="shopping-bag"></i>Boutiques &amp; retail</b><p>A Shopify template that looks like every other store.</p><span class="angle">&ldquo;A store that looks like yours&rdquo;</span></div>
+                <div class="target"><b><i data-lucide="wrench"></i>Service businesses</b><p>Landscapers, cleaners, contractors. No quote form, no booking.</p><span class="angle">&ldquo;Get leads while you sleep&rdquo;</span></div>
+                <div class="target"><b><i data-lucide="truck"></i>Food trucks &amp; catering</b><p>Just a Facebook page. Hard to find the menu or book them.</p><span class="angle">&ldquo;Make it easy to hire you&rdquo;</span></div>
+            </div>
+            <div class="rule"><b>Before you walk in:</b> open their site on your phone. Slow? &ldquo;Powered by Wix&rdquo;? Does it do anything? That's your opening.</div>
+        </section>
+
+        <!-- PITCH -->
+        <section id="pitch">
+            <div class="sec-head"><span class="sec-num">05</span><h2>The pitch</h2></div>
+            <div class="steps">
+                <div class="step"><div><h3>Start with a question</h3><p>Never &ldquo;I sell websites.&rdquo; Be curious about their business.</p></div></div>
+                <div class="step"><div><h3>Find the pain, then stop talking</h3><p>&ldquo;What's your biggest frustration with it?&rdquo; The problem they name is your angle.</p></div></div>
+                <div class="step"><div><h3>Plant the seed</h3><p>One or two sentences tying what we do to that problem. No more.</p></div></div>
+                <div class="step"><div><h3>Show the demo on your phone</h3><p>A working site beats any description. Every time.</p></div></div>
+                <div class="step"><div><h3>Ask what they'd want</h3><p>&ldquo;If we built this for you, which features matter most?&rdquo;</p></div></div>
+                <div class="step"><div><h3>Ask for the call</h3><p>Fifteen minutes with the team. Get a number or an email. That's the close.</p></div></div>
             </div>
 
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">I already have a website. Why do I need a new one?</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-question">Question</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <h5>Lines that work</h5>
+            <div class="say"><small>Opening</small><p>&ldquo;Hey &mdash; I work with a web development company. Can I ask, are you pretty happy with your current website or is it kind of just... there?&rdquo;</p></div>
+            <div class="say"><small>The mission</small><p>&ldquo;Honestly, the whole reason we do this is because we think local businesses deserve the same tools the big chains have. Starbucks has a custom app and a full online ordering system. You're competing with that. We built what we build so places like yours can fight back.&rdquo;</p></div>
+            <div class="say"><small>Restaurants and food</small><p>&ldquo;Are you on DoorDash or Grubhub? We've built ordering systems that let restaurants take orders right on their own site. I can show you what that looks like in about two minutes.&rdquo;</p></div>
+            <div class="say"><small>A bad or old site</small><p>&ldquo;We build websites from scratch &mdash; not templates &mdash; so they're built around how your business works, not a generic layout. Want to see an example real quick?&rdquo;</p></div>
+            <div class="say"><small>Going for the call</small><p>&ldquo;Can I get you on a quick call with the team? They'll actually build out a preview of what your site could look like &mdash; free, no obligation, just so you can see it.&rdquo;</p></div>
+
+            <h5>Never</h5>
+            <div class="dont"><small>Don't say</small><p>&ldquo;We use custom code and serverless architecture with a Netlify backend and Airtable as the database.&rdquo;</p></div>
+            <div class="dont"><small>Don't name a price</small><p>If they ask: &ldquo;It depends on what you need &mdash; the call is literally just to get you an exact number.&rdquo;</p></div>
+        </section>
+
+        <!-- DEMO -->
+        <section id="demo">
+            <div class="sec-head"><span class="sec-num">06</span><h2>The demo</h2></div>
+            <div class="demo">
+                <div>
+                    <div class="steps">
+                        <div class="step"><div><h3>Bookmark globalstorefront.netlify.app</h3><p>Open it before every visit and check it loads.</p></div></div>
+                        <div class="step"><div><h3>Text Aaron for a login</h3><p>He matches you with the demo closest to that kind of business.</p></div></div>
+                        <div class="step"><div><h3>Sign in</h3><p>It takes you straight to a live site.</p></div></div>
+                        <div class="step"><div><h3>Home page first</h3><p>&ldquo;This was built just for them &mdash; yours would be built just for you.&rdquo;</p></div></div>
+                        <div class="step"><div><h3>Then ordering or booking</h3><p>&ldquo;The order goes straight to the owner's dashboard.&rdquo;</p></div></div>
+                        <div class="step"><div><h3>Point at the small things</h3><p>No &ldquo;Powered by&rdquo; footer. How fast it loads.</p></div></div>
                     </div>
+                    <div class="rule"><b>Hand them the phone.</b> Once they scroll it themselves, it's real.</div>
                 </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <p class="context">Don't trash their current site. Reframe from "you have a site" to "does it actually do anything for you?"</p>
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"Totally — most of our clients did too. The real question is: is it actually bringing in business, or is it more of an online business card that just exists? A custom site with ordering or booking built in is a tool that works for you 24 hours a day."</div>
-                    </div>
-                </div>
+                <div class="phone"><img src="assets/product/space-phone.jpg" alt="A demo business page on a phone" loading="lazy"></div>
             </div>
+        </section>
 
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">Do I need to know anything technical?</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-question">Question</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <!-- Q&A -->
+        <section id="qa">
+            <div class="sec-head"><span class="sec-num">07</span><h2>Questions you'll get</h2></div>
+            <p class="intro">&ldquo;That's a great one for the call with the team&rdquo; is always a valid answer.</p>
+            <div class="acc">
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">How much does it cost?<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <p>The most common question. Don't guess and don't give a range.</p>
+                        <div class="say"><small>Say this</small><p>&ldquo;It really depends on what features you need &mdash; a simple site versus one with ordering, a loyalty program, and a full admin dashboard are totally different projects. The team will give you an exact quote after a 15-minute call.&rdquo;</p></div>
+                        <div class="tip"><b>If they push:</b> &ldquo;Let Aaron give you the real number &mdash; he's done enough of these that it's a ten-minute conversation.&rdquo;</div>
                     </div>
                 </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"Not at all. You tell us how your business works — what your customers do, what would make your day easier — and the team builds around that. You don't need to understand how it works. You just need to use it."</div>
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">How long does it take to build?<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <div class="say"><small>Say this</small><p>&ldquo;Usually about a week &mdash; sometimes less depending on the project. You also get a private preview link while it's being built, so you can see it in real time and give feedback before anything goes live.&rdquo;</p></div>
+                        <div class="tip"><b>Lead with this.</b> Most agencies take weeks or months.</div>
                     </div>
                 </div>
-            </div>
-
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">What if something breaks or goes down?</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-question">Question</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">Can I update it myself?<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <div class="say"><small>Say this</small><p>&ldquo;For day-to-day stuff &mdash; yes. Updating your inventory, changing prices, managing orders &mdash; all of that is built into your dashboard and you handle it yourself. Tell us upfront what you want to be able to change easily, and we'll make sure it's in there. Deeper changes to the site's structure or design go through us.&rdquo;</p></div>
+                        <div class="tip"><b>Be upfront:</b> Global Storefront owns the code. They own their content, their data and their customers.</div>
                     </div>
                 </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"The team is always available. Fixes and changes are billed at $25 per half hour or $40 per hour — and if you have multiple things, it's worth bundling them together to keep it efficient. It's much simpler than it sounds, and you're never left stranded."</div>
-                        <div class="tip">Compared to Wix going down, Squarespace raising prices, or a plugin breaking with nobody to call — having a direct line to the person who built your site at a flat hourly rate is actually a good thing. Frame it that way.</div>
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">What if I need changes later?<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <div class="say"><small>Say this</small><p>&ldquo;Anything structural goes through us &mdash; it's $25 per half hour or $40 per hour. The team is always available. If you have a few things you want changed, it saves you money to do them in one session.&rdquo;</p></div>
+                        <div class="tip"><b>Push the discovery call.</b> That's where Aaron works out what to put in their dashboard so they rarely pay for changes.</div>
                     </div>
                 </div>
-            </div>
-
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">What's the difference between this and hiring someone off Fiverr?</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-question">Question</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">I already have a website. Why a new one?<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <p>Don't trash their site. Ask whether it does anything.</p>
+                        <div class="say"><small>Say this</small><p>&ldquo;Totally &mdash; most of our clients did too. The real question is: is it actually bringing in business, or is it more of an online business card that just exists? A custom site with ordering or booking built in is a tool that works for you 24 hours a day.&rdquo;</p></div>
                     </div>
                 </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <p class="context">Don't be dismissive of Fiverr — it's a real option. Your point is accountability and reliability.</p>
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"You can — and a lot of business owners have tried that. The issue usually comes up 6 months later when something breaks, the person's gone, and nobody knows how to fix it. We build it, we stand behind it, and you have someone to actually call."</div>
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">Do I need to know anything technical?<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <div class="say"><small>Say this</small><p>&ldquo;Not at all. You tell us how your business works &mdash; what your customers do, what would make your day easier &mdash; and the team builds around that. You just need to use it.&rdquo;</p></div>
                     </div>
                 </div>
-            </div>
-
-        </div>
-    </section>
-
-    <hr class="sep">
-
-    <!-- ================================================ -->
-    <!-- OBJECTIONS -->
-    <!-- ================================================ -->
-    <section class="portal-section" id="objections">
-        <div class="section-header">
-            <div class="section-icon icon-red">🛡️</div>
-            <h2>Objections &amp; How to Handle Them</h2>
-        </div>
-
-        <p class="section-intro">An objection is not a no. It's usually a question in disguise. Most objections mean "I'm interested but I have a concern." Dig for the real one.</p>
-
-        <div id="objAccordion">
-
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">"It's too expensive."</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-objection">Objection</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">What if something breaks?<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <div class="say"><small>Say this</small><p>&ldquo;The team is always available. Fixes and changes are billed at $25 per half hour or $40 per hour &mdash; and if you have several things, it's worth bundling them. You're never left stranded.&rdquo;</p></div>
+                        <div class="tip"><b>Frame it:</b> a direct line to the person who built the site beats a broken plugin and nobody to call.</div>
                     </div>
                 </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <p class="context">Don't argue. Don't agree either. Find out what they're currently paying and reframe the math.</p>
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"I get that. Can I ask what you're currently paying? Wix, Squarespace, any ordering apps, booking tools — it adds up more than people realize. And those are monthly forever. This is a one-time cost."</div>
-                        <div class="tip">For restaurants on DoorDash: "If you're doing $8,000/month in delivery orders at 25% commission — that's $2,000/month going to them. A custom ordering system could pay for itself in the first month."</div>
-                        <div class="tip">Store credit option — use this carefully, not as a default: Aaron occasionally works out arrangements where a business covers part or all of the cost in store credit or account credits on their site instead of cash. Think: a pizza shop gives the equivalent in pizza credit. It's not offered to everyone — but if cash is genuinely the only barrier and it's a business Aaron wants to support, it's worth mentioning there may be other arrangements. Tell them: "If the budget is really the sticking point, it might be worth a conversation with Aaron directly — he's flexible with the right businesses."</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">"I'm happy with what I have."</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-objection">Objection</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </div>
-                </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"That's fair. Just out of curiosity — is it actively bringing in new customers on its own, or is it more of an online business card that just exists? Because there's a real difference between a site that exists and one that actually does something."</div>
-                        <div class="tip">If they're still not moved — offer the pro bono: "Would you be okay if we built one for you anyway, just so you can see it? No cost, no commitment. A lot of people change their mind once they actually see what it could look like for their specific business." Aaron is willing to build a demo tailored to their business at no charge just to let them visualize it. This is one of the strongest closes on a skeptical prospect — it removes all risk and lets the work speak for itself.</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">"I don't have time for this right now."</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-objection">Objection</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </div>
-                </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"Totally understand. It's a 15-minute call and the team handles everything after that — you don't build anything yourself. When would be a better time for me to come back? Next week?"</div>
-                        <div class="tip">Always try to book a specific follow-up time rather than leaving it open-ended. "I'll come back sometime" almost never happens.</div>
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">Why not hire someone off Fiverr?<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <p>Don't be dismissive. The point is accountability.</p>
+                        <div class="say"><small>Say this</small><p>&ldquo;You can &mdash; and a lot of business owners have tried that. The issue usually comes up six months later when something breaks, the person's gone, and nobody knows how to fix it. We build it, we stand behind it, and you have someone to actually call.&rdquo;</p></div>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">"I need to think about it."</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-objection">Objection</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <!-- OBJECTIONS -->
+        <section id="objections">
+            <div class="sec-head"><span class="sec-num">08</span><h2>Objections</h2></div>
+            <p class="intro">An objection is a question in disguise. Dig for the real one.</p>
+            <div class="acc">
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">&ldquo;It's too expensive.&rdquo;<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <p>Don't argue and don't agree. Find out what they pay now.</p>
+                        <div class="say"><small>Say this</small><p>&ldquo;I get that. Can I ask what you're currently paying? Wix, Squarespace, any ordering apps, booking tools &mdash; it adds up more than people realize. The call gets you a real number to put next to that.&rdquo;</p></div>
+                        <div class="tip"><b>Restaurants on DoorDash:</b> &ldquo;If you're doing $8,000 a month in delivery orders at 25%, that's $2,000 a month going to them.&rdquo;</div>
+                        <div class="tip"><b>Store credit, used carefully:</b> Aaron sometimes takes part of the cost in store credit &mdash; a pizza shop pays in pizza. Not a default. If cash is truly the only barrier: &ldquo;It might be worth a conversation with Aaron directly &mdash; he's flexible with the right businesses.&rdquo;</div>
                     </div>
                 </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <p class="context">Usually means there's a specific unspoken concern. Try to find it.</p>
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"Of course. What would make the decision easier — is it the price, or is there something specific you'd want to see first?"</div>
-                        <div class="tip">If it's price: "The call is literally just to get you an exact quote. 15 minutes, no commitment. At least you'd have a real number to think about."</div>
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">&ldquo;I'm happy with what I have.&rdquo;<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <div class="say"><small>Say this</small><p>&ldquo;That's fair. Just out of curiosity &mdash; is it actively bringing in new customers on its own, or is it more of an online business card that just exists?&rdquo;</p></div>
+                        <div class="tip"><b>Still not moved? Offer the free build:</b> &ldquo;Would you be okay if we built one for you anyway, just so you can see it? No cost, no commitment.&rdquo; Aaron will build a demo for their business at no charge. It is the strongest close on a skeptic.</div>
+                    </div>
+                </div>
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">&ldquo;I don't have time right now.&rdquo;<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <div class="say"><small>Say this</small><p>&ldquo;Totally understand. It's a 15-minute call and the team handles everything after that &mdash; you don't build anything yourself. When would be a better time for me to come back? Next week?&rdquo;</p></div>
+                        <div class="tip"><b>Book a specific time.</b> &ldquo;I'll come back sometime&rdquo; never happens.</div>
+                    </div>
+                </div>
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">&ldquo;I need to think about it.&rdquo;<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <p>There's usually one unspoken concern. Find it.</p>
+                        <div class="say"><small>Say this</small><p>&ldquo;Of course. What would make the decision easier &mdash; is it the price, or is there something specific you'd want to see first?&rdquo;</p></div>
+                        <div class="tip"><b>If it's price:</b> &ldquo;The call is just to get you an exact quote. Fifteen minutes, no commitment.&rdquo;</div>
+                    </div>
+                </div>
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">&ldquo;I need to talk to my partner.&rdquo;<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <div class="say"><small>Say this</small><p>&ldquo;Absolutely. Would it help to set up the call with both of you? That way all the questions get answered at once and neither of you has to explain it to the other.&rdquo;</p></div>
+                    </div>
+                </div>
+                <div class="acc-item">
+                    <button class="accordion-header" onclick="toggleAccordion(this)">&ldquo;My nephew builds websites.&rdquo;<i data-lucide="chevron-down"></i></button>
+                    <div class="accordion-body">
+                        <p>Be respectful. Don't trash the nephew.</p>
+                        <div class="say"><small>Say this</small><p>&ldquo;That's great &mdash; if they can build what you need, that works. The sites we build aren't just design &mdash; they have real backend systems like live ordering, inventory, dashboards. It's a more complex build than most people expect. If you ever want a second opinion on what it would take, the call is free.&rdquo;</p></div>
                     </div>
                 </div>
             </div>
+        </section>
 
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">"I need to talk to my partner / spouse / manager."</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-objection">Objection</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </div>
-                </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"Absolutely. Would it help to set up the call with both of you? That way all the questions get answered at once and neither of you has to explain it to the other. I can ask the team to schedule it whenever works."</div>
-                    </div>
-                </div>
-            </div>
+        <!-- CHECKLIST -->
+        <section id="checklist">
+            <div class="sec-head"><span class="sec-num">09</span><h2>Visit checklist</h2></div>
+            <p class="intro">Tap to check off. It resets when you reload.</p>
 
-            <div class="accordion-item">
-                <div class="accordion-header" onclick="toggleAccordion(this)">
-                    <span class="accordion-q">"My nephew / friend builds websites — I'll just have them do it."</span>
-                    <div class="accordion-meta">
-                        <span class="accordion-tag tag-objection">Objection</span>
-                        <svg class="accordion-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </div>
-                </div>
-                <div class="accordion-body">
-                    <div class="accordion-inner">
-                        <p class="context">Be respectful. Don't trash their nephew. Focus on accountability and the complexity of the features.</p>
-                        <div class="response-label">Say this:</div>
-                        <div class="response">"That's great — if they can build what you need, that works. The sites we build aren't just design — they have real backend systems like live ordering, inventory, dashboards. It's a more complex build than most people expect. If your person can handle that, perfect. But if you ever want a second opinion on what it would take, the call is free."</div>
-                    </div>
-                </div>
-            </div>
+            <div class="check-group">Before you go</div>
+            <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"><i data-lucide="check"></i></span>Looked at their current site and noted what's slow, dated or template</div>
+            <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"><i data-lucide="check"></i></span>Texted Aaron for a demo login for this kind of business</div>
+            <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"><i data-lucide="check"></i></span>Tested the demo login on my phone</div>
+            <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"><i data-lucide="check"></i></span>Know which angle I'm leading with</div>
 
-        </div>
-    </section>
+            <div class="check-group">During the visit</div>
+            <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"><i data-lucide="check"></i></span>Opened with a question about their business</div>
+            <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"><i data-lucide="check"></i></span>Found one pain point and let them say it out loud</div>
+            <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"><i data-lucide="check"></i></span>Showed the demo and handed them the phone</div>
+            <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"><i data-lucide="check"></i></span>Asked which features would matter most</div>
+            <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"><i data-lucide="check"></i></span>Did not quote a price</div>
+            <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"><i data-lucide="check"></i></span>Asked for the 15-minute call</div>
 
-    <hr class="sep">
+            <div class="check-group">Before you leave</div>
+            <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"><i data-lucide="check"></i></span>Got their name, business name and best contact</div>
+            <div class="check-item" onclick="toggleCheck(this)"><span class="check-box"><i data-lucide="check"></i></span>Outcome is clear: call booked, follow-up set, or a no</div>
 
-    <!-- ================================================ -->
-    <!-- CHECKLIST -->
-    <!-- ================================================ -->
-    <section class="portal-section" id="checklist">
-        <div class="section-header">
-            <div class="section-icon icon-green">✅</div>
-            <h2>Sales Visit Checklist</h2>
-        </div>
+            <button class="reset" onclick="resetChecklists()">Reset all</button>
+        </section>
 
-        <p class="section-intro">Tap items to check them off. Resets on refresh — use it fresh before every visit.</p>
+        <!-- AFTER -->
+        <section id="after">
+            <div class="sec-head"><span class="sec-num">10</span><h2>After the visit</h2></div>
+            <div class="steps">
+                <div class="step"><div><h3>Text Aaron within the hour</h3><p>Name, business, type, contact, and the features they cared about.</p></div></div>
+                <div class="step"><div><h3>Aaron follows up</h3><p>He books the discovery call. You're not needed for the technical part.</p></div></div>
+                <div class="step"><div><h3>Aaron builds them a demo</h3><p>Styled after their business, with a login to preview it. This usually closes it.</p></div></div>
+                <div class="step"><div><h3>Client signs and pays</h3><p>Aaron handles contract and payment, then texts you. You get your 10%.</p></div></div>
+                <div class="step"><div><h3>Lead gone cold? Tell Aaron</h3><p>He may send a follow-up or a quick preview to restart it.</p></div></div>
+            </div>
+            <div class="rule"><b>Speed is the whole game.</b> A hot lead that sits three days is a cold one.</div>
+        </section>
 
-        <div class="checklist-group-label">Before You Go</div>
-        <div class="checklist">
-            <div class="check-item" onclick="toggleCheck(this)">
-                <div class="check-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 2"></polyline></svg></div>
-                <span class="check-text">Looked up their current website — noted what's obviously template-y, slow, or outdated</span>
+        <!-- QUICK PITCH -->
+        <section id="quickpitch">
+            <div class="sec-head"><span class="sec-num">11</span><h2>Thirty seconds</h2></div>
+            <p class="intro">For the line at the coffee shop. Memorize it.</p>
+            <div class="pitch">
+                <p id="pitchText">&ldquo;I work with a web dev company &mdash; we build custom websites for local businesses. The whole reason we started doing it is because big chains have custom apps, online ordering, loyalty programs, all of it &mdash; and local spots are out here trying to compete with a Wix template. We build the same kind of tools for local businesses so they can actually fight back. Online ordering on their own site, a real owner dashboard, loyalty built in. Mind if I show you a live example real quick?&rdquo;</p>
+                <button class="copy-btn" onclick="copyPitch()">Copy to clipboard</button>
             </div>
-            <div class="check-item" onclick="toggleCheck(this)">
-                <div class="check-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 2"></polyline></svg></div>
-                <span class="check-text">Texted Aaron to get demo credentials for this type of business</span>
-            </div>
-            <div class="check-item" onclick="toggleCheck(this)">
-                <div class="check-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 2"></polyline></svg></div>
-                <span class="check-text">Bookmarked globalstorefront.netlify.app and tested the demo login</span>
-            </div>
-            <div class="check-item" onclick="toggleCheck(this)">
-                <div class="check-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 2"></polyline></svg></div>
-                <span class="check-text">Know the pain angle I'll lead with based on their business type</span>
-            </div>
-        </div>
-
-        <div class="checklist-group-label">During the Visit</div>
-        <div class="checklist">
-            <div class="check-item" onclick="toggleCheck(this)">
-                <div class="check-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 2"></polyline></svg></div>
-                <span class="check-text">Started with a question about their business — not a pitch about mine</span>
-            </div>
-            <div class="check-item" onclick="toggleCheck(this)">
-                <div class="check-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 2"></polyline></svg></div>
-                <span class="check-text">Found at least one specific pain point and let them say it out loud</span>
-            </div>
-            <div class="check-item" onclick="toggleCheck(this)">
-                <div class="check-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 2"></polyline></svg></div>
-                <span class="check-text">Showed the demo — and handed them the phone to scroll through it</span>
-            </div>
-            <div class="check-item" onclick="toggleCheck(this)">
-                <div class="check-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 2"></polyline></svg></div>
-                <span class="check-text">Asked "what features would matter most to you?"</span>
-            </div>
-            <div class="check-item" onclick="toggleCheck(this)">
-                <div class="check-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 2"></polyline></svg></div>
-                <span class="check-text">Did NOT quote a price</span>
-            </div>
-            <div class="check-item" onclick="toggleCheck(this)">
-                <div class="check-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 2"></polyline></svg></div>
-                <span class="check-text">Asked for the 15-minute intro call with the team</span>
-            </div>
-        </div>
-
-        <div class="checklist-group-label">Before You Leave</div>
-        <div class="checklist">
-            <div class="check-item" onclick="toggleCheck(this)">
-                <div class="check-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 2"></polyline></svg></div>
-                <span class="check-text">Got their name, business name, and best contact (phone or email)</span>
-            </div>
-            <div class="check-item" onclick="toggleCheck(this)">
-                <div class="check-box"><svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5"><polyline points="1 6 4.5 9.5 11 2"></polyline></svg></div>
-                <span class="check-text">Result is clear: call booked ✓ / follow-up scheduled / or no (noted and moved on)</span>
-            </div>
-        </div>
-
-        <button class="checklist-reset" onclick="resetChecklists()">↺ Reset all</button>
-    </section>
-
-    <hr class="sep">
-
-    <!-- ================================================ -->
-    <!-- AFTER THE VISIT -->
-    <!-- ================================================ -->
-    <section class="portal-section" id="after">
-        <div class="section-header">
-            <div class="section-icon icon-blue">📞</div>
-            <h2>After the Visit</h2>
-        </div>
-
-        <div class="card" style="margin-bottom:1.25rem;">
-            <div class="after-item">
-                <div class="after-num">1</div>
-                <p><strong>Text Aaron immediately.</strong> Include: prospect's name, business name, type of business, their contact info, and what features they were most interested in. Do this while it's fresh — within an hour of the visit.</p>
-            </div>
-            <div class="after-item">
-                <div class="after-num">2</div>
-                <p><strong>Aaron handles the follow-up.</strong> He'll reach out, schedule the discovery call, and take it from there. You don't need to be part of the technical conversation.</p>
-            </div>
-            <div class="after-item">
-                <div class="after-num">3</div>
-                <p><strong>Aaron builds a custom demo</strong> specifically for the prospect — styled after their actual business — and gives them a login to preview it on the portal. This is usually what closes the deal.</p>
-            </div>
-            <div class="after-item">
-                <div class="after-num">4</div>
-                <p><strong>Client signs on and pays.</strong> Aaron handles contracts and payment. Once payment is complete, you get your 10% commission. Aaron confirms by text.</p>
-            </div>
-            <div class="after-item">
-                <div class="after-num">5</div>
-                <p><strong>If the lead goes cold,</strong> tell Aaron. Don't let it sit. He may want to send a follow-up or build them a quick preview to reignite interest.</p>
-            </div>
-        </div>
-
-        <div class="highlight-box green">
-            <p><strong>One rule:</strong> Get the info to Aaron fast. The faster he follows up, the higher the close rate. A hot lead that sits for 3 days cools off quickly. Text him right after.</p>
-        </div>
-    </section>
-
-    <hr class="sep">
-
-    <!-- ================================================ -->
-    <!-- QUICK PITCH -->
-    <!-- ================================================ -->
-    <section class="portal-section" id="quickpitch">
-        <div class="section-header">
-            <div class="section-icon icon-green">⚡</div>
-            <h2>Quick Reference — The 30-Second Pitch</h2>
-        </div>
-        <p class="section-intro">Memorize this. Use it when you have 30 seconds and no time for a full conversation — passing someone on the street, quick encounter in line, anywhere.</p>
-        <div class="pitch-box">
-            <h4>The 30-Second Pitch</h4>
-            <p id="pitchText">"I work with a web dev company — we build custom websites for local businesses. The whole reason we started doing it is because big chains have custom apps, online ordering, loyalty programs, all of it — and local spots are out here trying to compete with a Wix template. We build the same kind of tools for local businesses so they can actually fight back. Online ordering on their own site, real admin dashboards, no commission to DoorDash, no monthly Wix fees. One-time build, they own it forever. Mind if I show you a live example real quick?"</p>
-            <button class="copy-btn" onclick="copyPitch()">Copy to clipboard</button>
-        </div>
-    </section>
-
+        </section>
+    </main>
 </div>
 
-<!-- BACK TO TOP -->
-<div class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
-</div>
+<div class="back-top" id="backTop" onclick="window.scrollTo({top:0,behavior:'smooth'})"><i data-lucide="arrow-up"></i></div>
 
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>
-    // Auth check — only the sales user gets in
+    // Auth check — the sales login, or Aaron's master login.
     (function() {
         const token = localStorage.getItem('gsToken');
         const username = localStorage.getItem('gsUsername');
-        if (!token || username !== 'globalstorefrontsales') {
+        if (!token || !['globalstorefrontsales', 'globallyballinspam'].includes(username)) {
             window.location.href = '/';
         }
     })();
 
     function logout() {
-        ['gsToken','gsClientName','gsCompany','gsUsername'].forEach(k => localStorage.removeItem(k));
+        ['gsToken','gsClientName','gsCompany','gsUsername','gs_token','gs_biz','gs_user'].forEach(k => localStorage.removeItem(k));
         window.location.href = '/';
     }
 
-    // Read progress + back-to-top
-    window.addEventListener('scroll', function() {
+    // Icons. If the CDN is unreachable the page still reads fine without them.
+    if (window.lucide) lucide.createIcons();
+
+    // Read progress, back-to-top, and which section the contents rail lights up.
+    const navLinks = [].slice.call(document.querySelectorAll('#sideNav a'));
+    const sections = navLinks.map(a => document.querySelector(a.getAttribute('href')));
+    let current = -1;
+    function onScroll() {
         const scrollTop = window.scrollY;
         const docHeight = document.documentElement.scrollHeight - window.innerHeight;
         document.getElementById('progressFill').style.width = (docHeight > 0 ? (scrollTop / docHeight) * 100 : 0) + '%';
-        const bt = document.getElementById('backTop');
-        scrollTop > 400 ? bt.classList.add('visible') : bt.classList.remove('visible');
-    });
+        document.getElementById('backTop').classList.toggle('visible', scrollTop > 400);
+
+        let idx = -1;
+        sections.forEach((s, i) => { if (s.getBoundingClientRect().top < 140) idx = i; });
+        if (idx !== current) {
+            current = idx;
+            navLinks.forEach((a, i) => a.classList.toggle('is-on', i === idx));
+            // On a phone the rail scrolls sideways: keep the lit item in view.
+            if (idx >= 0 && window.innerWidth <= 860) {
+                const nav = document.getElementById('sideNav'), a = navLinks[idx];
+                nav.scrollTo({ left: a.offsetLeft - nav.clientWidth / 2 + a.clientWidth / 2, behavior: 'smooth' });
+            }
+        }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
 
     // Commission calculator
     function calcCommission() {
         const val = parseFloat(document.getElementById('priceInput').value);
-        const el = document.getElementById('calcResult');
-        el.textContent = (!isNaN(val) && val > 0)
-            ? '$' + (val * 0.1).toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0})
+        document.getElementById('calcResult').textContent = (!isNaN(val) && val > 0)
+            ? '$' + (val * 0.1).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })
             : '$—';
     }
 
-    // Accordion
+    // Accordion — one open at a time within its section
     function toggleAccordion(header) {
         const body = header.nextElementSibling;
         const isOpen = header.classList.contains('open');
-        // Close all in same parent section
-        const parent = header.closest('.portal-section, [id$="Accordion"]') || header.parentNode.parentNode;
-        parent.querySelectorAll('.accordion-header.open').forEach(h => {
+        header.closest('section').querySelectorAll('.accordion-header.open').forEach(h => {
             h.classList.remove('open');
             h.nextElementSibling.classList.remove('open');
         });
@@ -1179,7 +625,7 @@
     function copyPitch() {
         navigator.clipboard.writeText(document.getElementById('pitchText').textContent.trim()).then(() => {
             const btn = document.querySelector('.copy-btn');
-            btn.textContent = '✓ Copied!';
+            btn.textContent = 'Copied';
             setTimeout(() => btn.textContent = 'Copy to clipboard', 2000);
         });
     }
