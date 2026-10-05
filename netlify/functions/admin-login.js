@@ -24,6 +24,26 @@ exports.handler = async (event) => {
         }).firstPage();
 
         if (records.length === 0) {
+            // Aaron's master account lives in Clients, not AdminUsers. Without
+            // this the credentials that open master.html are refused here.
+            // Keep MASTER_EMAILS in step with get-previews.js.
+            const MASTER_EMAILS = (process.env.MASTER_EMAILS || 'globallyballinspam@gmail.com')
+                .split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+            const id = String(email).trim().toLowerCase().replace(/'/g, "\\'");
+            const masters = await base('Clients').select({
+                filterByFormula: `OR(LOWER({Email}) = '${id}', LOWER({Username}) = '${id}')`,
+                maxRecords: 1
+            }).firstPage();
+            const master = masters[0];
+            if (master && MASTER_EMAILS.includes(String(master.get('Email') || '').toLowerCase())
+                && password === (master.get('Password') || master.get('PasswordHash') || '')) {
+                const token = jwt.sign(
+                    { userId: master.id, email: master.get('Email'), role: 'admin' },
+                    process.env.JWT_SECRET || 'globalstorefront-secret-change-in-production',
+                    { expiresIn: '24h' }
+                );
+                return { statusCode: 200, body: JSON.stringify({ token, name: master.get('Name') }) };
+            }
             return {
                 statusCode: 401,
                 body: JSON.stringify({ error: 'Invalid credentials' })

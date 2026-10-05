@@ -656,7 +656,24 @@
                 localStorage.setItem('gsClientName', data.name);
                 localStorage.setItem('gsCompany', data.company);
                 localStorage.setItem('gsUsername', data.username || '');
-                window.location.href = data.projectUrl;
+                // The dashboard reads its own session keys; set them here too
+                // so one login opens it without a second sign-in.
+                const biz = {
+                    name: data.name, company: data.company, projectUrl: data.projectUrl,
+                    username: data.username, slug: data.slug, tier: data.tier,
+                    billingCycle: data.billingCycle, subStatus: data.subStatus,
+                    caps: data.caps || [], regionId: data.regionId,
+                    surfaces: data.surfaces || {},
+                    directoryStatus: data.directoryStatus || 'none',
+                    paymentChannel: data.paymentChannel || 'none'
+                };
+                localStorage.setItem('gs_token', data.token);
+                localStorage.setItem('gs_biz', JSON.stringify(biz));
+                localStorage.setItem('gs_user', JSON.stringify(biz));
+                // A client with a build goes to it (their showcase, or
+                // /master.html for Aaron). A client without one runs on
+                // Global Storefront itself, so they land on their dashboard.
+                window.location.href = data.projectUrl || '/dashboard.html';
             } else {
                 error.textContent = data.error || 'Login failed. Please try again.';
                 error.classList.add('show');
