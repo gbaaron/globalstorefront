@@ -604,19 +604,8 @@
         {"key": "harvest", "name": "Harvest Stand", "where": "Food pantry · Zeeland, MI", "spec": true, "url": "https://harvest-stand.netlify.app/showcase.html", "screens": [0, 1, 2, 3, 4], "line": "What the pantry needs this week, giving, and volunteer shifts that fill themselves."}
     ];
 
-    // The hero wall: Global Storefront's own product screens only. Client
-    // builds stay off it until those businesses are partners. Each track is
-    // the list twice so the -50% roll loops without a seam, and each row
-    // starts at a different point in the deck.
-    const WALL = ['dashboard-home', 'directory-holland', 'dashboard-loyalty', 'space-bakery',
-                  'dashboard-bookings', 'dashboard-reach', 'dashboard-insights'];
-    ['wallA', 'wallB', 'wallC'].forEach((id, row) => {
-        const start = (row * 3) % WALL.length;
-        let deck = WALL.slice(start).concat(WALL.slice(0, start));
-        while (deck.length < 14) deck = deck.concat(deck);
-        document.getElementById(id).innerHTML = deck.concat(deck)
-            .map(n => '<img src="assets/product/' + n + '.jpg" alt="" decoding="async">').join('');
-    });
+    // The hero wall is left blank for now (the tracks in .artwall stay empty).
+    // Fill #wallA/#wallB/#wallC with <img> tiles to bring it back.
 
     // The builds grid. Off until these are partners — see the note on #builds.
     const SHOW_BUILDS = false;
